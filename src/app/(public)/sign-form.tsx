@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -72,7 +71,6 @@ export function SignForm() {
 											{...field}
 										/>
 									</FormControl>
-									<FormDescription>This is your username</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}

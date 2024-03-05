@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface NavProps {
 	isCollapsed: boolean;
@@ -15,7 +16,7 @@ interface NavProps {
 		title: string;
 		label?: string;
 		icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-		variant:
+		variant?:
 			| "default"
 			| "destructive"
 			| "outline"
@@ -27,6 +28,7 @@ interface NavProps {
 }
 
 export function Nav({ links, isCollapsed }: NavProps) {
+	const pathname = usePathname();
 	return (
 		<div
 			data-collapsed={isCollapsed}
@@ -41,9 +43,15 @@ export function Nav({ links, isCollapsed }: NavProps) {
 						>
 							<TooltipTrigger asChild>
 								<Link
-									href={link.href}
+									href={`/${link.href}`}
 									className={cn(
-										buttonVariants({ variant: link.variant, size: "icon" }),
+										buttonVariants({
+											variant:
+												link.variant || pathname?.split("/")[1] === link.href
+													? "default"
+													: "ghost",
+											size: "icon",
+										}),
 										"h-9 w-9"
 										// link.variant === "default" &&
 										// 	"dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
@@ -68,9 +76,15 @@ export function Nav({ links, isCollapsed }: NavProps) {
 					) : (
 						<Link
 							key={index}
-							href={link.href}
+							href={`/${link.href}`}
 							className={cn(
-								buttonVariants({ variant: link.variant, size: "default" }),
+								buttonVariants({
+									variant:
+										link.variant || pathname?.split("/")[1] === link.href
+											? "default"
+											: "ghost",
+									size: "default",
+								}),
 								// link.variant === "default" &&
 								// 	"dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
 								"justify-start"

@@ -76,8 +76,7 @@ export default function ResizableSidebar({
 								{
 									title: "Dashboard",
 									icon: MdOutlineDashboard,
-									variant: "default",
-									href: "/dashboard",
+									href: "dashboard",
 								},
 							]}
 						/>
@@ -88,20 +87,17 @@ export default function ResizableSidebar({
 								{
 									title: "Customers",
 									icon: FaPeopleGroup,
-									variant: "ghost",
-									href: "/customers",
+									href: "customers",
 								},
 								{
 									title: "Properties",
 									icon: TbBuildingCommunity,
-									variant: "ghost",
-									href: "/customers",
+									href: "customers",
 								},
 								{
 									title: "Media",
 									icon: MdOutlineConnectWithoutContact,
-									variant: "ghost",
-									href: "/customers",
+									href: "customers",
 								},
 							]}
 						/>
@@ -112,14 +108,12 @@ export default function ResizableSidebar({
 								{
 									title: "Employees",
 									icon: IoIdCardOutline,
-									variant: "ghost",
-									href: "/customers",
+									href: "customers",
 								},
 								{
 									title: "Roles & Permissions",
 									icon: MdKey,
-									variant: "ghost",
-									href: "/customers",
+									href: "customers",
 								},
 							]}
 						/>
@@ -130,8 +124,7 @@ export default function ResizableSidebar({
 								{
 									title: "Configuration",
 									icon: MdDisplaySettings,
-									variant: "ghost",
-									href: "/additional",
+									href: "additional",
 								},
 							]}
 						/>
@@ -142,8 +135,7 @@ export default function ResizableSidebar({
 								{
 									title: "Settings",
 									icon: MdOutlineSettings,
-									variant: "ghost",
-									href: "/settings",
+									href: "settings",
 								},
 							]}
 						/>
