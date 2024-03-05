@@ -20,6 +20,7 @@ import { MdKey } from "react-icons/md";
 import { MdOutlineSettings } from "react-icons/md";
 import { TbLogout } from "react-icons/tb";
 import { MdDisplaySettings } from "react-icons/md";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function ResizableSidebar({
 	children,
@@ -68,97 +69,100 @@ export default function ResizableSidebar({
 							"min-w-[50px] transition-all duration-300 ease-in-out"
 					)}
 				>
-					<Nav
-						isCollapsed={isCollapsed}
-						links={[
-							{
-								title: "Dashboard",
-								icon: MdOutlineDashboard,
-								variant: "default",
-								href: "/dashboard",
-							},
-						]}
-					/>
-					<Separator />
-					<Nav
-						isCollapsed={isCollapsed}
-						links={[
-							{
-								title: "Customers",
-								icon: FaPeopleGroup,
-								variant: "ghost",
-								href: "/customers",
-							},
-							{
-								title: "Properties",
-								icon: TbBuildingCommunity,
-								variant: "ghost",
-								href: "/customers",
-							},
-							{
-								title: "Media",
-								icon: MdOutlineConnectWithoutContact,
-								variant: "ghost",
-								href: "/customers",
-							},
-						]}
-					/>
-					<Separator />
-					<Nav
-						isCollapsed={isCollapsed}
-						links={[
-							{
-								title: "Employees",
-								icon: IoIdCardOutline,
-								variant: "ghost",
-								href: "/customers",
-							},
-							{
-								title: "Roles & Permissions",
-								icon: MdKey,
-								variant: "ghost",
-								href: "/customers",
-							},
-						]}
-					/>
-					<Separator />
-					<Nav
-						isCollapsed={isCollapsed}
-						links={[
-							{
-								title: "Configuration",
-								icon: MdDisplaySettings,
-								variant: "ghost",
-								href: "/additional",
-							},
-						]}
-					/>
-					<Separator />
-					<Nav
-						isCollapsed={isCollapsed}
-						links={[
-							{
-								title: "Settings",
-								icon: MdOutlineSettings,
-								variant: "ghost",
-								href: "/customers",
-							},
-							{
-								title: "Logout",
-								icon: TbLogout,
-								variant: "ghost",
-								href: "/customers",
-							},
-						]}
-					/>
+					<ScrollArea className="h-screen !overflow-y-auto">
+						<Nav
+							isCollapsed={isCollapsed}
+							links={[
+								{
+									title: "Dashboard",
+									icon: MdOutlineDashboard,
+									variant: "default",
+									href: "/dashboard",
+								},
+							]}
+						/>
+						<Separator />
+						<Nav
+							isCollapsed={isCollapsed}
+							links={[
+								{
+									title: "Customers",
+									icon: FaPeopleGroup,
+									variant: "ghost",
+									href: "/customers",
+								},
+								{
+									title: "Properties",
+									icon: TbBuildingCommunity,
+									variant: "ghost",
+									href: "/customers",
+								},
+								{
+									title: "Media",
+									icon: MdOutlineConnectWithoutContact,
+									variant: "ghost",
+									href: "/customers",
+								},
+							]}
+						/>
+						<Separator />
+						<Nav
+							isCollapsed={isCollapsed}
+							links={[
+								{
+									title: "Employees",
+									icon: IoIdCardOutline,
+									variant: "ghost",
+									href: "/customers",
+								},
+								{
+									title: "Roles & Permissions",
+									icon: MdKey,
+									variant: "ghost",
+									href: "/customers",
+								},
+							]}
+						/>
+						<Separator />
+						<Nav
+							isCollapsed={isCollapsed}
+							links={[
+								{
+									title: "Configuration",
+									icon: MdDisplaySettings,
+									variant: "ghost",
+									href: "/additional",
+								},
+							]}
+						/>
+						<Separator />
+						<Nav
+							isCollapsed={isCollapsed}
+							links={[
+								{
+									title: "Settings",
+									icon: MdOutlineSettings,
+									variant: "ghost",
+									href: "/customers",
+								},
+								{
+									title: "Logout",
+									icon: TbLogout,
+									variant: "ghost",
+									href: "/customers",
+								},
+							]}
+						/>
+					</ScrollArea>
 				</ResizablePanel>
 				<ResizableHandle withHandle />
 				<ResizablePanel
-					className="p-6 h-screen !overflow-y-auto"
 					defaultSize={defaultLayout[1]}
 					minSize={30}
 				>
-					{children}
+					<ScrollArea className="h-screen !overflow-y-auto">
+						{children}
+					</ScrollArea>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</TooltipProvider>
