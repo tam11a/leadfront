@@ -17,7 +17,7 @@ export default function PrivateLayout({
 			<ResizableSidebar
 				defaultLayout={defaultLayout}
 				defaultCollapsed={defaultCollapsed}
-				navCollapsedSize={4}
+				navCollapsedSize={3}
 			>
 				{children}
 				<div className="fixed bottom-5 right-5">

@@ -69,7 +69,7 @@ export default function ResizableSidebar({
 							"min-w-[50px] transition-all duration-300 ease-in-out"
 					)}
 				>
-					<ScrollArea className="h-screen !overflow-y-auto">
+					<ScrollArea className="h-screen">
 						<Nav
 							isCollapsed={isCollapsed}
 							links={[
@@ -154,9 +154,7 @@ export default function ResizableSidebar({
 					defaultSize={defaultLayout[1]}
 					minSize={30}
 				>
-					<ScrollArea className="h-screen !overflow-y-auto">
-						{children}
-					</ScrollArea>
+					<ScrollArea className="h-screen">{children}</ScrollArea>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</TooltipProvider>
