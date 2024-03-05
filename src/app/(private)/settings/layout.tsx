@@ -30,7 +30,7 @@ export default function SettingsLayout({
 				</p>
 			</div>
 			<Separator />
-			<div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0 px-6">
+			<div className="flex flex-col space-y-6 lg:flex-row lg:space-x-8 lg:space-y-0 px-6">
 				<aside className="lg:w-1/5">
 					<SidebarNav items={sidebarNavItems} />
 				</aside>

@@ -35,6 +35,82 @@ export default function ResizableSidebar({
 }>) {
 	const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
+	function NavBar() {
+		return (
+			<>
+				<Nav
+					isCollapsed={isCollapsed}
+					links={[
+						{
+							title: "Dashboard",
+							icon: MdOutlineDashboard,
+							href: "dashboard",
+						},
+					]}
+				/>
+				<Separator />
+				<Nav
+					isCollapsed={isCollapsed}
+					links={[
+						{
+							title: "Customers",
+							icon: FaPeopleGroup,
+							href: "customers",
+						},
+						{
+							title: "Properties",
+							icon: TbBuildingCommunity,
+							href: "customers",
+						},
+						{
+							title: "Media",
+							icon: MdOutlineConnectWithoutContact,
+							href: "customers",
+						},
+					]}
+				/>
+				<Separator />
+				<Nav
+					isCollapsed={isCollapsed}
+					links={[
+						{
+							title: "Employees",
+							icon: IoIdCardOutline,
+							href: "customers",
+						},
+						{
+							title: "Roles & Permissions",
+							icon: MdKey,
+							href: "customers",
+						},
+					]}
+				/>
+				<Separator />
+				<Nav
+					isCollapsed={isCollapsed}
+					links={[
+						{
+							title: "Configuration",
+							icon: MdDisplaySettings,
+							href: "configuration",
+						},
+					]}
+				/>
+				<Separator />
+				<Nav
+					isCollapsed={isCollapsed}
+					links={[
+						{
+							title: "Settings",
+							icon: MdOutlineSettings,
+							href: "settings",
+						},
+					]}
+				/>
+			</>
+		);
+	}
+
 	return (
 		<TooltipProvider delayDuration={0}>
 			<ResizablePanelGroup
@@ -66,82 +142,18 @@ export default function ResizableSidebar({
 					}}
 					className={cn(
 						isCollapsed &&
-							"min-w-[50px] transition-all duration-300 ease-in-out"
+							"min-w-[50px] transition-all duration-300 ease-in-out",
+						"hidden md:block"
 					)}
 				>
 					<ScrollArea className="h-screen">
-						<Nav
-							isCollapsed={isCollapsed}
-							links={[
-								{
-									title: "Dashboard",
-									icon: MdOutlineDashboard,
-									href: "dashboard",
-								},
-							]}
-						/>
-						<Separator />
-						<Nav
-							isCollapsed={isCollapsed}
-							links={[
-								{
-									title: "Customers",
-									icon: FaPeopleGroup,
-									href: "customers",
-								},
-								{
-									title: "Properties",
-									icon: TbBuildingCommunity,
-									href: "customers",
-								},
-								{
-									title: "Media",
-									icon: MdOutlineConnectWithoutContact,
-									href: "customers",
-								},
-							]}
-						/>
-						<Separator />
-						<Nav
-							isCollapsed={isCollapsed}
-							links={[
-								{
-									title: "Employees",
-									icon: IoIdCardOutline,
-									href: "customers",
-								},
-								{
-									title: "Roles & Permissions",
-									icon: MdKey,
-									href: "customers",
-								},
-							]}
-						/>
-						<Separator />
-						<Nav
-							isCollapsed={isCollapsed}
-							links={[
-								{
-									title: "Configuration",
-									icon: MdDisplaySettings,
-									href: "additional",
-								},
-							]}
-						/>
-						<Separator />
-						<Nav
-							isCollapsed={isCollapsed}
-							links={[
-								{
-									title: "Settings",
-									icon: MdOutlineSettings,
-									href: "settings",
-								},
-							]}
-						/>
+						<NavBar />
 					</ScrollArea>
 				</ResizablePanel>
-				<ResizableHandle withHandle />
+				<ResizableHandle
+					withHandle
+					className="hidden md:flex"
+				/>
 				<ResizablePanel
 					defaultSize={defaultLayout[1]}
 					minSize={30}
