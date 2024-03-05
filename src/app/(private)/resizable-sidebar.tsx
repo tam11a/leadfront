@@ -19,6 +19,7 @@ import { IoIdCardOutline } from "react-icons/io5";
 import { MdKey } from "react-icons/md";
 import { MdOutlineSettings } from "react-icons/md";
 import { TbLogout } from "react-icons/tb";
+import { MdDisplaySettings } from "react-icons/md";
 
 export default function ResizableSidebar({
 	children,
@@ -64,7 +65,7 @@ export default function ResizableSidebar({
 					}}
 					className={cn(
 						isCollapsed &&
-							"min-w-[30px] transition-all duration-300 ease-in-out"
+							"min-w-[50px] transition-all duration-300 ease-in-out"
 					)}
 				>
 					<Nav
@@ -117,6 +118,18 @@ export default function ResizableSidebar({
 								icon: MdKey,
 								variant: "ghost",
 								href: "/customers",
+							},
+						]}
+					/>
+					<Separator />
+					<Nav
+						isCollapsed={isCollapsed}
+						links={[
+							{
+								title: "Configuration",
+								icon: MdDisplaySettings,
+								variant: "ghost",
+								href: "/additional",
 							},
 						]}
 					/>
