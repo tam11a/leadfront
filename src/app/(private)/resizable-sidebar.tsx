@@ -18,7 +18,6 @@ import { MdOutlineConnectWithoutContact } from "react-icons/md";
 import { IoIdCardOutline } from "react-icons/io5";
 import { MdKey } from "react-icons/md";
 import { MdOutlineSettings } from "react-icons/md";
-import { TbLogout } from "react-icons/tb";
 import { MdDisplaySettings } from "react-icons/md";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -168,8 +167,8 @@ export default function ResizableSidebar({
 					minSize={30}
 				>
 					<ScrollArea className="h-screen">
-						<header className="inline-flex lg:hidden flex-row items-center justify-between w-full p-4">
-							<Drawer>
+						<header className="inline-flex lg:hidden flex-row items-center justify-between w-full px-4 pt-4 pb-1">
+							<Drawer shouldScaleBackground>
 								<DrawerTrigger asChild>
 									<Button
 										variant="outline"
@@ -180,9 +179,7 @@ export default function ResizableSidebar({
 								</DrawerTrigger>
 								<DrawerContent>
 									<DrawerClose asChild>
-										<ScrollArea className="h-full">
-											<NavBar />
-										</ScrollArea>
+										<NavBar />
 									</DrawerClose>
 								</DrawerContent>
 							</Drawer>

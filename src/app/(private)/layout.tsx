@@ -19,7 +19,11 @@ export default function PrivateLayout({
 				defaultCollapsed={defaultCollapsed}
 				navCollapsedSize={3}
 			>
-				{children}
+				<main
+				// vaul-drawer-wrapper="" // Needed for the drawer to work with scale animation
+				>
+					{children}
+				</main>
 				<div className="fixed bottom-5 right-5 hidden lg:inline">
 					<ModeToggle />
 				</div>

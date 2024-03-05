@@ -50,7 +50,7 @@ export function SignForm() {
 
 	return (
 		<Form {...form}>
-			<Card>
+			<Card className="mx-2">
 				<CardHeader>
 					<CardTitle>Welcome</CardTitle>
 					<CardDescription>

@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={cn(outfit.className, "")}>
+			<body className={cn(outfit.className, "bg-background")}>
 				<CookiesProvider>
 					<ThemeProvider
 						attribute="class"
