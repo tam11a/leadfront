@@ -8,7 +8,17 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Nav } from "./nav";
+import { Separator } from "@/components/ui/separator";
+
+// Icons
 import { MdOutlineDashboard } from "react-icons/md";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { TbBuildingCommunity } from "react-icons/tb";
+import { MdOutlineConnectWithoutContact } from "react-icons/md";
+import { IoIdCardOutline } from "react-icons/io5";
+import { MdKey } from "react-icons/md";
+import { MdOutlineSettings } from "react-icons/md";
+import { TbLogout } from "react-icons/tb";
 
 export default function ResizableSidebar({
 	children,
@@ -54,7 +64,7 @@ export default function ResizableSidebar({
 					}}
 					className={cn(
 						isCollapsed &&
-							"min-w-[60px] transition-all duration-300 ease-in-out"
+							"min-w-[30px] transition-all duration-300 ease-in-out"
 					)}
 				>
 					<Nav
@@ -65,6 +75,66 @@ export default function ResizableSidebar({
 								icon: MdOutlineDashboard,
 								variant: "default",
 								href: "/dashboard",
+							},
+						]}
+					/>
+					<Separator />
+					<Nav
+						isCollapsed={isCollapsed}
+						links={[
+							{
+								title: "Customers",
+								icon: FaPeopleGroup,
+								variant: "ghost",
+								href: "/customers",
+							},
+							{
+								title: "Properties",
+								icon: TbBuildingCommunity,
+								variant: "ghost",
+								href: "/customers",
+							},
+							{
+								title: "Media",
+								icon: MdOutlineConnectWithoutContact,
+								variant: "ghost",
+								href: "/customers",
+							},
+						]}
+					/>
+					<Separator />
+					<Nav
+						isCollapsed={isCollapsed}
+						links={[
+							{
+								title: "Employees",
+								icon: IoIdCardOutline,
+								variant: "ghost",
+								href: "/customers",
+							},
+							{
+								title: "Roles & Permissions",
+								icon: MdKey,
+								variant: "ghost",
+								href: "/customers",
+							},
+						]}
+					/>
+					<Separator />
+					<Nav
+						isCollapsed={isCollapsed}
+						links={[
+							{
+								title: "Settings",
+								icon: MdOutlineSettings,
+								variant: "ghost",
+								href: "/customers",
+							},
+							{
+								title: "Logout",
+								icon: TbLogout,
+								variant: "ghost",
+								href: "/customers",
 							},
 						]}
 					/>
