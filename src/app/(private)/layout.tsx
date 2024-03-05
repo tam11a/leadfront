@@ -20,7 +20,7 @@ export default function PrivateLayout({
 				navCollapsedSize={3}
 			>
 				{children}
-				<div className="fixed bottom-5 right-5">
+				<div className="fixed bottom-5 right-5 hidden lg:inline">
 					<ModeToggle />
 				</div>
 			</ResizableSidebar>

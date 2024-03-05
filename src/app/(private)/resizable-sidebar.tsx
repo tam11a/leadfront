@@ -21,6 +21,15 @@ import { MdOutlineSettings } from "react-icons/md";
 import { TbLogout } from "react-icons/tb";
 import { MdDisplaySettings } from "react-icons/md";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+	Drawer,
+	DrawerClose,
+	DrawerContent,
+	DrawerTrigger,
+} from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function ResizableSidebar({
 	children,
@@ -35,11 +44,11 @@ export default function ResizableSidebar({
 }>) {
 	const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
 
-	function NavBar() {
+	function NavBar({ collapsed = false }: Readonly<{ collapsed?: boolean }>) {
 		return (
 			<>
 				<Nav
-					isCollapsed={isCollapsed}
+					isCollapsed={collapsed}
 					links={[
 						{
 							title: "Dashboard",
@@ -50,7 +59,7 @@ export default function ResizableSidebar({
 				/>
 				<Separator />
 				<Nav
-					isCollapsed={isCollapsed}
+					isCollapsed={collapsed}
 					links={[
 						{
 							title: "Customers",
@@ -71,7 +80,7 @@ export default function ResizableSidebar({
 				/>
 				<Separator />
 				<Nav
-					isCollapsed={isCollapsed}
+					isCollapsed={collapsed}
 					links={[
 						{
 							title: "Employees",
@@ -87,7 +96,7 @@ export default function ResizableSidebar({
 				/>
 				<Separator />
 				<Nav
-					isCollapsed={isCollapsed}
+					isCollapsed={collapsed}
 					links={[
 						{
 							title: "Configuration",
@@ -98,7 +107,7 @@ export default function ResizableSidebar({
 				/>
 				<Separator />
 				<Nav
-					isCollapsed={isCollapsed}
+					isCollapsed={collapsed}
 					links={[
 						{
 							title: "Settings",
@@ -143,22 +152,44 @@ export default function ResizableSidebar({
 					className={cn(
 						isCollapsed &&
 							"min-w-[50px] transition-all duration-300 ease-in-out",
-						"hidden md:block"
+						"hidden lg:block"
 					)}
 				>
 					<ScrollArea className="h-screen">
-						<NavBar />
+						<NavBar collapsed={isCollapsed} />
 					</ScrollArea>
 				</ResizablePanel>
 				<ResizableHandle
 					withHandle
-					className="hidden md:flex"
+					className="hidden lg:flex"
 				/>
 				<ResizablePanel
 					defaultSize={defaultLayout[1]}
 					minSize={30}
 				>
-					<ScrollArea className="h-screen">{children}</ScrollArea>
+					<ScrollArea className="h-screen">
+						<header className="inline-flex lg:hidden flex-row items-center justify-between w-full p-4">
+							<Drawer>
+								<DrawerTrigger asChild>
+									<Button
+										variant="outline"
+										size="icon"
+									>
+										<HamburgerMenuIcon />
+									</Button>
+								</DrawerTrigger>
+								<DrawerContent>
+									<DrawerClose asChild>
+										<ScrollArea className="h-full">
+											<NavBar />
+										</ScrollArea>
+									</DrawerClose>
+								</DrawerContent>
+							</Drawer>
+							<ModeToggle />
+						</header>
+						{children}
+					</ScrollArea>
 				</ResizablePanel>
 			</ResizablePanelGroup>
 		</TooltipProvider>
