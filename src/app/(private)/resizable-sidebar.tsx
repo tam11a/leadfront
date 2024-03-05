@@ -38,7 +38,7 @@ export default function ResizableSidebar({
 					defaultSize={defaultLayout[0]}
 					collapsedSize={navCollapsedSize}
 					collapsible={true}
-					minSize={15}
+					minSize={10}
 					maxSize={20}
 					onCollapse={() => {
 						setIsCollapsed(true);
@@ -54,7 +54,7 @@ export default function ResizableSidebar({
 					}}
 					className={cn(
 						isCollapsed &&
-							"min-w-[50px] transition-all duration-300 ease-in-out"
+							"min-w-[60px] transition-all duration-300 ease-in-out"
 					)}
 				>
 					<Nav
@@ -62,7 +62,6 @@ export default function ResizableSidebar({
 						links={[
 							{
 								title: "Dashboard",
-								label: "128",
 								icon: MdOutlineDashboard,
 								variant: "default",
 								href: "/dashboard",
