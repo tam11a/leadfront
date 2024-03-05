@@ -143,7 +143,7 @@ export default function ResizableSidebar({
 									title: "Settings",
 									icon: MdOutlineSettings,
 									variant: "ghost",
-									href: "/customers",
+									href: "/settings",
 								},
 							]}
 						/>
