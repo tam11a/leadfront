@@ -141,7 +141,7 @@ export default function ResizableSidebar({
 				</ResizablePanel>
 				<ResizableHandle withHandle />
 				<ResizablePanel
-					className="p-6"
+					className="p-6 h-screen !overflow-y-auto"
 					defaultSize={defaultLayout[1]}
 					minSize={30}
 				>
