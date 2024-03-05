@@ -1,7 +1,12 @@
+import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
 export default function Security() {
 	return (
 		<div>
-			<h1>Security</h1>
+			<CardHeader className="p-0">
+				<CardTitle>Security</CardTitle>
+				<CardDescription>Update your security information</CardDescription>
+			</CardHeader>
 		</div>
 	);
 }
