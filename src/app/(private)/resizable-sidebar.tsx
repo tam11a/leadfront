@@ -44,14 +44,14 @@ export default function ResizableSidebar({
 						sizes
 					)}`;
 				}}
-				className="h-full min-h-screen"
+				className="h-full min-h-screen overflow-hidden"
 			>
 				<ResizablePanel
 					defaultSize={defaultLayout[0]}
 					collapsedSize={navCollapsedSize}
 					collapsible={true}
-					minSize={10}
-					maxSize={20}
+					minSize={13}
+					maxSize={22}
 					onCollapse={() => {
 						setIsCollapsed(true);
 						document.cookie = `react-resizable-panels:collapsed=${JSON.stringify(
@@ -142,12 +142,6 @@ export default function ResizableSidebar({
 								{
 									title: "Settings",
 									icon: MdOutlineSettings,
-									variant: "ghost",
-									href: "/customers",
-								},
-								{
-									title: "Logout",
-									icon: TbLogout,
 									variant: "ghost",
 									href: "/customers",
 								},
