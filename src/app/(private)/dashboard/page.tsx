@@ -10,6 +10,7 @@ import { CalendarDateRangePicker } from "@/components/ui/date-range-picker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Overview } from "./overview";
 import { RecentSales } from "./recent-sales";
+import { MdMoreVert } from "react-icons/md";
 
 export default function Dashboard() {
 	return (
@@ -17,7 +18,14 @@ export default function Dashboard() {
 			<div className="flex-1 space-y-4 p-8 pt-6">
 				<div className="flex items-center justify-between space-y-2">
 					<h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-					<div className="flex items-center space-x-2">
+					<Button
+						size={"icon"}
+						variant={"outline"}
+						className="flex md:hidden"
+					>
+						<MdMoreVert />
+					</Button>
+					<div className="hidden md:flex items-center space-x-2">
 						<CalendarDateRangePicker />
 						<Button>Download</Button>
 					</div>
@@ -33,18 +41,6 @@ export default function Dashboard() {
 							disabled
 						>
 							Analytics
-						</TabsTrigger>
-						<TabsTrigger
-							value="reports"
-							disabled
-						>
-							Reports
-						</TabsTrigger>
-						<TabsTrigger
-							value="notifications"
-							disabled
-						>
-							Notifications
 						</TabsTrigger>
 					</TabsList>
 					<TabsContent
@@ -165,7 +161,7 @@ export default function Dashboard() {
 							</Card>
 						</div>
 						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-							<Card className="col-span-4">
+							<Card className="lg:col-span-4">
 								<CardHeader>
 									<CardTitle>Overview</CardTitle>
 								</CardHeader>
@@ -173,7 +169,7 @@ export default function Dashboard() {
 									<Overview />
 								</CardContent>
 							</Card>
-							<Card className="col-span-3">
+							<Card className="lg:col-span-3">
 								<CardHeader>
 									<CardTitle>Recent Sales</CardTitle>
 									<CardDescription>
