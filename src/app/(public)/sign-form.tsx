@@ -1,10 +1,11 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+// Form
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
+// UI
 import {
 	Form,
 	FormControl,
@@ -13,8 +14,6 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-
 import {
 	Card,
 	CardContent,
@@ -23,11 +22,22 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { useLogin } from "@/lib/actions/auth/sign-in";
-import { LuLoader2 } from "react-icons/lu";
-import handleResponse from "@/lib/handle-response";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
+// Icon
+import { LuLoader2 } from "react-icons/lu";
+
+// Actions
+import { useLogin } from "@/lib/actions/auth/sign-in";
+
+// Utils
+import handleResponse from "@/lib/handle-response";
+import { useCookies } from "next-client-cookies";
+import { useRouter } from "next/navigation";
+
+// Form Schema
 const formSchema = z.object({
 	username: z
 		.string()
@@ -43,8 +53,16 @@ const formSchema = z.object({
 });
 
 export function SignForm() {
+	// Cookies Hook
+	const cookies = useCookies();
+
+	// Router Hook
+	const router = useRouter();
+
+	// Login Hook
 	const { mutateAsync: login, isPending } = useLogin();
 
+	// Form Hook
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -54,11 +72,27 @@ export function SignForm() {
 	});
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
+		// Clearing errors
 		form.clearErrors();
+
+		// Making the request
 		const res = await handleResponse(() => login(values));
+
 		if (res.status) {
-			// Do something with the response
+			// Setting cookies
+			cookies.set("access_token", res.data.access_token);
+			cookies.set("refresh_token", res.data.refresh_token);
+
+			// Generating Toast
+			toast("Logged in successfully!", {
+				description: `Welcome back, ${res.data.username}`,
+				important: true,
+			});
+
+			// Redirect to dashboard
+			router.replace("/dashboard");
 		} else {
+			// Setting errors
 			form.setError("username", {
 				type: "validate",
 				message: "",
@@ -67,12 +101,14 @@ export function SignForm() {
 				type: "validate",
 				message: res.message,
 			});
+
+			// Generating Toast
 			toast("Request failed", {
 				description: res.message,
 				important: true,
 				action: {
 					label: "Retry",
-					onClick: () => onSubmit(values),
+					onClick: () => onSubmit(values), // Retrying the request
 				},
 			});
 		}
