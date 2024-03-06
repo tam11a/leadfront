@@ -4,6 +4,7 @@ import "./globals.css";
 import { CookiesProvider } from "next-client-cookies/server";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/provider";
+import Contexts from "./context";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -22,14 +23,16 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={cn(outfit.className, "bg-background")}>
 				<CookiesProvider>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="system"
-						enableSystem
-						disableTransitionOnChange
-					>
-						{children}
-					</ThemeProvider>
+					<Contexts>
+						<ThemeProvider
+							attribute="class"
+							defaultTheme="system"
+							enableSystem
+							disableTransitionOnChange
+						>
+							{children}
+						</ThemeProvider>
+					</Contexts>
 				</CookiesProvider>
 			</body>
 		</html>

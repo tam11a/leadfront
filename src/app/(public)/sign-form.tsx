@@ -23,17 +23,25 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { useLogin } from "@/lib/actions/auth/sign-in";
 
 const formSchema = z.object({
-	username: z.string().min(2, {
-		message: "Username must be at least 2 characters.",
-	}),
+	username: z
+		.string()
+		.min(6, {
+			message: "Username must be at least 6 characters.",
+		})
+		.max(155, {
+			message: "Username must be at most 155 characters.",
+		}),
 	password: z.string().min(6, {
 		message: "Password must be at least 6 characters.",
 	}),
 });
 
 export function SignForm() {
+	const { mutateAsync: login } = useLogin();
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -68,6 +76,7 @@ export function SignForm() {
 									<FormControl>
 										<Input
 											placeholder="John Doe"
+											autoComplete="username"
 											{...field}
 										/>
 									</FormControl>
@@ -85,6 +94,7 @@ export function SignForm() {
 										<Input
 											type="password"
 											placeholder="********"
+											autoComplete="current-password"
 											{...field}
 										/>
 									</FormControl>
