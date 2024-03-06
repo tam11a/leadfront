@@ -5,6 +5,7 @@ import { CookiesProvider } from "next-client-cookies/server";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/provider";
 import Contexts from "./context";
+import { Toaster as Sonner } from "@/components/ui/sonner"; // Toasts
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default function RootLayout({
 							disableTransitionOnChange
 						>
 							{children}
+							<Sonner /> {/* Toasts */}
 						</ThemeProvider>
 					</Contexts>
 				</CookiesProvider>

@@ -13,6 +13,14 @@ export const instance = axios.create({
 	},
 });
 
+// Add trailing slash to all requests
+instance.interceptors.request.use((config) => {
+	if (config?.url?.[config.url.length - 1] !== "/") {
+		config.url += "/";
+	}
+	return config;
+});
+
 // instance.interceptors.request.use((configuration) => {
 // 	// Check if the token exists in cookies
 // 	const token = authService.getToken();
