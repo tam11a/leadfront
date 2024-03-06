@@ -68,12 +68,12 @@ export default function ResizableSidebar({
 						{
 							title: "Properties",
 							icon: TbBuildingCommunity,
-							href: "customers",
+							href: "properties",
 						},
 						{
 							title: "Media",
 							icon: MdOutlineConnectWithoutContact,
-							href: "customers",
+							href: "medias",
 						},
 					]}
 				/>
@@ -84,12 +84,12 @@ export default function ResizableSidebar({
 						{
 							title: "Employees",
 							icon: IoIdCardOutline,
-							href: "customers",
+							href: "employees",
 						},
 						{
 							title: "Roles & Permissions",
 							icon: MdKey,
-							href: "customers",
+							href: "roles",
 						},
 					]}
 				/>
