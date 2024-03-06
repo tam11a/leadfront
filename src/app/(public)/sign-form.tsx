@@ -23,17 +23,28 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { useLogin } from "@/lib/actions/auth/sign-in";
+import { LuLoader2 } from "react-icons/lu";
+import handleResponse from "@/lib/handle-response";
+import { toast } from "sonner";
 
 const formSchema = z.object({
-	username: z.string().min(2, {
-		message: "Username must be at least 2 characters.",
-	}),
+	username: z
+		.string()
+		.min(6, {
+			message: "Username must be at least 6 characters.",
+		})
+		.max(155, {
+			message: "Username must be at most 155 characters.",
+		}),
 	password: z.string().min(6, {
 		message: "Password must be at least 6 characters.",
 	}),
 });
 
 export function SignForm() {
+	const { mutateAsync: login, isPending } = useLogin();
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -42,10 +53,29 @@ export function SignForm() {
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values);
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+		form.clearErrors();
+		const res = await handleResponse(() => login(values));
+		if (res.status) {
+			// Do something with the response
+		} else {
+			form.setError("username", {
+				type: "validate",
+				message: "",
+			});
+			form.setError("password", {
+				type: "validate",
+				message: res.message,
+			});
+			toast("Request failed", {
+				description: res.message,
+				important: true,
+				action: {
+					label: "Retry",
+					onClick: () => onSubmit(values),
+				},
+			});
+		}
 	}
 
 	return (
@@ -68,6 +98,7 @@ export function SignForm() {
 									<FormControl>
 										<Input
 											placeholder="John Doe"
+											autoComplete="username"
 											{...field}
 										/>
 									</FormControl>
@@ -85,6 +116,7 @@ export function SignForm() {
 										<Input
 											type="password"
 											placeholder="********"
+											autoComplete="current-password"
 											{...field}
 										/>
 									</FormControl>
@@ -98,8 +130,16 @@ export function SignForm() {
 							type="submit"
 							className="w-full"
 							size={"lg"}
+							disabled={isPending}
 						>
-							Sign In
+							{isPending ? (
+								<>
+									<LuLoader2 className="mr-2 h-4 w-4 animate-spin" />
+									Signing in..
+								</>
+							) : (
+								<>Sign in</>
+							)}
 						</Button>
 					</CardFooter>
 				</form>
