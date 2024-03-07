@@ -113,6 +113,12 @@ export default function ResizableSidebar({
 							icon: MdOutlineSettings,
 							href: "settings",
 						},
+						{
+							title: "Logout",
+							icon: MdOutlineSettings,
+							href: "logout",
+							variant: "destructive",
+						},
 					]}
 				/>
 			</>

@@ -47,9 +47,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
 									className={cn(
 										buttonVariants({
 											variant:
-												link.variant || pathname?.split("/")[1] === link.href
+												link.variant ||
+												(pathname?.split("/")[1] === link.href
 													? "default"
-													: "ghost",
+													: "ghost"),
 											size: "icon",
 										}),
 										"h-9 w-9"
@@ -80,9 +81,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
 							className={cn(
 								buttonVariants({
 									variant:
-										link.variant || pathname?.split("/")[1] === link.href
+										link.variant ||
+										(pathname?.split("/")[1] === link.href
 											? "default"
-											: "ghost",
+											: "ghost"),
 									size: "default",
 								}),
 								// link.variant === "default" &&

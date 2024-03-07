@@ -1,6 +1,7 @@
 // Axios
 import axios from "axios";
 import config from "../config";
+import { authService } from "../auth.service";
 
 // Configuring root url
 export const rootURL: string | undefined = config.apiURL;
@@ -21,17 +22,17 @@ instance.interceptors.request.use((config) => {
 	return config;
 });
 
-// instance.interceptors.request.use((configuration) => {
-// 	// Check if the token exists in cookies
-// 	const token = authService.getToken();
+instance.interceptors.request.use((configuration) => {
+	// Check if the token exists in cookies
+	const token = authService.getToken();
 
-// 	if (token) {
-// 		configuration.headers.Authorization = `Bearer ${token}`;
-// 	}
+	if (token) {
+		configuration.headers.Authorization = token;
+	}
 
-// 	configuration.headers.set("x-api-key", crypto?.encryptKey?.(config.xApiKey));
+	// configuration.headers.set("x-api-key", crypto?.encryptKey?.(config.xApiKey));
 
-// 	return configuration;
-// });
+	return configuration;
+});
 
 export default instance;
