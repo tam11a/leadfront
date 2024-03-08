@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import useUser from "@/hooks/useUser";
+import { toast } from "@/components/ui/use-toast";
 
 const passwordChangeFormSchema = z
 	.object({
@@ -56,6 +57,10 @@ const passwordChangeFormSchema = z
 	.refine((data) => data.new_password === data.confirm_password, {
 		message: "Passwords do not match.",
 		path: ["confirm_password"],
+	})
+	.refine((data) => data.old_password !== data.new_password, {
+		message: "New password must be different from the old password.",
+		path: ["new_password"],
 	});
 
 type PasswordChangeFormValues = z.infer<typeof passwordChangeFormSchema>;
@@ -76,14 +81,14 @@ export function PasswordChangeForm() {
 
 	function onSubmit(data: PasswordChangeFormValues) {
 		console.log(data);
-		// toast({
-		//   title: "You submitted the following values:",
-		//   description: (
-		//     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-		//       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-		//     </pre>
-		//   ),
-		// })
+		toast({
+			title: "You submitted the following values:",
+			description: (
+				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+					<code className="text-white">{JSON.stringify(data, null, 2)}</code>
+				</pre>
+			),
+		});
 	}
 
 	return (
@@ -92,6 +97,29 @@ export function PasswordChangeForm() {
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="space-y-6"
 			>
+				<FormField
+					control={form.control}
+					name="username"
+					render={({ field }) => (
+						<FormItem className="hidden">
+							<FormLabel>Username</FormLabel>
+							<FormControl>
+								<Input
+									placeholder="John Doe"
+									autoComplete="username"
+									readOnly
+									disabled
+									{...field}
+								/>
+							</FormControl>
+							<FormDescription>
+								Your username is how other people on the platform will see you.
+							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
 				<FormField
 					control={form.control}
 					name="old_password"

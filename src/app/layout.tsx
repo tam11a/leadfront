@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/provider";
 import Contexts from "./context";
 import { Toaster as Sonner } from "@/components/ui/sonner"; // Toasts
+import { Toaster } from "@/components/ui/toaster";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -33,6 +34,7 @@ export default function RootLayout({
 						>
 							{children}
 							<Sonner /> {/* Toasts */}
+							<Toaster />
 						</ThemeProvider>
 					</Contexts>
 				</CookiesProvider>
