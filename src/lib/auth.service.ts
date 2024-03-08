@@ -22,7 +22,7 @@ export class AuthService {
 	}
 
 	removeToken() {
-		destroyCookie(this.ctx, "token", {
+		destroyCookie(this.ctx, "access_token", {
 			path: "/",
 		});
 		this.listners.forEach((listner) => listner(null));

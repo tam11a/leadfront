@@ -2,6 +2,7 @@ import { ModeToggle } from "@/components/ui/mode-toggle";
 import ResizableSidebar from "./resizable-sidebar";
 import { cookies } from "next/headers";
 import { RedirectType, redirect } from "next/navigation";
+import TokenValidationChecker from "./token-validation-checker";
 
 export default function PrivateLayout({
 	children,
@@ -20,7 +21,7 @@ export default function PrivateLayout({
 	const defaultLayout = layout ? JSON.parse(layout.value) : undefined;
 	const defaultCollapsed = collapsed ? JSON.parse(collapsed.value) : undefined;
 	return (
-		<>
+		<TokenValidationChecker>
 			<ResizableSidebar
 				defaultLayout={defaultLayout}
 				defaultCollapsed={defaultCollapsed}
@@ -35,6 +36,6 @@ export default function PrivateLayout({
 					<ModeToggle />
 				</div>
 			</ResizableSidebar>
-		</>
+		</TokenValidationChecker>
 	);
 }
