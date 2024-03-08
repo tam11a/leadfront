@@ -9,16 +9,6 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Nav } from "./nav";
 import { Separator } from "@/components/ui/separator";
-
-// Icons
-import { MdOutlineDashboard } from "react-icons/md";
-import { FaPeopleGroup } from "react-icons/fa6";
-import { TbBuildingCommunity } from "react-icons/tb";
-import { MdOutlineConnectWithoutContact } from "react-icons/md";
-import { IoIdCardOutline } from "react-icons/io5";
-import { MdKey } from "react-icons/md";
-import { MdOutlineSettings } from "react-icons/md";
-import { MdDisplaySettings } from "react-icons/md";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
 	Drawer,
@@ -27,8 +17,19 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+
+// Icons
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { MdOutlineDashboard } from "react-icons/md";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { TbBuildingCommunity } from "react-icons/tb";
+import { MdOutlineConnectWithoutContact } from "react-icons/md";
+import { IoIdCardOutline } from "react-icons/io5";
+import { MdKey } from "react-icons/md";
+import { MdOutlineSettings } from "react-icons/md";
+import { MdDisplaySettings } from "react-icons/md";
+import { PiSignOutBold } from "react-icons/pi";
 
 export default function ResizableSidebar({
 	children,
@@ -115,7 +116,7 @@ export default function ResizableSidebar({
 						},
 						{
 							title: "Logout",
-							icon: MdOutlineSettings,
+							icon: PiSignOutBold,
 							href: "logout",
 							variant: "destructive",
 						},
