@@ -1,16 +1,14 @@
-"use client";
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useCurrentUser } from "@/lib/actions/auth/current_user";
+import { ProfileForm } from "./profile-form";
 
 export default function Settings() {
-	const { data } = useCurrentUser();
-	console.log(data);
 	return (
-		<div>
+		<div className="space-y-8">
 			<CardHeader className="p-0">
 				<CardTitle>Profile</CardTitle>
 				<CardDescription>Update your profile information</CardDescription>
 			</CardHeader>
+			<ProfileForm />
 		</div>
 	);
 }
