@@ -159,7 +159,7 @@ export default function ResizableSidebar({
 					className={cn(
 						isCollapsed &&
 							"min-w-[50px] transition-all duration-300 ease-in-out",
-						"hidden lg:block"
+						"hidden min-w-min lg:block"
 					)}
 				>
 					<ScrollArea className="h-screen">

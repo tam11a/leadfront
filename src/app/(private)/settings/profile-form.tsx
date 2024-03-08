@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 
 import useUser from "@/hooks/useUser";
 import { toast } from "@/components/ui/use-toast";
+import Link from "next/link";
 
 const profileFormSchema = z.object({
 	username: z
@@ -155,7 +156,15 @@ export function ProfileForm() {
 					<FormMessage />
 				</FormItem>
 
-				<Button type="submit">Update profile</Button>
+				<div className="flex flex-row flex-wrap gap-3">
+					<Button type="submit">Update profile</Button>
+					<Link
+						href={"/logout"}
+						replace
+					>
+						<Button variant={"destructive"}>Logout</Button>
+					</Link>
+				</div>
 			</form>
 		</Form>
 	);
