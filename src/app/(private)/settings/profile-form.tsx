@@ -78,27 +78,6 @@ export function ProfileForm() {
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="space-y-6"
 			>
-				<FormField
-					control={form.control}
-					name="username"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Username</FormLabel>
-							<FormControl>
-								<Input
-									placeholder="John Doe"
-									{...field}
-								/>
-							</FormControl>
-							<FormDescription>
-								This is your public display name. It can be your real name or a
-								pseudonym.
-							</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-
 				<div className="flex flex-col md:flex-row gap-4">
 					<FormField
 						control={form.control}
@@ -136,6 +115,27 @@ export function ProfileForm() {
 						)}
 					/>
 				</div>
+
+				<FormField
+					control={form.control}
+					name="username"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Username</FormLabel>
+							<FormControl>
+								<Input
+									placeholder="John Doe"
+									{...field}
+								/>
+							</FormControl>
+							<FormDescription>
+								This is your public display name. It can be your real name or a
+								pseudonym.
+							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 
 				<FormItem>
 					<FormLabel>Email</FormLabel>
