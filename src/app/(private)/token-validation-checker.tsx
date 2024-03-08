@@ -5,7 +5,7 @@ import useUser from "@/hooks/useUser";
 import { authService } from "@/lib/auth.service";
 import { useRouter } from "next/navigation";
 
-const Loading = () => {
+export const Loading = () => {
 	return (
 		<div className="h-svh w-svw max-w-xs mx-auto flex flex-col items-center justify-center space-y-3">
 			{/* <Skeleton className="h-[125px] w-[250px] rounded-xl" />

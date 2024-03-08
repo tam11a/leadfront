@@ -23,7 +23,8 @@ interface NavProps {
 			| "secondary"
 			| "ghost"
 			| "link";
-		href: string;
+		href?: string;
+		replace?: boolean;
 	}[];
 }
 

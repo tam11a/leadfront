@@ -119,6 +119,7 @@ export default function ResizableSidebar({
 							icon: PiSignOutBold,
 							href: "logout",
 							variant: "destructive",
+							replace: true,
 						},
 					]}
 				/>
