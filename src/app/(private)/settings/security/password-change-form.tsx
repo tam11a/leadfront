@@ -17,7 +17,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import useUser from "@/hooks/useUser";
-import { toast } from "@/components/ui/use-toast";
+import { usePasswordChange } from "@/lib/actions/auth/password-change";
+import { LuLoader2 } from "react-icons/lu";
+import handleResponse from "@/lib/handle-response";
+import { toast } from "sonner";
 
 const passwordChangeFormSchema = z
 	.object({
@@ -67,6 +70,7 @@ type PasswordChangeFormValues = z.infer<typeof passwordChangeFormSchema>;
 
 export function PasswordChangeForm() {
 	const { access } = useUser();
+	const { mutateAsync: change, isPending } = usePasswordChange();
 
 	const form = useForm<PasswordChangeFormValues>({
 		resolver: zodResolver(passwordChangeFormSchema),
@@ -79,16 +83,26 @@ export function PasswordChangeForm() {
 		mode: "onChange",
 	});
 
-	function onSubmit(data: PasswordChangeFormValues) {
-		console.log(data);
-		toast({
-			title: "You submitted the following values:",
-			description: (
-				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-					<code className="text-white">{JSON.stringify(data, null, 2)}</code>
-				</pre>
-			),
-		});
+	async function onSubmit(data: PasswordChangeFormValues) {
+		const res = await handleResponse(() => change(data));
+
+		if (res.status) {
+			toast("Password updated successfully!", {
+				closeButton: true,
+				important: true,
+			});
+		} else {
+			form.setError("old_password", {
+				type: "validate",
+				message: res.message,
+			});
+			toast("Failed to update password!", {
+				description: res.message,
+				important: true,
+			});
+		}
+
+		form.reset();
 	}
 
 	return (
@@ -186,7 +200,19 @@ export function PasswordChangeForm() {
 					)}
 				/>
 
-				<Button type="submit">Update password</Button>
+				<Button
+					type="submit"
+					disabled={isPending}
+				>
+					{isPending ? (
+						<>
+							<LuLoader2 className="mr-2 h-4 w-4 animate-spin" />
+							Updating..
+						</>
+					) : (
+						<>Update password</>
+					)}
+				</Button>
 			</form>
 		</Form>
 	);
