@@ -36,7 +36,7 @@ export default function BusinessAreasList() {
 				/>
 				<CreateSheet />
 			</div>
-			<div className="max-w-md space-y-3">
+			<div className="max-w-xl space-y-3">
 				{isLoading ? (
 					<>
 						<Skeleton className="h-24 w-full rounded-lg" />
@@ -59,7 +59,7 @@ export default function BusinessAreasList() {
 										Last Updated {moment(area.updated_at).format("ll")}
 									</CardDescription>
 								</CardHeader>
-								<CardFooter className="flex flex-row items-center gap-1">
+								<CardFooter className="flex flex-row items-center gap-1 p-6">
 									<UpdateSheet data={area} />
 									<Button
 										variant={"outline"}
