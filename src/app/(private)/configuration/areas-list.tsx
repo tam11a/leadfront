@@ -39,9 +39,10 @@ export default function BusinessAreasList() {
 			<div className="max-w-xl space-y-3">
 				{isLoading ? (
 					<>
-						<Skeleton className="h-24 w-full rounded-lg" />
-						<Skeleton className="h-24 w-full rounded-lg" />
-						<Skeleton className="h-24 w-full rounded-lg" />
+						<Skeleton className="h-24 w-full rounded-2xl" />
+						<Skeleton className="h-24 w-full rounded-2xl" />
+						<Skeleton className="h-24 w-full rounded-2xl" />
+						<Skeleton className="h-24 w-full rounded-2xl" />
 					</>
 				) : (
 					<>
