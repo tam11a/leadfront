@@ -36,6 +36,7 @@ import { useLogin } from "@/lib/actions/auth/sign-in";
 import handleResponse from "@/lib/handle-response";
 import { useCookies } from "next-client-cookies";
 import { useRouter } from "next/navigation";
+import { authService } from "@/lib/auth.service";
 
 // Form Schema
 const formSchema = z.object({
@@ -80,7 +81,8 @@ export function SignForm() {
 
 		if (res.status) {
 			// Setting cookies
-			cookies.set("access_token", res.data.access_token);
+
+			authService.setToken(res.data.access_token);
 			cookies.set("refresh_token", res.data.refresh_token);
 
 			// Generating Toast
