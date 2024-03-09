@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import CustomerTable from "./table";
+import EmployeeTable from "./table";
 
 export default function Customers() {
 	return (
@@ -13,7 +13,7 @@ export default function Customers() {
 			<Separator />
 
 			<div className="px-9">
-				<CustomerTable />
+				<EmployeeTable />
 			</div>
 		</div>
 	);

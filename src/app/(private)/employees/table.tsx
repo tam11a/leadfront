@@ -3,8 +3,8 @@
 import * as React from "react";
 import {
 	CaretSortIcon,
-	ChevronDownIcon,
 	DotsHorizontalIcon,
+	MixerHorizontalIcon,
 } from "@radix-ui/react-icons";
 import {
 	ColumnDef,
@@ -39,26 +39,35 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useEmployees } from "@/lib/actions/employees/users";
 import { Badge } from "@/components/ui/badge";
 
 export interface Employee {
 	id: number;
-	password: string;
-	last_login?: null;
-	username: string;
-	email: string;
 	first_name: string;
 	last_name: string;
-	role: string;
-	is_staff: boolean;
-	is_superuser: boolean;
-	is_verified: boolean;
-	is_admin: boolean;
+	employee_uid: string;
+	gender: string;
+	email: string;
+	phone: string;
+	dob: string;
+	work_hour: number;
+	salary: number;
+	bank_name?: string;
+	bank_branch?: string;
+	bank_account_number?: number;
+	bank_routing_number?: number;
+	address: string;
+	address2?: null;
+	zip_code: number;
+	nid: number;
+	tin?: number;
 	is_active: boolean;
-	groups?: null[] | null;
-	user_permissions?: null[] | null;
+	created_at: string;
+	updated_at: string;
+	deleted_at: string;
+	user_id?: number;
 }
 
 export const columns: ColumnDef<Employee>[] = [
@@ -70,25 +79,45 @@ export const columns: ColumnDef<Employee>[] = [
 		cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
 	},
 	{
-		accessorKey: "username",
-		header: ({ column }) => {
-			return (
-				<Button
-					variant="ghost"
-					className="w-full"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-				>
-					Username
-					<CaretSortIcon className="ml-2 h-4 w-4" />
-				</Button>
-			);
+		accessorKey: "employee_uid",
+		header: () => {
+			return <div className="mx-4">Employee UID</div>;
 		},
 		cell: ({ row }) => (
-			<>
-				<div className="lowercase text-center">{row.getValue("username")}</div>
-			</>
+			<div className="mx-4">{row.getValue("employee_uid")}</div>
 		),
 	},
+	{
+		id: "full_name",
+		accessorKey: "full_name",
+		header: () => {
+			return <div className="mx-4">Full Name</div>;
+		},
+		cell: ({ row }) => (
+			<div className="mx-4">
+				{row.original.first_name} {row.original.last_name}{" "}
+				{!row.original.user_id && (
+					<>
+						<Button
+							variant={"link"}
+							size={"sm"}
+						>
+							Create Access
+						</Button>
+					</>
+				)}
+			</div>
+		),
+	},
+
+	{
+		accessorKey: "phone",
+		header: () => {
+			return <div className="mx-4">Phone</div>;
+		},
+		cell: ({ row }) => <div className="mx-4">{row.getValue("phone")}</div>,
+	},
+
 	{
 		accessorKey: "email",
 		header: ({ column }) => {
@@ -107,6 +136,29 @@ export const columns: ColumnDef<Employee>[] = [
 				<div className="lowercase">{row.getValue("email")}</div>
 			</>
 		),
+	},
+	{
+		accessorKey: "created_at",
+		header: () => {
+			return <div className="mx-4">Created At</div>;
+		},
+		cell: ({ row }) => <div className="mx-4">{row.getValue("created_at")}</div>,
+	},
+	{
+		accessorKey: "is_active",
+		header: () => {
+			return <div className="mx-4">Status</div>;
+		},
+		cell: ({ row }) => {
+			const isActive = row.getValue("is_active");
+			return (
+				<div className="mx-4">
+					<Badge variant={isActive ? "secondary" : "destructive"}>
+						{isActive ? "Active" : "Inactive"}
+					</Badge>
+				</div>
+			);
+		},
 	},
 	{
 		id: "actions",
@@ -130,8 +182,8 @@ export const columns: ColumnDef<Employee>[] = [
 						<DropdownMenuItem
 							onClick={() =>
 								navigator.clipboard.writeText(
-									`ID: ${employee.id?.toString()}\nUsername: ${
-										employee.username
+									`ID: ${employee.id?.toString()}\nPhone: ${
+										employee.phone
 									}\nEmail: ${employee.email}`
 								)
 							}
@@ -149,7 +201,7 @@ export const columns: ColumnDef<Employee>[] = [
 	},
 ];
 
-export default function CustomerTable() {
+export default function EmployeeTable() {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
 		[]
@@ -177,29 +229,37 @@ export default function CustomerTable() {
 	});
 
 	return (
-		<div className="w-full">
+		<div className="w-full max-w-[85vw] lg:max-w-[70vw] mx-auto relative">
 			<div className="flex items-center flex-row gap-2 py-4">
 				<Input
-					placeholder="Filter username..."
-					// value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-					// onChange={(event) =>
-					// 	table.getColumn("email")?.setFilterValue(event.target.value)
-					// }
+					placeholder="Filter email..."
+					value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+					onChange={(event) =>
+						table.getColumn("email")?.setFilterValue(event.target.value)
+					}
 					className="max-w-sm"
 				/>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button
 							variant="outline"
-							className="ml-auto"
+							size="sm"
+							className="ml-auto hidden h-8 lg:flex"
 						>
-							Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+							<MixerHorizontalIcon className="mr-2 h-4 w-4" />
+							View
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
+						<DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+						<DropdownMenuSeparator />
 						{table
 							.getAllColumns()
-							.filter((column) => column.getCanHide())
+							.filter(
+								(column) =>
+									typeof column.accessorFn !== "undefined" &&
+									column.getCanHide()
+							)
 							.map((column) => {
 								return (
 									<DropdownMenuCheckboxItem
@@ -210,89 +270,65 @@ export default function CustomerTable() {
 											column.toggleVisibility(!!value)
 										}
 									>
-										{column.id}
+										{column.id.split("_").join(" ")}
 									</DropdownMenuCheckboxItem>
 								);
 							})}
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</div>
-			<div className="rounded-md border">
-				<ScrollArea>
-					<Table>
-						<TableHeader>
-							{table.getHeaderGroups().map((headerGroup) => (
-								<TableRow key={headerGroup.id}>
-									{headerGroup.headers.map((header) => {
-										return (
-											<TableHead key={header.id}>
-												{header.isPlaceholder
-													? null
-													: flexRender(
-															header.column.columnDef.header,
-															header.getContext()
-													  )}
-											</TableHead>
-										);
-									})}
+
+			<ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
+				<Table className="w-full">
+					<TableHeader>
+						{table.getHeaderGroups().map((headerGroup) => (
+							<TableRow key={headerGroup.id}>
+								{headerGroup.headers.map((header) => {
+									return (
+										<TableHead key={header.id}>
+											{header.isPlaceholder
+												? null
+												: flexRender(
+														header.column.columnDef.header,
+														header.getContext()
+												  )}
+										</TableHead>
+									);
+								})}
+							</TableRow>
+						))}
+					</TableHeader>
+					<TableBody>
+						{table.getRowModel().rows?.length ? (
+							table.getRowModel().rows.map((row) => (
+								<TableRow
+									key={row.id}
+									data-state={row.getIsSelected() && "selected"}
+								>
+									{row.getVisibleCells().map((cell) => (
+										<TableCell key={cell.id}>
+											{flexRender(
+												cell.column.columnDef.cell,
+												cell.getContext()
+											)}
+										</TableCell>
+									))}
 								</TableRow>
-							))}
-						</TableHeader>
-						<TableBody>
-							{table.getRowModel().rows?.length ? (
-								table.getRowModel().rows.map((row) => (
-									<TableRow
-										key={row.id}
-										data-state={row.getIsSelected() && "selected"}
-									>
-										{row.getVisibleCells().map((cell) => (
-											<TableCell key={cell.id}>
-												{flexRender(
-													cell.column.columnDef.cell,
-													cell.getContext()
-												)}
-											</TableCell>
-										))}
-									</TableRow>
-								))
-							) : (
-								<TableRow>
-									<TableCell
-										colSpan={columns.length}
-										className="h-24 text-center"
-									>
-										No results.
-									</TableCell>
-								</TableRow>
-							)}
-						</TableBody>
-					</Table>
-				</ScrollArea>
-			</div>
-			<div className="flex items-center justify-end space-x-2 py-4">
-				<div className="flex-1 text-sm text-muted-foreground">
-					{table.getFilteredSelectedRowModel().rows.length} of{" "}
-					{table.getFilteredRowModel().rows.length} page(s).
-				</div>
-				<div className="space-x-2">
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => table.previousPage()}
-						disabled={!table.getCanPreviousPage()}
-					>
-						Previous
-					</Button>
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => table.nextPage()}
-						disabled={!table.getCanNextPage()}
-					>
-						Next
-					</Button>
-				</div>
-			</div>
+							))
+						) : (
+							<TableRow>
+								<TableCell
+									colSpan={columns.length}
+									className="h-24 text-center"
+								>
+									No results.
+								</TableCell>
+							</TableRow>
+						)}
+					</TableBody>
+				</Table>
+				<ScrollBar orientation="horizontal" />
+			</ScrollArea>
 		</div>
 	);
 }

@@ -5,7 +5,7 @@ export const useEmployees = () => {
 	return useQuery({
 		queryKey: ["get-employees"],
 		queryFn: () => {
-			return instance.get("/auth/users");
+			return instance.get("/crm-employees");
 		},
 	});
 };
