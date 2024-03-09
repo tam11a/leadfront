@@ -45,6 +45,7 @@ export function UpdateSheet({ data }: { data: any }) {
 				<Input
 					id="name"
 					value={data.area_name}
+					readOnly
 					placeholder="Dhaka, Chittagong, etc."
 					className="my-3"
 				/>

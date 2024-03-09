@@ -3,15 +3,27 @@ import { SidebarNav } from "./sidebar-nav";
 
 const sidebarNavItems = [
 	{
-		title: "Areas",
+		title: (
+			<span>
+				<span className="hidden md:inline">Business</span> Areas
+			</span>
+		),
 		href: "/configuration",
 	},
 	{
-		title: "Types",
+		title: (
+			<span>
+				<span className="hidden md:inline">Property</span> Types
+			</span>
+		),
 		href: "/configuration/types",
 	},
 	{
-		title: "Units",
+		title: (
+			<span>
+				<span className="hidden md:inline">Property Measurement</span> Units
+			</span>
+		),
 		href: "/configuration/units",
 	},
 ];

@@ -9,7 +9,7 @@ import { buttonVariants } from "@/components/ui/button";
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
 	items: {
 		href: string;
-		title: string;
+		title: string | React.ReactNode;
 	}[];
 }
 
