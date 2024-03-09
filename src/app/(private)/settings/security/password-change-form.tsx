@@ -66,12 +66,12 @@ const passwordChangeFormSchema = z
 type PasswordChangeFormValues = z.infer<typeof passwordChangeFormSchema>;
 
 export function PasswordChangeForm() {
-	const { user } = useUser();
+	const { access } = useUser();
 
 	const form = useForm<PasswordChangeFormValues>({
 		resolver: zodResolver(passwordChangeFormSchema),
 		defaultValues: {
-			username: user?.data?.username,
+			username: access?.data?.username,
 			old_password: "",
 			new_password: "",
 			confirm_password: "",
