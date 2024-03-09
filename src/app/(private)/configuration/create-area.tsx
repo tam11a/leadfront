@@ -20,9 +20,12 @@ import {
 	SheetHeader,
 	SheetTitle,
 } from "@/components/ui/sheet";
+import { useCreateArea } from "@/lib/actions/configuration/areas/post-area";
+import handleResponse from "@/lib/handle-response";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const CreateAreaSchema = z.object({
@@ -40,6 +43,8 @@ type CreateAreaValues = z.infer<typeof CreateAreaSchema>;
 export function CreateSheet() {
 	const [open, setOpen] = useState(false);
 
+	const { mutateAsync: create, isPending } = useCreateArea();
+
 	const form = useForm<CreateAreaValues>({
 		resolver: zodResolver(CreateAreaSchema),
 		defaultValues: {
@@ -49,7 +54,45 @@ export function CreateSheet() {
 	});
 
 	async function onSubmit(data: CreateAreaValues) {
-		console.log(data);
+		form.clearErrors();
+		const res = await handleResponse(() => create(data), [201]);
+		if (res.status) {
+			toast("Added!", {
+				description: `Business area has been created successfully.`,
+				closeButton: true,
+				important: true,
+			});
+			form.reset();
+			setOpen(false);
+		} else {
+			if (typeof res.data === "object") {
+				Object.entries(res.data).forEach(([key, value]) => {
+					form.setError(key as keyof CreateAreaValues, {
+						type: "validate",
+						message: value as string,
+					});
+				});
+				toast("Error!", {
+					description: `There was an error creating business area. Please try again.`,
+					important: true,
+					closeButton: true,
+					action: {
+						label: "Retry",
+						onClick: () => onSubmit(data),
+					},
+				});
+			} else {
+				toast("Error!", {
+					description: res.message,
+					important: true,
+					closeButton: true,
+					action: {
+						label: "Retry",
+						onClick: () => onSubmit(data),
+					},
+				});
+			}
+		}
 	}
 
 	return (
@@ -91,7 +134,12 @@ export function CreateSheet() {
 							<SheetClose asChild>
 								<Button variant={"ghost"}>Cancel</Button>
 							</SheetClose>
-							<Button type="submit">Save</Button>
+							<Button
+								type="submit"
+								disabled={isPending}
+							>
+								Save
+							</Button>
 						</SheetFooter>
 					</form>
 				</Form>

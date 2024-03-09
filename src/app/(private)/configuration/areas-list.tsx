@@ -16,9 +16,12 @@ import moment from "moment";
 import { MdOutlineDelete } from "react-icons/md";
 import { CreateSheet } from "./create-area";
 import { UpdateSheet } from "./update-area";
+import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function BusinessAreasList() {
-	const { data, isLoading, isError, error } = useGetAreas();
+	const [search, setSearch] = useState("");
+	const { data, isLoading, isError, error } = useGetAreas(search);
 
 	if (isError) throw new Error(error.message);
 
@@ -28,12 +31,18 @@ export default function BusinessAreasList() {
 				<Input
 					placeholder="Filter area..."
 					className="flex-1"
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
 				/>
 				<CreateSheet />
 			</div>
 			<div className="max-w-md space-y-3">
 				{isLoading ? (
-					<div>Loading...</div>
+					<>
+						<Skeleton className="h-24 w-full rounded-lg" />
+						<Skeleton className="h-24 w-full rounded-lg" />
+						<Skeleton className="h-24 w-full rounded-lg" />
+					</>
 				) : (
 					<>
 						{data?.data.map((area: any) => (
@@ -42,9 +51,12 @@ export default function BusinessAreasList() {
 								className="flex flex-row gap-3 items-center "
 							>
 								<CardHeader className="flex-1">
-									<CardTitle>{area.area_name}</CardTitle>
+									<CardTitle>
+										<span className="text-primary mr-1">{area.id}.</span>{" "}
+										{area.area_name}
+									</CardTitle>
 									<CardDescription className="text-xs">
-										Created {moment(area.created_at).format("ll")}
+										Last Updated {moment(area.updated_at).format("ll")}
 									</CardDescription>
 								</CardHeader>
 								<CardFooter className="flex flex-row items-center gap-1">
@@ -52,6 +64,7 @@ export default function BusinessAreasList() {
 									<Button
 										variant={"outline"}
 										size={"icon"}
+										className="text-destructive"
 									>
 										<MdOutlineDelete />
 									</Button>
