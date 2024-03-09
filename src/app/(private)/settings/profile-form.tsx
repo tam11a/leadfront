@@ -19,16 +19,16 @@ import { Button } from "@/components/ui/button";
 import useUser from "@/hooks/useUser";
 import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 const profileFormSchema = z.object({
-	username: z
-		.string()
-		.min(2, {
-			message: "Username must be at least 2 characters.",
-		})
-		.max(30, {
-			message: "Username must not be longer than 30 characters.",
-		}),
 	first_name: z
 		.string()
 		.min(2, {
@@ -45,6 +45,25 @@ const profileFormSchema = z.object({
 		.max(30, {
 			message: "Last name must not be longer than 30 characters.",
 		}),
+	phone: z
+		.string()
+		.min(10, {
+			message: "Phone number must be at least 10 characters.",
+		})
+		.max(15, {
+			message: "Phone number must not be longer than 15 characters.",
+		}),
+	nid: z.number().int().min(10, { message: "NID must be at least 10 digits." }),
+	gender: z.enum(["Male", "Female", "Non Binary"]),
+	address: z
+		.string()
+		.min(10, {
+			message: "Address must be at least 10 characters.",
+		})
+		.max(100, {
+			message: "Address must not be longer than 100 characters.",
+		}),
+	address2: z.string().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -52,12 +71,18 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 export function ProfileForm() {
 	const { user } = useUser();
 
+	console.log(user);
+
 	const form = useForm<ProfileFormValues>({
 		resolver: zodResolver(profileFormSchema),
 		defaultValues: {
-			username: user?.data?.username,
 			first_name: user?.data?.first_name,
 			last_name: user?.data?.last_name,
+			phone: user?.data?.phone,
+			nid: user?.data?.nid,
+			address: user?.data?.address,
+			address2: user?.data?.address2,
+			gender: user?.data?.gender,
 		},
 		mode: "onChange",
 	});
@@ -118,44 +143,140 @@ export function ProfileForm() {
 					/>
 				</div>
 
-				<FormField
-					control={form.control}
-					name="username"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Username</FormLabel>
-							<FormControl>
-								<Input
-									placeholder="John Doe"
-									{...field}
-								/>
-							</FormControl>
-							<FormDescription>
-								This is your public display name. It can be your real name or a
-								pseudonym.
-							</FormDescription>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+				<div className="flex flex-col md:flex-row gap-4">
+					<FormField
+						control={form.control}
+						name="phone"
+						render={({ field }) => (
+							<FormItem className="flex-1">
+								<FormLabel>Phone</FormLabel>
+								<FormControl>
+									<Input
+										placeholder="013*******"
+										{...field}
+									/>
+								</FormControl>
+								<FormDescription>
+									This is your phone number. It must be a valid Bangladeshi
+									phone number.
+								</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
-				<FormItem>
-					<FormLabel>Email</FormLabel>
-					<FormControl>
-						<Input
-							placeholder="example@email.com"
-							type="email"
-							value={user?.data?.email}
-							readOnly
-						/>
-					</FormControl>
-					<FormDescription>
-						This is your verified email address. You can&apos;t change it here.
-						If you need to change it, please contact administrator.
-					</FormDescription>
-					<FormMessage />
-				</FormItem>
+					<FormField
+						control={form.control}
+						name="nid"
+						render={({ field }) => (
+							<FormItem className="flex-1">
+								<FormLabel>NID Card Number</FormLabel>
+								<FormControl>
+									<Input
+										placeholder="*******"
+										{...field}
+									/>
+								</FormControl>
+								<FormDescription>
+									This is your National Identification Number.
+								</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
+				<div className="flex flex-col md:flex-row gap-4">
+					<FormField
+						control={form.control}
+						name="gender"
+						render={({ field }) => (
+							<FormItem className="flex-1">
+								<FormLabel>Gender</FormLabel>
+								<Select
+									onValueChange={field.onChange}
+									defaultValue={field.value}
+								>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue placeholder="Select a gender" />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										<SelectItem value="Male">Male (He/Him)</SelectItem>
+										<SelectItem value="Female">Female (She/Her)</SelectItem>
+										<SelectItem value="Non Binary">Others</SelectItem>
+									</SelectContent>
+								</Select>
+								<FormDescription>This is your gender identity.</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 
+					<FormItem className="flex-1">
+						<FormLabel>Email</FormLabel>
+						<FormControl>
+							<Input
+								placeholder="example@email.com"
+								type="email"
+								value={user?.data?.email}
+								readOnly
+							/>
+						</FormControl>
+						<FormDescription>
+							This is your verified email address. You can&apos;t change it
+							here. If you need to change it, please contact administrator.
+						</FormDescription>
+						<FormMessage />
+					</FormItem>
+				</div>
+
+				<div className="flex flex-col md:flex-row gap-4">
+					<FormField
+						control={form.control}
+						name="address"
+						render={({ field }) => (
+							<FormItem className="flex-1">
+								<FormLabel>Address Line 1</FormLabel>
+								<FormControl>
+									<Textarea
+										rows={5}
+										placeholder="1234 Main St, City, Country"
+										className="resize-none"
+										{...field}
+									/>
+								</FormControl>
+								<FormDescription>
+									This is your primary address. It must be a valid address.
+								</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
+						name="address2"
+						render={({ field }) => (
+							<FormItem className="flex-1">
+								<FormLabel>Address Line 2 </FormLabel>
+								<FormControl>
+									<Textarea
+										rows={5}
+										placeholder="1234 Main St, City, Country"
+										className="resize-none"
+										{...field}
+									/>
+								</FormControl>
+								<FormDescription>
+									This is your secondary address. It is optional. If you enter
+									any address it must be a valid address.
+								</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
 				<div className="flex flex-row flex-wrap gap-3">
 					<Button type="submit">Update profile</Button>
 					<Link
