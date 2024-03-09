@@ -71,13 +71,13 @@ export interface Employee {
 }
 
 export const columns: ColumnDef<Employee>[] = [
-	{
-		accessorKey: "id",
-		header: () => {
-			return <div className="mx-4">Id</div>;
-		},
-		cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
-	},
+	// {
+	// 	accessorKey: "id",
+	// 	header: () => {
+	// 		return <div className="mx-4">Id</div>;
+	// 	},
+	// 	cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
+	// },
 	{
 		accessorKey: "employee_uid",
 		header: () => {
@@ -243,11 +243,10 @@ export default function EmployeeTable() {
 					<DropdownMenuTrigger asChild>
 						<Button
 							variant="outline"
-							size="sm"
-							className="ml-auto hidden h-8 lg:flex"
+							className="ml-auto flex"
 						>
-							<MixerHorizontalIcon className="mr-2 h-4 w-4" />
 							View
+							<MixerHorizontalIcon className="ml-2 h-4 w-4" />
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
