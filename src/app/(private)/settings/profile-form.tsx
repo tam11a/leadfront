@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import useUser from "@/hooks/useUser";
-import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import {
 	Select,
@@ -27,6 +26,10 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useUpdateEmployee } from "@/lib/actions/employees/patch-by-id";
+import { LuLoader2 } from "react-icons/lu";
+import handleResponse from "@/lib/handle-response";
+import { toast } from "sonner";
 
 const profileFormSchema = z.object({
 	first_name: z
@@ -53,11 +56,18 @@ const profileFormSchema = z.object({
 		.max(15, {
 			message: "Phone number must not be longer than 15 characters.",
 		}),
-	nid: z.number().int().min(10, { message: "NID must be at least 10 digits." }),
-	gender: z.enum(["Male", "Female", "Non Binary"]),
-	address: z.string().max(100, {
-		message: "Address must not be longer than 100 characters.",
+	nid: z.any({
+		description: "NID must be a number.",
 	}),
+	gender: z.enum(["Male", "Female", "Non Binary"]),
+	address: z
+		.string()
+		.max(100, {
+			message: "Address must not be longer than 100 characters.",
+		})
+		.min(1, {
+			message: "Address must be at least 1 character.",
+		}),
 	address2: z.string().optional(),
 });
 
@@ -65,6 +75,7 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 export function ProfileForm() {
 	const { user } = useUser();
+	const { mutateAsync: update, isPending } = useUpdateEmployee();
 
 	const form = useForm<ProfileFormValues>({
 		resolver: zodResolver(profileFormSchema),
@@ -80,16 +91,47 @@ export function ProfileForm() {
 		mode: "onChange",
 	});
 
-	function onSubmit(data: ProfileFormValues) {
-		console.log(data);
-		toast({
-			title: "You submitted the following values:",
-			description: (
-				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-					<code className="text-white">{JSON.stringify(data, null, 2)}</code>
-				</pre>
-			),
-		});
+	async function onSubmit(data: ProfileFormValues) {
+		// Making the request
+		const res = await handleResponse(() =>
+			update({ id: user?.data?.id, data })
+		);
+
+		if (res.status) {
+			toast("Saved!", {
+				description: `Your profile has been updated successfully.`,
+				closeButton: true,
+				important: true,
+			});
+		} else {
+			if (typeof res.data === "object") {
+				Object.entries(res.data).forEach(([key, value]) => {
+					form.setError(key as keyof ProfileFormValues, {
+						type: "validate",
+						message: value as string,
+					});
+				});
+				toast("Error!", {
+					description: `There was an error updating your profile. Please try again.`,
+					important: true,
+					closeButton: true,
+					action: {
+						label: "Retry",
+						onClick: () => onSubmit(data),
+					},
+				});
+			} else {
+				toast("Error!", {
+					description: res.message,
+					important: true,
+					closeButton: true,
+					action: {
+						label: "Retry",
+						onClick: () => onSubmit(data),
+					},
+				});
+			}
+		}
 	}
 
 	return (
@@ -271,7 +313,19 @@ export function ProfileForm() {
 					/>
 				</div>
 				<div className="flex flex-row flex-wrap gap-3">
-					<Button type="submit">Update profile</Button>
+					<Button
+						type="submit"
+						disabled={isPending}
+					>
+						{isPending ? (
+							<>
+								<LuLoader2 className="mr-2 h-4 w-4 animate-spin" />
+								Updating..
+							</>
+						) : (
+							<>Update profile</>
+						)}
+					</Button>
 					<Link
 						href={"/logout"}
 						replace
