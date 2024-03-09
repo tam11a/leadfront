@@ -13,7 +13,9 @@ import { useGetAreas } from "@/lib/actions/configuration/areas/get-areas";
 import moment from "moment";
 
 // Icons
-import { MdOutlineDelete, MdOutlineEdit } from "react-icons/md";
+import { MdOutlineDelete } from "react-icons/md";
+import { CreateSheet } from "./create-area";
+import { UpdateSheet } from "./update-area";
 
 export default function BusinessAreasList() {
 	const { data, isLoading, isError, error } = useGetAreas();
@@ -27,7 +29,7 @@ export default function BusinessAreasList() {
 					placeholder="Filter area..."
 					className="flex-1"
 				/>
-				<Button>Add New</Button>
+				<CreateSheet />
 			</div>
 			<div className="max-w-md space-y-3">
 				{isLoading ? (
@@ -46,12 +48,7 @@ export default function BusinessAreasList() {
 									</CardDescription>
 								</CardHeader>
 								<CardFooter className="flex flex-row items-center gap-1">
-									<Button
-										variant={"outline"}
-										size={"icon"}
-									>
-										<MdOutlineEdit />
-									</Button>
+									<UpdateSheet data={area} />
 									<Button
 										variant={"outline"}
 										size={"icon"}
