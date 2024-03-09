@@ -55,14 +55,9 @@ const profileFormSchema = z.object({
 		}),
 	nid: z.number().int().min(10, { message: "NID must be at least 10 digits." }),
 	gender: z.enum(["Male", "Female", "Non Binary"]),
-	address: z
-		.string()
-		.min(10, {
-			message: "Address must be at least 10 characters.",
-		})
-		.max(100, {
-			message: "Address must not be longer than 100 characters.",
-		}),
+	address: z.string().max(100, {
+		message: "Address must not be longer than 100 characters.",
+	}),
 	address2: z.string().optional(),
 });
 
@@ -81,7 +76,7 @@ export function ProfileForm() {
 			phone: user?.data?.phone,
 			nid: user?.data?.nid,
 			address: user?.data?.address,
-			address2: user?.data?.address2,
+			address2: user?.data?.address2 || "",
 			gender: user?.data?.gender,
 		},
 		mode: "onChange",
