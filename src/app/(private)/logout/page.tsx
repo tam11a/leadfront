@@ -8,7 +8,7 @@ export default function LogoutPage() {
 	const router = useRouter();
 	useEffect(() => {
 		authService.removeToken();
-		router.replace("/");
+		router.refresh();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return <Loading />;

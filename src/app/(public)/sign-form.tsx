@@ -92,7 +92,7 @@ export function SignForm() {
 			});
 
 			// Redirect to dashboard
-			router.replace("/dashboard");
+			router.refresh();
 		} else {
 			// Setting errors
 			form.setError("username", {
