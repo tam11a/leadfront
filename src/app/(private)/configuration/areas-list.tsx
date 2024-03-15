@@ -47,34 +47,51 @@ export default function BusinessAreasList() {
 				) : (
 					<>
 						{data?.data.map((area: any) => (
-							<Card
+							<AreaCard
+								area={area}
 								key={area.id}
-								className="flex flex-row gap-3 items-center "
-							>
-								<CardHeader className="flex-1">
-									<CardTitle>
-										<span className="text-primary mr-1">{area.id}.</span>{" "}
-										{area.area_name}
-									</CardTitle>
-									<CardDescription className="text-xs">
-										Last Updated {moment(area.updated_at).format("ll")}
-									</CardDescription>
-								</CardHeader>
-								<CardFooter className="flex flex-row items-center gap-1 p-6">
-									<UpdateSheet data={area} />
-									<Button
-										variant={"outline"}
-										size={"icon"}
-										className="text-destructive"
-									>
-										<MdOutlineDelete />
-									</Button>
-								</CardFooter>
-							</Card>
+							/>
 						))}
 					</>
 				)}
 			</div>
 		</>
+	);
+}
+
+function AreaCard({ area }: { area: any }) {
+	const [open, setOpen] = useState(false);
+	return (
+		<Card
+			key={area.id}
+			className="flex flex-row gap-3 items-center "
+		>
+			<CardHeader className="flex-1">
+				<CardTitle>
+					{/* <span className="text-primary mr-1">{area.id}.</span> */}
+					{area.area_name}
+				</CardTitle>
+				<CardDescription className="text-xs">
+					Last Updated{" "}
+					<span className="text-primary mr-1">
+						{moment(area.updated_at).format("ll")}
+					</span>
+				</CardDescription>
+			</CardHeader>
+			<CardFooter className="flex flex-row items-center gap-1 p-6">
+				<UpdateSheet
+					open={open}
+					setOpen={setOpen}
+					old_data={area}
+				/>
+				<Button
+					variant={"outline"}
+					size={"icon"}
+					className="text-destructive"
+				>
+					<MdOutlineDelete />
+				</Button>
+			</CardFooter>
+		</Card>
 	);
 }
