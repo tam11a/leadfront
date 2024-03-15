@@ -59,7 +59,6 @@ export function CreateSheet() {
 		if (res.status) {
 			toast("Added!", {
 				description: `Business area has been created successfully.`,
-				closeButton: true,
 				important: true,
 			});
 			form.reset();
@@ -75,7 +74,6 @@ export function CreateSheet() {
 				toast("Error!", {
 					description: `There was an error creating business area. Please try again.`,
 					important: true,
-					closeButton: true,
 					action: {
 						label: "Retry",
 						onClick: () => onSubmit(data),
@@ -85,7 +83,6 @@ export function CreateSheet() {
 				toast("Error!", {
 					description: res.message,
 					important: true,
-					closeButton: true,
 					action: {
 						label: "Retry",
 						onClick: () => onSubmit(data),

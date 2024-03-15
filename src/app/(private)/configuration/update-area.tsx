@@ -11,11 +11,9 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import {
 	Sheet,
-	SheetClose,
 	SheetContent,
 	SheetDescription,
 	SheetFooter,
@@ -92,7 +90,6 @@ export function UpdateSheet({
 				toast("Error!", {
 					description: `There was an error updating business area. Please try again.`,
 					important: true,
-					closeButton: true,
 					action: {
 						label: "Retry",
 						onClick: () => onSubmit(data),
@@ -102,7 +99,6 @@ export function UpdateSheet({
 				toast("Error!", {
 					description: res.message,
 					important: true,
-					closeButton: true,
 					action: {
 						label: "Retry",
 						onClick: () => onSubmit(data),

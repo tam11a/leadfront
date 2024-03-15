@@ -18,6 +18,9 @@ import { CreateSheet } from "./create-area";
 import { UpdateSheet } from "./update-area";
 import { useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDeleteArea } from "@/lib/actions/configuration/areas/delete-area";
+import handleResponse from "@/lib/handle-response";
+import { toast } from "sonner";
 
 export default function BusinessAreasList() {
 	const [search, setSearch] = useState("");
@@ -61,6 +64,28 @@ export default function BusinessAreasList() {
 
 function AreaCard({ area }: { area: any }) {
 	const [open, setOpen] = useState(false);
+
+	const { mutateAsync: deleteAsync, isPending } = useDeleteArea();
+
+	async function onSubmit() {
+		const res = await handleResponse(() => deleteAsync(area.id), [204]);
+		if (res.status) {
+			toast("Deleted!", {
+				description: `Business area has been deleted successfully.`,
+				important: true,
+			});
+		} else {
+			toast("Error!", {
+				description: `There was an error deleting business area. Please try again.`,
+				important: true,
+				action: {
+					label: "Retry",
+					onClick: () => onSubmit(),
+				},
+			});
+		}
+	}
+
 	return (
 		<Card
 			key={area.id}
@@ -79,15 +104,19 @@ function AreaCard({ area }: { area: any }) {
 				</CardDescription>
 			</CardHeader>
 			<CardFooter className="flex flex-row items-center gap-1 p-6">
-				<UpdateSheet
-					open={open}
-					setOpen={setOpen}
-					old_data={area}
-				/>
+				{!isPending && (
+					<UpdateSheet
+						open={open}
+						setOpen={setOpen}
+						old_data={area}
+					/>
+				)}
 				<Button
 					variant={"outline"}
 					size={"icon"}
 					className="text-destructive"
+					onClick={onSubmit}
+					disabled={isPending}
 				>
 					<MdOutlineDelete />
 				</Button>
