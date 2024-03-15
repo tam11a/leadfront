@@ -16,7 +16,7 @@ const sidebarNavItems = [
 				<span className="hidden md:inline">Property</span> Types
 			</span>
 		),
-		href: "/configuration/types",
+		href: "/configuration/property-types",
 	},
 	{
 		title: (
@@ -24,7 +24,7 @@ const sidebarNavItems = [
 				<span className="hidden md:inline">Property Measurement</span> Units
 			</span>
 		),
-		href: "/configuration/units",
+		href: "/configuration/property-units",
 	},
 ];
 

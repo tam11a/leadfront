@@ -26,7 +26,6 @@ import { FaPeopleGroup } from "react-icons/fa6";
 import { TbBuildingCommunity } from "react-icons/tb";
 import { MdOutlineConnectWithoutContact } from "react-icons/md";
 import { IoIdCardOutline } from "react-icons/io5";
-import { MdKey } from "react-icons/md";
 import { MdOutlineSettings } from "react-icons/md";
 import { MdDisplaySettings } from "react-icons/md";
 import { PiSignOutBold } from "react-icons/pi";
@@ -86,11 +85,6 @@ export default function ResizableSidebar({
 							title: "Employees",
 							icon: IoIdCardOutline,
 							href: "employees",
-						},
-						{
-							title: "Roles & Permissions",
-							icon: MdKey,
-							href: "roles",
 						},
 					]}
 				/>
