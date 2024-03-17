@@ -10,6 +10,8 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
 	Select,
 	SelectContent,
@@ -26,6 +28,8 @@ import {
 	SheetHeader,
 	SheetTitle,
 } from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -59,13 +63,13 @@ const CreateEmployeeSchema = z.object({
 		message: "Address must be at least 1 character.",
 	}),
 	address2: z.string().optional(),
-	zip_code: z.number().optional(),
+	zip_code: z.any().optional(),
 	nid: z.any({
 		description: "NID must be a number.",
 	}),
 	tin: z.any().optional(),
 	is_active: z.boolean(),
-	user_id: z.number().optional(),
+	user_id: z.any().optional(),
 });
 
 type EmployeeFormValues = z.infer<typeof CreateEmployeeSchema>;
@@ -83,7 +87,7 @@ export function CreateEmployee() {
 			email: "",
 			phone: "",
 			address: "",
-			nid: 0,
+			nid: undefined,
 			is_active: true,
 		},
 		mode: "onChange",
@@ -100,7 +104,7 @@ export function CreateEmployee() {
 				onOpenChange={(o) => setOpen(o)}
 			>
 				<Button onClick={() => setOpen(true)}>Add New</Button>
-				<SheetContent>
+				<SheetContent className="max-h-screen overflow-y-auto">
 					<SheetHeader>
 						<SheetTitle>Create Employee</SheetTitle>
 						<SheetDescription>
@@ -111,7 +115,7 @@ export function CreateEmployee() {
 					<Form {...form}>
 						<form
 							onSubmit={form.handleSubmit(onSubmit)}
-							className="space-y-3 mt-6"
+							className="space-y-3 mt-6 px-1"
 						>
 							<div className="flex flex-row items-start gap-3">
 								<FormField
@@ -306,6 +310,188 @@ export function CreateEmployee() {
 									)}
 								/>
 							</div>
+
+							<div className="flex flex-row items-start gap-3">
+								<FormField
+									control={form.control}
+									name="bank_account_number"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Bank Account Number</FormLabel>
+											<FormControl>
+												<Input
+													type="number"
+													placeholder="12938712*****78"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription></FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="bank_routing_number"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Bank Routing Number</FormLabel>
+											<FormControl>
+												<Input
+													type="number"
+													placeholder="123123"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription></FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+
+							<FormField
+								control={form.control}
+								name="address"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Address Line 1</FormLabel>
+										<FormControl>
+											<Textarea
+												rows={5}
+												placeholder="1234 Main St, City, Country"
+												className="resize-none"
+												{...field}
+											/>
+										</FormControl>
+										<FormDescription>
+											This is your primary address. It must be a valid address.
+										</FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="address2"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Address Line 2 </FormLabel>
+										<FormControl>
+											<Textarea
+												rows={5}
+												placeholder="1234 Main St, City, Country"
+												className="resize-none"
+												{...field}
+											/>
+										</FormControl>
+										<FormDescription>
+											This is your secondary address. It is optional. If you
+											enter any address it must be a valid address.
+										</FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<div className="flex flex-row items-start gap-3">
+								<FormField
+									control={form.control}
+									name="zip_code"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Zip Code</FormLabel>
+											<FormControl>
+												<Input
+													type="number"
+													placeholder="1240"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription></FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="tin"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>TIN</FormLabel>
+											<FormControl>
+												<Input
+													type="number"
+													placeholder="100120321***8"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription></FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+							<FormField
+								control={form.control}
+								name="nid"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>NID</FormLabel>
+										<FormControl>
+											<Input
+												type="number"
+												placeholder="10123*****"
+												{...field}
+											/>
+										</FormControl>
+										<FormDescription></FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="is_active"
+								render={({ field }) => (
+									<FormItem className="pt-4">
+										<div className="flex flex-row items-center gap-2">
+											<FormControl>
+												<Switch
+													id="is_active"
+													checked={field.value}
+													onCheckedChange={field.onChange}
+												/>
+											</FormControl>
+											<Label htmlFor="is_active">Active Status</Label>
+										</div>
+										<FormDescription>
+											Active status will determine if the employee is active or
+											not.
+										</FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="user_id"
+								render={({ field }) => (
+									<FormItem hidden>
+										<FormControl>
+											<Input
+												readOnly
+												type="number"
+												placeholder="1"
+												{...field}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
 
 							<SheetFooter>
 								<SheetClose asChild>
