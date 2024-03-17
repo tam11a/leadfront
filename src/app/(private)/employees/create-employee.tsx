@@ -123,7 +123,7 @@ export function CreateEmployee() {
 									name="first_name"
 									render={({ field }) => (
 										<FormItem className="flex-1">
-											<FormLabel>First Name</FormLabel>
+											<FormLabel>First Name*</FormLabel>
 											<FormControl>
 												<Input
 													placeholder="John"
@@ -140,7 +140,7 @@ export function CreateEmployee() {
 									name="last_name"
 									render={({ field }) => (
 										<FormItem className="flex-1">
-											<FormLabel>Last Name</FormLabel>
+											<FormLabel>Last Name*</FormLabel>
 											<FormControl>
 												<Input
 													placeholder="Doe"
@@ -159,7 +159,7 @@ export function CreateEmployee() {
 								name="employee_uid"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Employee UID</FormLabel>
+										<FormLabel>Employee UID*</FormLabel>
 										<FormControl>
 											<Input
 												placeholder="CEO-001"
@@ -177,7 +177,7 @@ export function CreateEmployee() {
 								name="gender"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Gender</FormLabel>
+										<FormLabel>Gender*</FormLabel>
 										<Select
 											onValueChange={field.onChange}
 											defaultValue={field.value}
@@ -204,7 +204,7 @@ export function CreateEmployee() {
 								name="email"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Email</FormLabel>
+										<FormLabel>Email*</FormLabel>
 										<FormControl>
 											<Input
 												placeholder="example@domain.co"
@@ -222,7 +222,7 @@ export function CreateEmployee() {
 								name="phone"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Phone</FormLabel>
+										<FormLabel>Phone*</FormLabel>
 										<FormControl>
 											<Input
 												placeholder="017XXXXXXXX"
@@ -355,7 +355,7 @@ export function CreateEmployee() {
 								name="address"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Address Line 1</FormLabel>
+										<FormLabel>Address Line 1*</FormLabel>
 										<FormControl>
 											<Textarea
 												rows={5}
@@ -438,7 +438,7 @@ export function CreateEmployee() {
 								name="nid"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>NID</FormLabel>
+										<FormLabel>NID*</FormLabel>
 										<FormControl>
 											<Input
 												type="number"
