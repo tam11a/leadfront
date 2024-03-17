@@ -11,6 +11,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import {
 	Sheet,
 	SheetClose,
 	SheetContent,
@@ -42,21 +49,21 @@ const CreateEmployeeSchema = z.object({
 		message: "Phone number must be at least 11 characters.",
 	}),
 	dob: z.date().optional(),
-	work_hour: z.number().optional(),
-	salary: z.number().optional(),
+	work_hour: z.any().optional(),
+	salary: z.any().optional(),
 	bank_name: z.string().optional(),
 	bank_branch: z.string().optional(),
-	bank_account_number: z.number().optional(),
-	bank_routing_number: z.number().optional(),
+	bank_account_number: z.any().optional(),
+	bank_routing_number: z.any().optional(),
 	address: z.string().min(1, {
 		message: "Address must be at least 1 character.",
 	}),
 	address2: z.string().optional(),
 	zip_code: z.number().optional(),
-	nid: z.number().min(1, {
-		message: "NID must be at least 1 character.",
+	nid: z.any({
+		description: "NID must be a number.",
 	}),
-	tin: z.number().optional(),
+	tin: z.any().optional(),
 	is_active: z.boolean(),
 	user_id: z.number().optional(),
 });
@@ -104,9 +111,9 @@ export function CreateEmployee() {
 					<Form {...form}>
 						<form
 							onSubmit={form.handleSubmit(onSubmit)}
-							className="space-y-6"
+							className="space-y-3 mt-6"
 						>
-							<div className="flex flex-row items-start gap-3 mt-5">
+							<div className="flex flex-row items-start gap-3">
 								<FormField
 									control={form.control}
 									name="first_name"
@@ -142,6 +149,164 @@ export function CreateEmployee() {
 									)}
 								/>
 							</div>
+
+							<FormField
+								control={form.control}
+								name="employee_uid"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Employee UID</FormLabel>
+										<FormControl>
+											<Input
+												placeholder="CEO-001"
+												{...field}
+											/>
+										</FormControl>
+										<FormDescription></FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="gender"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Gender</FormLabel>
+										<Select
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+										>
+											<FormControl>
+												<SelectTrigger>
+													<SelectValue placeholder="Select a gender" />
+												</SelectTrigger>
+											</FormControl>
+											<SelectContent>
+												<SelectItem value="Male">Male (He/Him)</SelectItem>
+												<SelectItem value="Female">Female (She/Her)</SelectItem>
+												<SelectItem value="Non Binary">Others</SelectItem>
+											</SelectContent>
+										</Select>
+										<FormDescription></FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="email"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Email</FormLabel>
+										<FormControl>
+											<Input
+												placeholder="example@domain.co"
+												{...field}
+											/>
+										</FormControl>
+										<FormDescription></FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="phone"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Phone</FormLabel>
+										<FormControl>
+											<Input
+												placeholder="017XXXXXXXX"
+												{...field}
+											/>
+										</FormControl>
+										<FormDescription></FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<div className="flex flex-row items-start gap-3">
+								<FormField
+									control={form.control}
+									name="work_hour"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Work Hour</FormLabel>
+											<FormControl>
+												<Input
+													type="number"
+													placeholder="8"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription></FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="salary"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Salary</FormLabel>
+											<FormControl>
+												<Input
+													type="number"
+													placeholder="20000"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription></FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+
+							<div className="flex flex-row items-start gap-3">
+								<FormField
+									control={form.control}
+									name="bank_name"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Bank Name</FormLabel>
+											<FormControl>
+												<Input
+													placeholder="XYZ Bank"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription></FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="bank_branch"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Bank Branch</FormLabel>
+											<FormControl>
+												<Input
+													placeholder="Dhaka, Chittagong Etc."
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription></FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+
 							<SheetFooter>
 								<SheetClose asChild>
 									<Button variant={"ghost"}>Cancel</Button>
