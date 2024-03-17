@@ -24,7 +24,7 @@ export default function Error({
 				Attempt to recover by trying again. If the problem persists, please
 				contact support.
 			</CardDescription>
-			<Button>Try Again</Button>
+			<Button onClick={reset}>Try Again</Button>
 		</div>
 	);
 }
