@@ -150,7 +150,7 @@ export function CreateEmployee() {
 									type="submit"
 									// disabled={isPending}
 								>
-									Create
+									Save
 								</Button>
 							</SheetFooter>
 						</form>
