@@ -20,7 +20,6 @@ import {
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -42,6 +41,8 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useEmployees } from "@/lib/actions/employees/users";
 import { Badge } from "@/components/ui/badge";
+import { UpdateEmployee } from "./update-employee";
+import { TbUserEdit } from "react-icons/tb";
 
 export interface Employee {
 	id: number;
@@ -167,35 +168,46 @@ export const columns: ColumnDef<Employee>[] = [
 			const employee = row.original;
 
 			return (
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
+				<>
+					<UpdateEmployee employeeId={employee.id}>
 						<Button
-							variant="ghost"
-							className="h-8 w-8 p-0"
+							size={"icon"}
+							variant={"ghost"}
 						>
-							<span className="sr-only">Open menu</span>
-							<DotsHorizontalIcon className="h-4 w-4" />
+							<TbUserEdit />
 						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
-						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem
-							onClick={() =>
-								navigator.clipboard.writeText(
-									`ID: ${employee.id?.toString()}\nPhone: ${
-										employee.phone
-									}\nEmail: ${employee.email}`
-								)
-							}
-						>
-							Copy Information
-						</DropdownMenuItem>
+					</UpdateEmployee>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button
+								variant="ghost"
+								className="h-8 w-8 p-0"
+							>
+								<span className="sr-only">Open menu</span>
+								<DotsHorizontalIcon className="h-4 w-4" />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							<DropdownMenuLabel>Actions</DropdownMenuLabel>
+							<DropdownMenuItem
+								onClick={() =>
+									navigator.clipboard.writeText(
+										`ID: ${employee.id?.toString()}\nFirst Name: ${
+											employee?.first_name
+										}\nLast Name: ${employee?.last_name}\nPhone: ${
+											employee.phone
+										}\nEmail: ${employee.email}`
+									)
+								}
+							>
+								Copy Information
+							</DropdownMenuItem>
 
-						<DropdownMenuSeparator />
-						<DropdownMenuItem>View profile</DropdownMenuItem>
-						<DropdownMenuItem>Update information</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem>View profile</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</>
 			);
 		},
 	},
