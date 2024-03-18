@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { CardDescription, CardTitle } from "@/components/ui/card";
 import {
 	Dialog,
 	DialogContent,
@@ -39,7 +40,24 @@ export function LogDialog({
 					</DialogDescription>
 				</DialogHeader>
 				<ScrollArea>
-					<div className="max-h-[75vh]">{/* Map the data here */}</div>
+					<div className="max-h-[75vh]">
+						{/* {data ? (
+              <>
+                {data?.map((log: any) => (
+                  <p key={log.id}>{log.user_name}</p>
+                ))}
+              </>
+            ) : (
+              <> */}
+
+						<DialogDescription className="text-center sm:text-left">
+							No recent activity detected. Please make sure the employee is
+							active.
+						</DialogDescription>
+
+						{/* </>
+            )} */}
+					</div>
 				</ScrollArea>
 				<DialogFooter>
 					<DialogTrigger asChild>
