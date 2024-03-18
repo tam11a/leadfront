@@ -43,6 +43,8 @@ import { useEmployees } from "@/lib/actions/employees/users";
 import { Badge } from "@/components/ui/badge";
 import { UpdateEmployee } from "./update-employee";
 import { TbUserEdit } from "react-icons/tb";
+import { FiActivity } from "react-icons/fi";
+import { LogDialog } from "./log-dialog";
 
 export interface Employee {
 	id: number;
@@ -177,6 +179,14 @@ export const columns: ColumnDef<Employee>[] = [
 							<TbUserEdit />
 						</Button>
 					</UpdateEmployee>
+					<LogDialog employeeId={employee.id}>
+						<Button
+							size={"icon"}
+							variant={"ghost"}
+						>
+							<FiActivity />
+						</Button>
+					</LogDialog>
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button
