@@ -57,14 +57,14 @@ const UpdateEmployeeSchema = z.object({
 	dob: z.date().optional(),
 	work_hour: z.any().optional(),
 	salary: z.any().optional(),
-	bank_name: z.string().optional(),
-	bank_branch: z.string().optional(),
+	bank_name: z.any().optional(),
+	bank_branch: z.any().optional(),
 	bank_account_number: z.any().optional(),
 	bank_routing_number: z.any().optional(),
 	address: z.string().min(1, {
 		message: "Address must be at least 1 character.",
 	}),
-	address2: z.string().optional(),
+	address2: z.any().optional(),
 	zip_code: z.any().optional(),
 	nid: z.any({
 		description: "NID must be a number.",
