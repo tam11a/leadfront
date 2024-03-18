@@ -14,6 +14,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGetLog } from "@/lib/actions/auth/get-log";
 import { useState } from "react";
+import { FiActivity } from "react-icons/fi";
 
 export function LogDialog({
 	children,
@@ -50,7 +51,8 @@ export function LogDialog({
             ) : (
               <> */}
 
-						<DialogDescription className="text-center sm:text-left">
+						<DialogDescription className="flex flex-col items-center justify-center text-center gap-7 min-h-[280px] max-w-xs mx-auto">
+							<FiActivity className="text-5xl mx-auto text-gray-400" />
 							No recent activity detected. Please make sure the employee is
 							active.
 						</DialogDescription>
@@ -59,11 +61,6 @@ export function LogDialog({
             )} */}
 					</div>
 				</ScrollArea>
-				<DialogFooter>
-					<DialogTrigger asChild>
-						<Button>Close</Button>
-					</DialogTrigger>
-				</DialogFooter>
 			</DialogContent>
 		</Dialog>
 	);
