@@ -23,7 +23,6 @@ export function LogDialog({
 }>) {
 	const [open, setOpen] = useState(false);
 	const { data } = useGetLog(open ? { user: employeeId } : undefined);
-	console.log(data);
 	return (
 		<Dialog
 			open={open}

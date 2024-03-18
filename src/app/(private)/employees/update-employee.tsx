@@ -196,7 +196,9 @@ export function UpdateEmployee({
 				open={open}
 				onOpenChange={(o) => setOpen(o)}
 			>
-				<SheetTrigger>{children || <Button>Update</Button>}</SheetTrigger>
+				<SheetTrigger asChild>
+					{children || <Button>Update</Button>}
+				</SheetTrigger>
 				<SheetContent className="max-h-screen overflow-y-auto">
 					<SheetHeader>
 						<SheetTitle>Update Employee</SheetTitle>

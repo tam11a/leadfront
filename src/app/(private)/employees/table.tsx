@@ -45,6 +45,7 @@ import { UpdateEmployee } from "./update-employee";
 import { TbUserEdit } from "react-icons/tb";
 import { FiActivity } from "react-icons/fi";
 import { LogDialog } from "./log-dialog";
+import { CreateAccessDialog } from "./create-access";
 
 export interface Employee {
 	id: number;
@@ -101,18 +102,15 @@ export const columns: ColumnDef<Employee>[] = [
 				{row.original.first_name} {row.original.last_name}{" "}
 				{!row.original.user_id && (
 					<>
-						<Button
-							variant={"link"}
-							size={"sm"}
-						>
-							Create Access
-						</Button>
+						<CreateAccessDialog
+							email={row.original.email}
+							employeeId={row.original.id}
+						/>
 					</>
 				)}
 			</div>
 		),
 	},
-
 	{
 		accessorKey: "phone",
 		header: () => {
@@ -120,7 +118,6 @@ export const columns: ColumnDef<Employee>[] = [
 		},
 		cell: ({ row }) => <div className="mx-4">{row.getValue("phone")}</div>,
 	},
-
 	{
 		accessorKey: "email",
 		header: ({ column }) => {
@@ -168,7 +165,6 @@ export const columns: ColumnDef<Employee>[] = [
 		enableHiding: false,
 		cell: ({ row }) => {
 			const employee = row.original;
-
 			return (
 				<>
 					<UpdateEmployee employeeId={employee.id}>
@@ -183,6 +179,7 @@ export const columns: ColumnDef<Employee>[] = [
 						<Button
 							size={"icon"}
 							variant={"ghost"}
+							disabled={!employee.user_id}
 						>
 							<FiActivity />
 						</Button>

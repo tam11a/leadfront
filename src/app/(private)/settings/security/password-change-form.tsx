@@ -32,26 +32,21 @@ const passwordChangeFormSchema = z
 			.max(30, {
 				message: "Username must not be longer than 30 characters.",
 			}),
-		old_password: z
-			.string()
-			.min(6, {
-				message: "Password must be at least 6 characters.",
-			})
-			.max(30, {
-				message: "Password must not be longer than 30 characters.",
-			}),
+		old_password: z.string().max(30, {
+			message: "Password must not be longer than 30 characters.",
+		}),
 		new_password: z
 			.string()
-			.min(6, {
-				message: "Password must be at least 6 characters.",
+			.min(8, {
+				message: "Password must be at least 8 characters.",
 			})
 			.max(30, {
 				message: "Password must not be longer than 30 characters.",
 			}),
 		confirm_password: z
 			.string()
-			.min(6, {
-				message: "Password must be at least 6 characters.",
+			.min(8, {
+				message: "Password must be at least 8 characters.",
 			})
 			.max(30, {
 				message: "Password must not be longer than 30 characters.",
