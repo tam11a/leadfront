@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { UpdateCustomer } from "../update-customer";
 import { Button } from "@/components/ui/button";
 import CustomerContactBar from "./contact";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default async function CustomerDetailsPage({
 	params,
@@ -46,14 +47,14 @@ export default async function CustomerDetailsPage({
 						</p>
 					</div>
 				</div>
-				<div>
+				<div className="hidden md:inline-flex">
 					<UpdateCustomer customerId={params.id}>
 						<Button variant={"outline"}>Update</Button>
 					</UpdateCustomer>
 				</div>
 			</div>
 			<Separator />
-			<div className="flex h-full relative flex-row items-start justify-between">
+			<div className="flex h-full relative flex-col md:flex-row items-start md:justify-between">
 				<CustomerContactBar
 					{...{
 						phone: data.phone,
@@ -65,14 +66,25 @@ export default async function CustomerDetailsPage({
 				<Separator
 					orientation="vertical"
 					role="separator"
-					className="relative min-h-[600px]"
+					className="relative min-h-[600px] hidden md:inline-flex"
 				/>
-				<div className="px-8 py-6 flex-1">
-					<h1 className="text-sm font-semibold text-muted-foreground">Notes</h1>
-					<p className="text-xs text-muted-foreground font-medium">
-						{data.notes || "No Notes Added"}
-					</p>
-				</div>
+				<Tabs
+					defaultValue="details"
+					className="flex-1 px-7 py-6"
+				>
+					<TabsList>
+						<TabsTrigger value="details">Details</TabsTrigger>
+						<TabsTrigger value="interests">Interests</TabsTrigger>
+						<TabsTrigger value="logs">Logs</TabsTrigger>
+					</TabsList>
+					<TabsContent value="details">
+						Make changes to your account here.
+					</TabsContent>
+					<TabsContent value="interests">
+						Change your password here.
+					</TabsContent>
+					<TabsContent value="logs">Change your password here.</TabsContent>
+				</Tabs>
 			</div>
 		</div>
 	) : (
