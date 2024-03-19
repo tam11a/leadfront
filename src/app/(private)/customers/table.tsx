@@ -244,9 +244,10 @@ export default function CustomerTable() {
 	const [columnVisibility, setColumnVisibility] =
 		React.useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = React.useState({});
-	const [search, setSearch] = React.useState<string>("");
 
+	const [search, setSearch] = React.useState<string>("utsha");
 	const { data } = useGetCustomers({ search });
+
 	const table = useReactTable({
 		data: data?.data?.results || [],
 		columns,
@@ -271,9 +272,11 @@ export default function CustomerTable() {
 			<div className="flex items-center flex-row gap-2 py-4">
 				<Input
 					placeholder="Search..."
-					disabled
 					value={search}
-					onChange={(event) => setSearch(event.target.value)}
+					onChange={(event) => {
+						setSearch(event.target.value);
+					}}
+					disabled
 					className="max-w-sm"
 				/>
 				<DropdownMenu>
