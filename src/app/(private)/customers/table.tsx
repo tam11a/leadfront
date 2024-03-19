@@ -2,41 +2,41 @@
 
 import * as React from "react";
 import {
-  CaretSortIcon,
-  DotsHorizontalIcon,
-  MixerHorizontalIcon,
+	CaretSortIcon,
+	DotsHorizontalIcon,
+	MixerHorizontalIcon,
 } from "@radix-ui/react-icons";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+	ColumnDef,
+	ColumnFiltersState,
+	SortingState,
+	VisibilityState,
+	flexRender,
+	getCoreRowModel,
+	getFilteredRowModel,
+	getPaginationRowModel,
+	getSortedRowModel,
+	useReactTable,
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
 } from "@/components/ui/table";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -45,183 +45,187 @@ import { TbUserEdit } from "react-icons/tb";
 import { UpdateCustomer } from "./update-customer";
 
 export interface Customer {
-  id: number;
-  first_name: string;
-  last_name: string;
-  gender: string;
-  status: string;
-  priority: string;
-  source: string;
-  email: string;
-  phone: string;
-  dob: string;
-  bank_name?: string;
-  bank_branch?: string;
-  bank_account_number?: number;
-  bank_routing_number?: number;
-  address: string;
-  address2?: string;
-  zip_code: number;
-  nid: number;
-  is_active: boolean;
-  followup: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string;
-  assigned_employee_id?: number;
-  media_id?: number;
-  project_id?: number;
+	id: number;
+	first_name: string;
+	last_name: string;
+	gender: string;
+	status: string;
+	priority: string;
+	source: string;
+	email: string;
+	phone: string;
+	dob: string;
+	bank_name?: string;
+	bank_branch?: string;
+	bank_account_number?: number;
+	bank_routing_number?: number;
+	address: string;
+	address2?: string;
+	zip_code: number;
+	nid: number;
+	is_active: boolean;
+	followup: string;
+	created_at: string;
+	updated_at: string;
+	deleted_at: string;
+	assigned_employee_id?: number;
+	media_id?: number;
+	project_id?: number;
 }
 
 export const columns: ColumnDef<Customer>[] = [
-  //   {
-  //     accessorKey: "customer_uid",
-  //     header: () => {
-  //       return <div className="mx-4">Customer UID</div>;
-  //     },
-  //     cell: ({ row }) => (
-  //       <div className="mx-4">{row.getValue("customer_uid")}</div>
-  //     ),
-  //   },
-  {
-    id: "full_name",
-    accessorKey: "full_name",
-    header: () => {
-      return <div className="mx-4">Full Name</div>;
-    },
-    cell: ({ row }) => (
-      <div className="mx-4">
-        {row.original.first_name} {row.original.last_name}{" "}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "phone",
-    header: () => {
-      return <div className="mx-4">Phone</div>;
-    },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("phone")}</div>,
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <>
-        <div className="lowercase">{row.getValue("email")}</div>
-      </>
-    ),
-  },
-  {
-    accessorKey: "gender",
-    header: () => {
-      return <div className="mx-4">Gender</div>;
-    },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("gender")}</div>,
-  },
-  {
-    accessorKey: "priority",
-    header: () => {
-      return <div className="mx-4">Priority</div>;
-    },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("priority")}</div>,
-  },
-  {
-    accessorKey: "source",
-    header: () => {
-      return <div className="mx-4">Source</div>;
-    },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("source")}</div>,
-  },
-  {
-    accessorKey: "status",
-    header: () => {
-      return <div className="mx-4">Status</div>;
-    },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("status")}</div>,
-  },
-  {
-    accessorKey: "followup",
-    header: () => {
-      return <div className="mx-4">Followup</div>;
-    },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("followup")}</div>,
-  },
-  {
-    accessorKey: "created_at",
-    header: () => {
-      return <div className="mx-4">Created At</div>;
-    },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("created_at")}</div>,
-  },
-  {
-    accessorKey: "is_active",
-    header: () => {
-      return <div className="mx-4">Account status</div>;
-    },
-    cell: ({ row }) => {
-      const isActive = row.getValue("is_active");
-      return (
-        <div className="mx-4">
-          <Badge variant={isActive ? "secondary" : "destructive"}>
-            {isActive ? "Active" : "Inactive"}
-          </Badge>
-        </div>
-      );
-    },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const customer = row.original;
-      return (
-        <>
-          <UpdateCustomer customerId={customer.id}>
-            <Button size={"icon"} variant={"ghost"}>
-              <TbUserEdit />
-            </Button>
-          </UpdateCustomer>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <DotsHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigator.clipboard.writeText(
-                    `ID: ${customer.id?.toString()}\nFirst Name: ${
-                      customer?.first_name
-                    }\nLast Name: ${customer?.last_name}\nPhone: ${
-                      customer.phone
-                    }\nEmail: ${customer.email}`
-                  )
-                }
-              >
-                Copy Information
-              </DropdownMenuItem>
+	{
+		accessorKey: "id",
+		header: () => {
+			return <div className="mx-4">ID</div>;
+		},
+		cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
+	},
+	{
+		id: "full_name",
+		accessorKey: "full_name",
+		header: () => {
+			return <div className="mx-4">Full Name</div>;
+		},
+		cell: ({ row }) => (
+			<div className="mx-4">
+				{row.original.first_name} {row.original.last_name}{" "}
+			</div>
+		),
+	},
+	{
+		accessorKey: "phone",
+		header: () => {
+			return <div className="mx-4">Phone</div>;
+		},
+		cell: ({ row }) => <div className="mx-4">{row.getValue("phone")}</div>,
+	},
+	{
+		accessorKey: "email",
+		header: ({ column }) => {
+			return (
+				<Button
+					variant="ghost"
+					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+				>
+					Email
+					<CaretSortIcon className="ml-2 h-4 w-4" />
+				</Button>
+			);
+		},
+		cell: ({ row }) => (
+			<>
+				<div className="lowercase">{row.getValue("email")}</div>
+			</>
+		),
+	},
+	{
+		accessorKey: "gender",
+		header: () => {
+			return <div className="mx-4">Gender</div>;
+		},
+		cell: ({ row }) => <div className="mx-4">{row.getValue("gender")}</div>,
+	},
+	{
+		accessorKey: "priority",
+		header: () => {
+			return <div className="mx-4">Priority</div>;
+		},
+		cell: ({ row }) => <div className="mx-4">{row.getValue("priority")}</div>,
+	},
+	{
+		accessorKey: "source",
+		header: () => {
+			return <div className="mx-4">Source</div>;
+		},
+		cell: ({ row }) => <div className="mx-4">{row.getValue("source")}</div>,
+	},
+	{
+		accessorKey: "status",
+		header: () => {
+			return <div className="mx-4">Status</div>;
+		},
+		cell: ({ row }) => <div className="mx-4">{row.getValue("status")}</div>,
+	},
+	{
+		accessorKey: "followup",
+		header: () => {
+			return <div className="mx-4">Followup</div>;
+		},
+		cell: ({ row }) => <div className="mx-4">{row.getValue("followup")}</div>,
+	},
+	{
+		accessorKey: "created_at",
+		header: () => {
+			return <div className="mx-4">Created At</div>;
+		},
+		cell: ({ row }) => <div className="mx-4">{row.getValue("created_at")}</div>,
+	},
+	{
+		accessorKey: "is_active",
+		header: () => {
+			return <div className="mx-4">Account status</div>;
+		},
+		cell: ({ row }) => {
+			const isActive = row.getValue("is_active");
+			return (
+				<div className="mx-4">
+					<Badge variant={isActive ? "secondary" : "destructive"}>
+						{isActive ? "Active" : "Inactive"}
+					</Badge>
+				</div>
+			);
+		},
+	},
+	{
+		id: "actions",
+		enableHiding: false,
+		cell: ({ row }) => {
+			const customer = row.original;
+			return (
+				<>
+					<UpdateCustomer customerId={customer.id}>
+						<Button
+							size={"icon"}
+							variant={"ghost"}
+						>
+							<TbUserEdit />
+						</Button>
+					</UpdateCustomer>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button
+								variant="ghost"
+								className="h-8 w-8 p-0"
+							>
+								<span className="sr-only">Open menu</span>
+								<DotsHorizontalIcon className="h-4 w-4" />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							<DropdownMenuLabel>Actions</DropdownMenuLabel>
+							<DropdownMenuItem
+								onClick={() =>
+									navigator.clipboard.writeText(
+										`ID: ${customer.id?.toString()}\nFirst Name: ${
+											customer?.first_name
+										}\nLast Name: ${customer?.last_name}\nPhone: ${
+											customer.phone
+										}\nEmail: ${customer.email}`
+									)
+								}
+							>
+								Copy Information
+							</DropdownMenuItem>
 
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>View profile</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </>
-      );
-    },
-  },
+							<DropdownMenuSeparator />
+							<DropdownMenuItem>View profile</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</>
+			);
+		},
+	},
 ];
 
 export default function CustomerTable() {
@@ -235,28 +239,27 @@ export default function CustomerTable() {
   const [search, setSearch] = React.useState<string>("");
 
   const { data } = useGetCustomers({ search });
+	const table = useReactTable({
+		data: data?.data?.results || [],
+		columns,
+		onSortingChange: setSorting,
+		onColumnFiltersChange: setColumnFilters,
+		getCoreRowModel: getCoreRowModel(),
+		getPaginationRowModel: getPaginationRowModel(),
+		getSortedRowModel: getSortedRowModel(),
+		getFilteredRowModel: getFilteredRowModel(),
+		onColumnVisibilityChange: setColumnVisibility,
+		onRowSelectionChange: setRowSelection,
+		state: {
+			sorting,
+			columnFilters,
+			columnVisibility,
+			rowSelection,
+		},
+	});
 
-  const table = useReactTable({
-    data: data?.data?.results || [],
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
-
-  return (
-    <div className="w-full max-w-[85vw] lg:max-w-[70vw] mx-auto relatives">
+	return (
+		<div className="w-full max-w-[85vw] lg:max-w-[70vw] mx-auto relatives">
       <div className="flex items-center flex-row gap-2 py-4">
         <Input
           placeholder="Search..."
@@ -299,82 +302,82 @@ export default function CustomerTable() {
         </DropdownMenu>
       </div>
 
-      <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
-        <Table className="w-full">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+			<ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
+				<Table className="w-full">
+					<TableHeader>
+						{table.getHeaderGroups().map((headerGroup) => (
+							<TableRow key={headerGroup.id}>
+								{headerGroup.headers.map((header) => {
+									return (
+										<TableHead key={header.id}>
+											{header.isPlaceholder
+												? null
+												: flexRender(
+														header.column.columnDef.header,
+														header.getContext()
+												  )}
+										</TableHead>
+									);
+								})}
+							</TableRow>
+						))}
+					</TableHeader>
+					<TableBody>
+						{table.getRowModel().rows?.length ? (
+							table.getRowModel().rows.map((row) => (
+								<TableRow
+									key={row.id}
+									data-state={row.getIsSelected() && "selected"}
+								>
+									{row.getVisibleCells().map((cell) => (
+										<TableCell key={cell.id}>
+											{flexRender(
+												cell.column.columnDef.cell,
+												cell.getContext()
+											)}
+										</TableCell>
+									))}
+								</TableRow>
+							))
+						) : (
+							<TableRow>
+								<TableCell
+									colSpan={columns.length}
+									className="h-24 text-center"
+								>
+									No results.
+								</TableCell>
+							</TableRow>
+						)}
+					</TableBody>
+				</Table>
+				<ScrollBar orientation="horizontal" />
+			</ScrollArea>
 
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+			<div className="flex items-center justify-end space-x-2 py-4">
+				<div className="flex-1 text-sm text-muted-foreground">
+					{table.getFilteredSelectedRowModel().rows.length} of{" "}
+					{table.getFilteredRowModel().rows.length} row(s) selected.
+				</div>
+				<div className="space-x-2">
+					<Button
+						variant="outline"
+						size="sm"
+						onClick={() => table.previousPage()}
+						disabled={!table.getCanPreviousPage()}
+					>
+						Previous
+					</Button>
+					<Button
+						variant="outline"
+						size="sm"
+						onClick={() => table.nextPage()}
+						disabled={!table.getCanNextPage()}
+					>
+						Next
+					</Button>
+				</div>
+			</div>
+		</div>
+	);
 }
