@@ -10,36 +10,28 @@ export default async function CustomerContactBar(contact: {
 	address2?: string;
 }) {
 	return (
-		<div className="space-y-3 px-8 py-6">
+		<div className="space-y-3 px-8 py-6 border-l h-full">
 			<CardTitle>Phone</CardTitle>
-			<CardDescription>
-				<div className="flex items-center space-x-2">
-					<LuPhoneCall />
-					<span>{contact.phone || "No Phone Number Added"}</span>
-				</div>
+			<CardDescription className="flex items-center space-x-2">
+				<LuPhoneCall />
+				<span>{contact.phone || "No Phone Number Added"}</span>
 			</CardDescription>
 
 			<CardTitle>Email</CardTitle>
-			<CardDescription>
-				<div className="flex items-center space-x-2">
-					<FiMail />
-					<span>{contact.email || "No Email Added"}</span>
-				</div>
+			<CardDescription className="flex items-center space-x-2">
+				<FiMail />
+				<span>{contact.email || "No Email Added"}</span>
 			</CardDescription>
 
 			<CardTitle>Address</CardTitle>
-			<CardDescription>
-				<div className="flex items-center space-x-2">
-					<IoLocationOutline />
-					<span>{contact.address || "No Address Added"}</span>
-				</div>
+			<CardDescription className="flex items-center space-x-2">
+				<IoLocationOutline />
+				<span>{contact.address || "No Address Added"}</span>
 			</CardDescription>
 			{contact.address2 && (
-				<CardDescription>
-					<div className="flex items-center space-x-2">
-						<IoLocationOutline />
-						<span>{contact.address2 || "No Address Added"}</span>
-					</div>
+				<CardDescription className="flex items-center space-x-2">
+					<IoLocationOutline />
+					<span>{contact.address2 || "No Address Added"}</span>
 				</CardDescription>
 			)}
 		</div>
