@@ -43,6 +43,7 @@ import { Badge } from "@/components/ui/badge";
 import { useGetCustomers } from "@/lib/actions/customers/get-customers";
 import { TbUserEdit } from "react-icons/tb";
 import { UpdateCustomer } from "./update-customer";
+import Link from "next/link";
 
 export interface Customer {
 	id: number;
@@ -88,9 +89,14 @@ export const columns: ColumnDef<Customer>[] = [
 			return <div className="mx-4">Full Name</div>;
 		},
 		cell: ({ row }) => (
-			<div className="mx-4">
-				{row.original.first_name} {row.original.last_name}{" "}
-			</div>
+			<Link
+				href={`/customers/${row.original.id}`}
+				className="mx-4"
+			>
+				<Button variant={"link"}>
+					{row.original.first_name} {row.original.last_name}
+				</Button>
+			</Link>
 		),
 	},
 	{
@@ -219,7 +225,9 @@ export const columns: ColumnDef<Customer>[] = [
 							</DropdownMenuItem>
 
 							<DropdownMenuSeparator />
-							<DropdownMenuItem>View profile</DropdownMenuItem>
+							<Link href={`/customers/${customer.id}`}>
+								<DropdownMenuItem>View profile</DropdownMenuItem>
+							</Link>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</>
@@ -229,16 +237,16 @@ export const columns: ColumnDef<Customer>[] = [
 ];
 
 export default function CustomerTable() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [search, setSearch] = React.useState<string>("");
+	const [sorting, setSorting] = React.useState<SortingState>([]);
+	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+		[]
+	);
+	const [columnVisibility, setColumnVisibility] =
+		React.useState<VisibilityState>({});
+	const [rowSelection, setRowSelection] = React.useState({});
+	const [search, setSearch] = React.useState<string>("");
 
-  const { data } = useGetCustomers({ search });
+	const { data } = useGetCustomers({ search });
 	const table = useReactTable({
 		data: data?.data?.results || [],
 		columns,
@@ -260,47 +268,50 @@ export default function CustomerTable() {
 
 	return (
 		<div className="w-full max-w-[85vw] lg:max-w-[70vw] mx-auto relatives">
-      <div className="flex items-center flex-row gap-2 py-4">
-        <Input
-          placeholder="Search..."
-          disabled
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              View <MixerHorizontalIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {table
-              .getAllColumns()
-              .filter(
-                (column) =>
-                  typeof column.accessorFn !== "undefined" &&
-                  column.getCanHide()
-              )
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+			<div className="flex items-center flex-row gap-2 py-4">
+				<Input
+					placeholder="Search..."
+					disabled
+					value={search}
+					onChange={(event) => setSearch(event.target.value)}
+					className="max-w-sm"
+				/>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button
+							variant="outline"
+							className="ml-auto"
+						>
+							View <MixerHorizontalIcon className="ml-2 h-4 w-4" />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+						<DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						{table
+							.getAllColumns()
+							.filter(
+								(column) =>
+									typeof column.accessorFn !== "undefined" &&
+									column.getCanHide()
+							)
+							.map((column) => {
+								return (
+									<DropdownMenuCheckboxItem
+										key={column.id}
+										className="capitalize"
+										checked={column.getIsVisible()}
+										onCheckedChange={(value) =>
+											column.toggleVisibility(!!value)
+										}
+									>
+										{column.id}
+									</DropdownMenuCheckboxItem>
+								);
+							})}
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</div>
 
 			<ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
 				<Table className="w-full">
