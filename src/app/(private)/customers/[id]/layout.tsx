@@ -30,6 +30,8 @@ export default async function CustomerDetailLayout({
 
 	if (!data || data === null) return notFound();
 
+	console.log(data);
+
 	return (
 		<>
 			<div className="min-h-screen flex flex-col">
@@ -42,11 +44,11 @@ export default async function CustomerDetailLayout({
 							{[data.first_name, data.last_name].join(" ")}
 						</p>
 						<div>
-							<p className="text-xs text-muted-foreground font-medium">
-								Last Updated: {format(data.updated_at, "PPPP")}
+							<p className="text-sm text-muted-foreground font-medium">
+								Last Updated: {format(data.updated_at, "PPP")}
 							</p>
-							<p className="text-xs text-muted-foreground font-medium">
-								Created: {format(data.created_at, "PPPP")}
+							<p className="text-sm text-muted-foreground font-medium">
+								Created: {format(data.created_at, "PPP")}
 							</p>
 						</div>
 					</div>
@@ -68,6 +70,9 @@ export default async function CustomerDetailLayout({
 							email: data.email,
 							address: data.address,
 							address2: data.address2,
+							status: data.status,
+							priority: data.priority,
+							source: data.source,
 						}}
 					/>
 				</div>

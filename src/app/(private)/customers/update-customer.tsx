@@ -262,7 +262,7 @@ export function UpdateCustomer({
 											<FormLabel>Gender*</FormLabel>
 											<Select
 												onValueChange={field.onChange}
-												defaultValue={field.value}
+												value={field.value}
 											>
 												<FormControl>
 													<SelectTrigger>
@@ -369,7 +369,7 @@ export function UpdateCustomer({
 													<FormLabel>Status*</FormLabel>
 													<Select
 														onValueChange={field.onChange}
-														defaultValue={field.value}
+														value={field.value}
 													>
 														<FormControl>
 															<SelectTrigger>
@@ -404,7 +404,7 @@ export function UpdateCustomer({
 													<FormLabel>Priority</FormLabel>
 													<Select
 														onValueChange={field.onChange}
-														defaultValue={field.value}
+														value={field.value}
 													>
 														<FormControl>
 															<SelectTrigger>
@@ -434,7 +434,7 @@ export function UpdateCustomer({
 											<FormLabel>Source</FormLabel>
 											<Select
 												onValueChange={field.onChange}
-												defaultValue={field.value}
+												value={field.value}
 											>
 												<FormControl>
 													<SelectTrigger>
