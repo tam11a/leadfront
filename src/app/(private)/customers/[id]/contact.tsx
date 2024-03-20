@@ -14,6 +14,14 @@ import { PiEqualsDuotone } from "react-icons/pi";
 import { RiArrowDownSLine } from "react-icons/ri";
 import { RiArrowDownDoubleFill } from "react-icons/ri";
 
+export const Priorities = [
+	"Lowest",
+	"Low",
+	"Medium",
+	"High",
+	"Highest",
+] as const;
+
 export const PriorityIcon = ({ priority }: { priority?: string }) => {
 	switch (priority) {
 		case "Highest":

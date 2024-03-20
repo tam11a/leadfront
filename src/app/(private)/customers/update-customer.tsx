@@ -49,6 +49,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Priorities, PriorityIcon } from "./[id]/contact";
 
 const UpdateCustomerSchema = z.object({
 	first_name: z.string().min(1, {
@@ -431,11 +432,17 @@ export function UpdateCustomer({
 															</SelectTrigger>
 														</FormControl>
 														<SelectContent>
-															<SelectItem value="Highest">Highest</SelectItem>
-															<SelectItem value="High">High</SelectItem>
-															<SelectItem value="Medium">Medium</SelectItem>
-															<SelectItem value="Low">Low</SelectItem>
-															<SelectItem value="Lowest">Lowest</SelectItem>
+															{Priorities.map((priority) => (
+																<SelectItem
+																	value={priority}
+																	key={priority}
+																>
+																	<span className="flex flex-row gap-2 items-center">
+																		<PriorityIcon priority={priority} />
+																		{priority}
+																	</span>
+																</SelectItem>
+															))}
 														</SelectContent>
 													</Select>
 													<FormDescription></FormDescription>
