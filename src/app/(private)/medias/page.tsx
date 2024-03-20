@@ -1,5 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import MediaTable from "./table";
+import { CreateMedia } from "./create-media";
 
 export default function Medias() {
   return (
@@ -11,10 +12,9 @@ export default function Medias() {
             Here&apos;s a list of your medias!
           </p>
         </div>
-        {/* <CreateMedia /> */}
+        <CreateMedia />
       </div>
       <Separator />
-
       <div className="px-9">
         <MediaTable />
       </div>
