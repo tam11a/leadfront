@@ -30,8 +30,6 @@ export default async function CustomerDetailLayout({
 
 	if (!data || data === null) return notFound();
 
-	console.log(data);
-
 	return (
 		<>
 			<div className="min-h-screen flex flex-col">
