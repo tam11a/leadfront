@@ -203,7 +203,7 @@ export default function MediaTable() {
   const { data } = useGetMedias({ search });
 
   const table = useReactTable({
-    data: data?.data?.results || [],
+    data: React.useMemo(() => data?.data?.results || [], [data]),
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -230,7 +230,6 @@ export default function MediaTable() {
           onChange={(event) => {
             setSearch(event.target.value);
           }}
-          disabled
           className="max-w-sm"
         />
         <DropdownMenu>

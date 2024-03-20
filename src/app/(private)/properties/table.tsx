@@ -41,7 +41,8 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { TbUserEdit } from "react-icons/tb";
 import Link from "next/link";
-import { useGetProperties } from "@/lib/actions/properties/get-properties";
+import { useGetProducts } from "@/lib/actions/properties/get-products";
+import { UpdateProperty } from "./update-property";
 
 export interface Property {
   id: number;
@@ -126,11 +127,11 @@ export const columns: ColumnDef<Property>[] = [
       const property = row.original;
       return (
         <>
-          {/* <UpdateProperty propertyId={property.id}>
-              <Button size={"icon"} variant={"ghost"}>
-                <TbUserEdit />
-              </Button>
-            </UpdateProperty> */}
+          <UpdateProperty propertyId={property.id}>
+            <Button size={"icon"} variant={"ghost"}>
+              <TbUserEdit />
+            </Button>
+          </UpdateProperty>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -178,10 +179,9 @@ export default function PropertyTable() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const [search, setSearch] = React.useState<string>("");
-  const { data } = useGetProperties({ search });
-  console.log(data);
+  const { data } = useGetProducts({ search });
   const table = useReactTable({
-    data: data?.data?.results || [],
+    data: React.useMemo(() => data?.data?.results || [], [data]),
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -208,7 +208,6 @@ export default function PropertyTable() {
           onChange={(event) => {
             setSearch(event.target.value);
           }}
-          disabled
           className="max-w-sm"
         />
         <DropdownMenu>
