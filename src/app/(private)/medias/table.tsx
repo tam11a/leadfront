@@ -43,6 +43,7 @@ import { Badge } from "@/components/ui/badge";
 import { TbUserEdit } from "react-icons/tb";
 import Link from "next/link";
 import { useGetMedias } from "@/lib/actions/media/get-medias";
+import { UpdateMedia } from "./update-media";
 
 export interface Media {
   id: number;
@@ -129,6 +130,13 @@ export const columns: ColumnDef<Media>[] = [
     cell: ({ row }) => <div className="mx-4">{row.getValue("gender")}</div>,
   },
   {
+    accessorKey: "dob",
+    header: () => {
+      return <div className="mx-4">Date of Birth</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("dob")}</div>,
+  },
+  {
     accessorKey: "created_at",
     header: () => {
       return <div className="mx-4">Created At</div>;
@@ -143,11 +151,11 @@ export const columns: ColumnDef<Media>[] = [
       const media = row.original;
       return (
         <>
-          {/* <UpdateMedia mediaId={media.id}>
+          <UpdateMedia mediaId={media.id}>
             <Button size={"icon"} variant={"ghost"}>
               <TbUserEdit />
             </Button>
-          </UpdateMedia> */}
+          </UpdateMedia>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
