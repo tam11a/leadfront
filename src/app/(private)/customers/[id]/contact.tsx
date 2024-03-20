@@ -25,17 +25,17 @@ export const Priorities = [
 export const PriorityIcon = ({ priority }: { priority?: string }) => {
 	switch (priority) {
 		case "Highest":
-			return <RiArrowUpDoubleFill />;
+			return <RiArrowUpDoubleFill className="text-primary" />;
 		case "High":
-			return <RiArrowUpSLine />;
+			return <RiArrowUpSLine className="text-primary" />;
 		case "Medium":
-			return <PiEqualsDuotone />;
+			return <PiEqualsDuotone className="text-primary" />;
 		case "Low":
-			return <RiArrowDownSLine />;
+			return <RiArrowDownSLine className="text-primary" />;
 		case "Lowest":
-			return <RiArrowDownDoubleFill />;
+			return <RiArrowDownDoubleFill className="text-primary" />;
 		default:
-			return <PiEqualsDuotone />;
+			return <PiEqualsDuotone className="text-primary" />;
 	}
 };
 
@@ -52,31 +52,31 @@ export default async function CustomerContactBar(contact: {
 		<div className="space-y-3 px-8 py-6 border-l h-full md:min-w-[300px]">
 			<CardTitle>Phone</CardTitle>
 			<CardDescription className="flex items-center space-x-2">
-				<LuPhoneCall />
+				<LuPhoneCall className="text-primary" />
 				<span>{contact.phone || "No Phone Number Added"}</span>
 			</CardDescription>
 
 			<CardTitle>Email</CardTitle>
 			<CardDescription className="flex items-center space-x-2">
-				<FiMail />
+				<FiMail className="text-primary" />
 				<span>{contact.email || "No Email Added"}</span>
 			</CardDescription>
 
 			<CardTitle>Address</CardTitle>
 			<CardDescription className="flex items-center space-x-2">
-				<IoLocationOutline />
+				<IoLocationOutline className="text-primary" />
 				<span>{contact.address || "No Address Added"}</span>
 			</CardDescription>
 			{contact.address2 && (
 				<CardDescription className="flex items-center space-x-2">
-					<IoLocationOutline />
+					<IoLocationOutline className="text-primary" />
 					<span>{contact.address2 || "No Address Added"}</span>
 				</CardDescription>
 			)}
 
 			<CardTitle>Status</CardTitle>
 			<CardDescription className="flex items-center space-x-2">
-				<HiOutlineStatusOnline />
+				<HiOutlineStatusOnline className="text-primary" />
 				<span>{contact.status || "No Status Added"}</span>
 			</CardDescription>
 
@@ -88,7 +88,7 @@ export default async function CustomerContactBar(contact: {
 
 			<CardTitle>Source</CardTitle>
 			<CardDescription className="flex items-center space-x-2">
-				<VscSourceControl />
+				<VscSourceControl className="text-primary" />
 				<span>{contact.source || "No Source Added"}</span>
 			</CardDescription>
 		</div>
