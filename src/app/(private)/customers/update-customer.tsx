@@ -156,7 +156,6 @@ export function UpdateCustomer({
 	}, [customer]);
 
 	const { mutateAsync: update, isPending } = useUpdateCustomer();
-	console.log(form.getValues());
 
 	async function onSubmit(data: CustomerFormValues) {
 		form.clearErrors();
