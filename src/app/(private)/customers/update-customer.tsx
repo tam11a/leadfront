@@ -79,7 +79,7 @@ const UpdateCustomerSchema = z.object({
 	}),
 	is_active: z.boolean(),
 	status: z.any(),
-	priority: z.any().optional(),
+	priority: z.any(),
 	source: z.any().optional(),
 	media_id: z.number().optional(),
 	assigned_employee_id: z.number().optional(),
@@ -109,25 +109,34 @@ export function UpdateCustomer({
 			gender: "Male",
 			email: "",
 			phone: "",
+			bank_name: "",
+			bank_branch: "",
+			bank_account_number: "",
+			bank_routing_number: "",
 			address: "",
+			address2: "",
+			zip_code: "",
 			nid: undefined,
 			is_active: true,
+			status: "",
+			priority: "",
+			source: "",
+			// media_id: undefined,
+			// assigned_employee_id: undefined,
+			// project_id: undefined,
 		},
 		mode: "onChange",
 	});
 
 	useEffect(() => {
-		if (customer && form.formState.isDirty === false) {
+		if (customer?.data && form.formState.isDirty === false) {
 			form.reset({
 				first_name: customer.data.first_name,
 				last_name: customer.data.last_name,
-				gender: customer.data.gender,
+				gender: customer.data.gender || "",
 				email: customer.data.email,
 				phone: customer.data.phone,
 				dob: customer.data.dob,
-				status: customer.data.status,
-				priority: customer.data.priority,
-				source: customer.data.source,
 				bank_name: customer.data.bank_name,
 				bank_branch: customer.data.bank_branch,
 				bank_account_number: customer.data.bank_account_number,
@@ -135,14 +144,18 @@ export function UpdateCustomer({
 				address: customer.data.address,
 				address2: customer.data.address2,
 				zip_code: customer.data.zip_code,
-				nid: customer.data.nid,
 				is_active: customer.data.is_active,
+				nid: customer.data.nid,
+				status: customer.data.status || "",
+				priority: customer.data.priority || "",
+				source: customer.data.source || "",
 			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [customer]);
 
 	const { mutateAsync: update, isPending } = useUpdateCustomer();
+	console.log(form.getValues());
 
 	async function onSubmit(data: CustomerFormValues) {
 		form.clearErrors();
@@ -260,23 +273,25 @@ export function UpdateCustomer({
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>Gender*</FormLabel>
-											<Select
-												onValueChange={field.onChange}
-												value={field.value}
-											>
-												<FormControl>
+											<FormControl>
+												<Select
+													name={field.name}
+													onValueChange={(v) => v && field.onChange(v)}
+													value={field.value}
+													disabled={field.disabled}
+												>
 													<SelectTrigger>
 														<SelectValue placeholder="Select a gender" />
 													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													<SelectItem value="Male">Male (He/Him)</SelectItem>
-													<SelectItem value="Female">
-														Female (She/Her)
-													</SelectItem>
-													<SelectItem value="Non Binary">Others</SelectItem>
-												</SelectContent>
-											</Select>
+													<SelectContent>
+														<SelectItem value="Male">Male (He/Him)</SelectItem>
+														<SelectItem value="Female">
+															Female (She/Her)
+														</SelectItem>
+														<SelectItem value="Non Binary">Others</SelectItem>
+													</SelectContent>
+												</Select>
+											</FormControl>
 											<FormDescription></FormDescription>
 											<FormMessage />
 										</FormItem>
@@ -367,28 +382,32 @@ export function UpdateCustomer({
 											render={({ field }) => (
 												<FormItem>
 													<FormLabel>Status*</FormLabel>
-													<Select
-														onValueChange={field.onChange}
-														value={field.value}
-													>
-														<FormControl>
+													<FormControl>
+														<Select
+															onValueChange={(v) => v && field.onChange(v)}
+															value={field.value}
+														>
 															<SelectTrigger>
 																<SelectValue placeholder="Select a status" />
 															</SelectTrigger>
-														</FormControl>
-														<SelectContent>
-															<SelectItem value="Raw">Raw</SelectItem>
-															<SelectItem value="Prospect">Prospect</SelectItem>
-															<SelectItem value="High Prospect">
-																High Prospect
-															</SelectItem>
-															<SelectItem value="Priority">Priority</SelectItem>
-															<SelectItem value="Booked">Booked</SelectItem>
-															<SelectItem value="Sold">Sold</SelectItem>
-															<SelectItem value="Closed">Closed</SelectItem>
-															<SelectItem value="Junk">Junk</SelectItem>
-														</SelectContent>
-													</Select>
+															<SelectContent>
+																<SelectItem value="Raw">Raw</SelectItem>
+																<SelectItem value="Prospect">
+																	Prospect
+																</SelectItem>
+																<SelectItem value="High Prospect">
+																	High Prospect
+																</SelectItem>
+																<SelectItem value="Priority">
+																	Priority
+																</SelectItem>
+																<SelectItem value="Booked">Booked</SelectItem>
+																<SelectItem value="Sold">Sold</SelectItem>
+																<SelectItem value="Closed">Closed</SelectItem>
+																<SelectItem value="Junk">Junk</SelectItem>
+															</SelectContent>
+														</Select>
+													</FormControl>
 													<FormDescription></FormDescription>
 													<FormMessage />
 												</FormItem>
@@ -403,7 +422,7 @@ export function UpdateCustomer({
 												<FormItem>
 													<FormLabel>Priority</FormLabel>
 													<Select
-														onValueChange={field.onChange}
+														onValueChange={(v) => v && field.onChange(v)}
 														value={field.value}
 													>
 														<FormControl>
@@ -432,22 +451,22 @@ export function UpdateCustomer({
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>Source</FormLabel>
-											<Select
-												onValueChange={field.onChange}
-												value={field.value}
-											>
-												<FormControl>
+											<FormControl>
+												<Select
+													onValueChange={(v) => v && field.onChange(v)}
+													value={field.value}
+												>
 													<SelectTrigger>
 														<SelectValue placeholder="Select a source" />
 													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													<SelectItem value="Facebook">Facebook</SelectItem>
-													<SelectItem value="Instagram">Instagram</SelectItem>
-													<SelectItem value="Indeed">Indeed</SelectItem>
-													<SelectItem value="Walk In">Walk In</SelectItem>
-												</SelectContent>
-											</Select>
+													<SelectContent>
+														<SelectItem value="Facebook">Facebook</SelectItem>
+														<SelectItem value="Instagram">Instagram</SelectItem>
+														<SelectItem value="Indeed">Indeed</SelectItem>
+														<SelectItem value="Walk In">Walk In</SelectItem>
+													</SelectContent>
+												</Select>
+											</FormControl>
 											<FormDescription></FormDescription>
 											<FormMessage />
 										</FormItem>

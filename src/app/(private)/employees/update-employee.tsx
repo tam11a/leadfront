@@ -281,7 +281,7 @@ export function UpdateEmployee({
 										<FormItem>
 											<FormLabel>Gender*</FormLabel>
 											<Select
-												onValueChange={field.onChange}
+												onValueChange={(v) => v && field.onChange(v)}
 												defaultValue={field.value}
 											>
 												<FormControl>

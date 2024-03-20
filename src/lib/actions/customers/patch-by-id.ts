@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import instance from "..";
+// import { revalidatePath } from "next/cache";
 
 const update = ({ id, data }: { id: number | string; data: any }) => {
 	return instance.patch(`/crm-customers/${id}`, { ...data });
@@ -17,6 +18,7 @@ export const useUpdateCustomer = () => {
 			queryClient.invalidateQueries({
 				queryKey: ["get-customer-by-id"],
 			});
+			// revalidatePath("/app/customers/[id]", "layout");
 		},
 	});
 };
