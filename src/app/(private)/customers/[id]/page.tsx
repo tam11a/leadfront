@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
 import { FiActivity } from "react-icons/fi";
-import { RiDeleteBin2Fill } from "react-icons/ri";
+import { MdOutlineDelete } from "react-icons/md";
 
 export default function CustomerInterestsPage({
 	params,
@@ -36,7 +36,7 @@ export default function CustomerInterestsPage({
 		</div>
 	) : (
 		<div className="space-y-3 max-w-lg">
-			<div className="flex flex-row items-center gap-3 justify-between">
+			<div className="flex flex-row items-center gap-3">
 				<Input
 					placeholder="Search property name, area.."
 					value={search}
@@ -80,10 +80,11 @@ export default function CustomerInterestsPage({
 					</CardHeader>
 					<CardHeader>
 						<Button
-							size={"icon"}
 							variant={"outline"}
+							size={"icon"}
+							className="text-destructive"
 						>
-							<RiDeleteBin2Fill />
+							<MdOutlineDelete />
 						</Button>
 					</CardHeader>
 				</Card>
