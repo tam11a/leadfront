@@ -9,15 +9,13 @@ export default function TabNav() {
 
 	return (
 		<Tabs
-			className="mb-4"
 			value={pathname.split("/")?.[3] || ""}
 			onValueChange={(value) => {
 				router.push(`/customers/${pathname.split("/")?.[2]}/${value}`);
 			}}
 		>
 			<TabsList>
-				<TabsTrigger value="">Details</TabsTrigger>
-				<TabsTrigger value="interests">Interests</TabsTrigger>
+				<TabsTrigger value="">Interests</TabsTrigger>
 				<TabsTrigger value="logs">Logs</TabsTrigger>
 			</TabsList>
 		</Tabs>
