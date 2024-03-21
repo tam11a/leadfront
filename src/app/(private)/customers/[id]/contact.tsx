@@ -10,7 +10,7 @@ import { VscSourceControl } from "react-icons/vsc";
 // Priority Icon
 import { RiArrowUpDoubleFill } from "react-icons/ri";
 import { RiArrowUpSLine } from "react-icons/ri";
-import { PiEqualsDuotone } from "react-icons/pi";
+import { PiEqualsBold } from "react-icons/pi";
 import { RiArrowDownSLine } from "react-icons/ri";
 import { RiArrowDownDoubleFill } from "react-icons/ri";
 
@@ -29,17 +29,17 @@ export const PriorityIcon = ({ priority }: { priority?: string }) => {
 		case "High":
 			return <RiArrowUpSLine className="text-primary" />;
 		case "Medium":
-			return <PiEqualsDuotone className="text-primary" />;
+			return <PiEqualsBold className="text-primary" />;
 		case "Low":
 			return <RiArrowDownSLine className="text-primary" />;
 		case "Lowest":
 			return <RiArrowDownDoubleFill className="text-primary" />;
 		default:
-			return <PiEqualsDuotone className="text-primary" />;
+			return <PiEqualsBold className="text-primary" />;
 	}
 };
 
-export default async function CustomerContactBar(contact: {
+export default function CustomerContactBar(contact: {
 	phone?: string;
 	email?: string;
 	address?: string;
