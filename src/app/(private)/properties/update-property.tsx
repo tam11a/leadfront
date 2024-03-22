@@ -36,6 +36,10 @@ import {
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { useGetAreas } from "@/lib/actions/configuration/areas/get-areas";
+import { useGetPropertyTypes } from "@/lib/actions/configuration/property-types/get-property-types";
+import { useGetPropertyUnits } from "@/lib/actions/configuration/property-units/get-property-units";
+import { useMedia } from "@/lib/actions/media/use-media";
 import { useGetProductById } from "@/lib/actions/properties/get-by-id";
 import { useUpdateProduct } from "@/lib/actions/properties/patch-by-id";
 import handleResponse from "@/lib/handle-response";
@@ -53,19 +57,21 @@ const UpdatePropertySchema = z.object({
     message: "Property title must be at least 1 character.",
   }),
   area: z.string(),
-  email: z.string().email({
-    message: "Email must be a valid email address.",
-  }),
-  phone: z.string().min(11, {
-    message: "Phone number must be at least 11 characters.",
-  }),
-  phone2: z.any().optional(),
-  dob: z.any().optional(),
-  address: z.string().min(1, {
+  product_type: z.string(),
+  size: z.string(),
+  unit: z.string(),
+  plot: z.any().optional(),
+  facing: z.string(),
+  block: z.any().optional(),
+  road: z.any().optional(),
+  remarks: z.any().optional(),
+  adress: z.string().min(1, {
     message: "Address must be at least 1 character.",
   }),
-  address2: z.any().optional(),
-  zip_code: z.any().optional(),
+  price_private: z.string(),
+  price_public: z.string(),
+  media_id: z.any().optional(),
+  media_commision: z.any().optional(),
 });
 
 type PropertyFormValues = z.infer<typeof UpdatePropertySchema>;
@@ -78,21 +84,37 @@ export function UpdateProperty({
   propertyId: number;
 }>) {
   const [open, setOpen] = useState(false);
+  const [search, _setSearch] = useState("");
   const { data: property, isLoading } = useGetProductById(
     open ? propertyId : undefined
   );
+  const { data: areaData, isLoading: areaLoading } = useGetAreas(search);
+  const { data: unitData, isLoading: unitLoading } =
+    useGetPropertyUnits(search);
+  const { data: typeData, isLoading: typeLoading } =
+    useGetPropertyTypes(search);
+  const { data: mediaData, isLoading: mediaLoading } = useMedia(search);
+
+  console.log(property);
 
   const form = useForm<PropertyFormValues>({
     resolver: zodResolver(UpdatePropertySchema),
     defaultValues: {
       product_uid: "",
       area: "",
-      email: "",
-      phone: "",
-      phone2: "",
-      address: "",
-      address2: "",
-      zip_code: "",
+      product_type: "",
+      size: "",
+      unit: "",
+      block: "",
+      road: "",
+      plot: "",
+      facing: "",
+      remarks: "",
+      adress: "",
+      price_private: "",
+      price_public: "",
+      media_id: "",
+      media_commision: "",
     },
     mode: "onChange",
   });
@@ -101,14 +123,20 @@ export function UpdateProperty({
     if (property?.data && form.formState.isDirty === false) {
       form.reset({
         product_uid: property.data.product_uid,
-        area: property.data.area,
-        email: property.data.email,
-        phone: property.data.phone,
-        phone2: property.data.phone2,
-        dob: property.data.dob,
-        address: property.data.address,
-        address2: property.data.address2,
-        zip_code: property.data.zip_code,
+        area: property.data.area || "",
+        product_type: property.data.product_type || "",
+        size: property.data.size,
+        unit: property.data.unit || "",
+        block: property.data.block,
+        road: property.data.road,
+        plot: property.data.plot,
+        facing: property.data.facing,
+        remarks: property.data.remarks,
+        adress: property.data.adress,
+        price_private: property.data.price_private,
+        price_public: property.data.price_public,
+        media_id: property.data.media_id,
+        media_commision: property.data.media_commision,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -201,148 +229,321 @@ export function UpdateProperty({
                 />
                 <FormField
                   control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email*</FormLabel>
-                      <FormControl>
-                        <Input placeholder="example@domain.co" {...field} />
-                      </FormControl>
-                      <FormDescription></FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Primary Number*</FormLabel>
-                      <FormControl>
-                        <Input placeholder="017XXXXXXXX" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        This is the primary/main contact number of the property.
-                        Make sure it is a valid number.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="phone2"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Secondary Number</FormLabel>
-                      <FormControl>
-                        <Input placeholder="017XXXXXXXX" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        This is the secondary contact number of the
-                        property.This is optional. If you enter any number make
-                        sure it is a valid number.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="dob"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Date of Birth</FormLabel>
-                      <FormControl>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full justify-start text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {field.value ? (
-                                format(field.value, "PPP")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={(e: any) =>
-                                field.onChange(format(e as Date, "yyyy-MM-dd"))
-                              }
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </FormControl>
-                      <FormDescription></FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address Line 1*</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          rows={5}
-                          placeholder="1234 Main St, City, Country"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        This is your primary address. It must be a valid
-                        address.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="address2"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address Line 2 </FormLabel>
-                      <FormControl>
-                        <Textarea
-                          rows={5}
-                          placeholder="1234 Main St, City, Country"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        This is your secondary address. It is optional. If you
-                        enter any address it must be a valid address.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="zip_code"
+                  name="product_type"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Zip Code</FormLabel>
+                      <FormLabel>Property Type*</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="1240" {...field} />
+                        <Select
+                          name={field.name}
+                          onValueChange={(v) => v && field.onChange(v)}
+                          value={field.value}
+                          disabled={typeLoading}
+                          // disabled={true}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a area" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {typeData?.data?.map((type: any) => (
+                              <SelectItem value={type?.id} key={type?.id}>
+                                {type?.product_type_name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormDescription></FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="area"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Area*</FormLabel>
+                      <FormControl>
+                        <Select
+                          name={field.name}
+                          onValueChange={(v) => v && field.onChange(v)}
+                          value={field.value}
+                          disabled={areaLoading}
+                          // disabled={true}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a area" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {areaData?.data?.map((area: any) => (
+                              <SelectItem value={area?.id} key={area?.id}>
+                                {area?.area_name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormDescription></FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="flex flex-row items-start gap-3">
+                  <FormField
+                    control={form.control}
+                    name="size"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Size*</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter size of the property"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="unit"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Unit Type*</FormLabel>
+                        <FormControl>
+                          <Select
+                            name={field.name}
+                            onValueChange={(v) => v && field.onChange(v)}
+                            value={field.value}
+                            disabled={unitLoading}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a unit type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {unitData?.data?.map((unit: any) => (
+                                <SelectItem value={unit?.id} key={unit?.id}>
+                                  {unit?.unit_name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex flex-row items-start gap-3">
+                  <FormField
+                    control={form.control}
+                    name="block"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Block/Sector</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter block number" {...field} />
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="road"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Road</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter road number" {...field} />
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex flex-row items-start gap-3">
+                  <FormField
+                    control={form.control}
+                    name="plot"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Plot</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter size of the property"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="facing"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Unit Type*</FormLabel>
+                        <FormControl>
+                          <Select
+                            name={field.name}
+                            onValueChange={(v) => v && field.onChange(v)}
+                            value={field.value}
+                            disabled={field.disabled}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a unit type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value={"East"}>East</SelectItem>
+                              <SelectItem value={"West"}>West</SelectItem>
+                              <SelectItem value={"North"}>North</SelectItem>
+                              <SelectItem value={"South"}>South</SelectItem>
+                              <SelectItem value={"Southeast"}>
+                                Southeast
+                              </SelectItem>
+                              <SelectItem value={"Southwest"}>
+                                Southwest
+                              </SelectItem>
+                              <SelectItem value={"Northeast"}>
+                                Northeast
+                              </SelectItem>
+                              <SelectItem value={"Northwest"}>
+                                Northwest
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="remarks"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Remarks</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          rows={3}
+                          placeholder="Enter any additional comments or notes here..."
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription></FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="adress"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Address</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          rows={5}
+                          placeholder="1234 Main St, City, Country"
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        This is property's address. It must be a valid address.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="price_private"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Pruchasing Price*</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter the price in bdt."
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription></FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="price_public"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Selling Price*</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter the price in bdt."
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription></FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="media_id"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Media</FormLabel>
+                      <FormControl>
+                        <Select
+                          name={field.name}
+                          onValueChange={(v) => v && field.onChange(v)}
+                          value={field.value}
+                          disabled={unitLoading}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a the name of the media" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {mediaData?.data?.map((media: any) => (
+                              <SelectItem value={media?.id} key={media?.id}>
+                                {`${media?.first_name} ${media?.last_name}`}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormDescription></FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="media_commision"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Media Commision</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter the price in bdt."
+                          {...field}
+                        />
                       </FormControl>
                       <FormDescription></FormDescription>
                       <FormMessage />
