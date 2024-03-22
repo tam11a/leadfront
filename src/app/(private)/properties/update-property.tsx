@@ -58,7 +58,7 @@ const UpdatePropertySchema = z.object({
   }),
   area: z.string(),
   product_type: z.string(),
-  size: z.string(),
+  size: z.number(),
   unit: z.string(),
   plot: z.any().optional(),
   facing: z.string(),
@@ -68,8 +68,8 @@ const UpdatePropertySchema = z.object({
   adress: z.string().min(1, {
     message: "Address must be at least 1 character.",
   }),
-  price_private: z.string(),
-  price_public: z.string(),
+  price_private: z.number(),
+  price_public: z.number(),
   media_id: z.any().optional(),
   media_commision: z.any().optional(),
 });
@@ -95,25 +95,16 @@ export function UpdateProperty({
     useGetPropertyTypes(search);
   const { data: mediaData, isLoading: mediaLoading } = useMedia(search);
 
-  console.log(property);
-
   const form = useForm<PropertyFormValues>({
     resolver: zodResolver(UpdatePropertySchema),
     defaultValues: {
       product_uid: "",
-      area: "",
-      product_type: "",
-      size: "",
-      unit: "",
       block: "",
       road: "",
       plot: "",
       facing: "",
       remarks: "",
       adress: "",
-      price_private: "",
-      price_public: "",
-      media_id: "",
       media_commision: "",
     },
     mode: "onChange",
@@ -123,10 +114,10 @@ export function UpdateProperty({
     if (property?.data && form.formState.isDirty === false) {
       form.reset({
         product_uid: property.data.product_uid,
-        area: property.data.area || "",
-        product_type: property.data.product_type || "",
+        area: property.data.area?.toString(),
+        product_type: property.data.product_type?.toString(),
         size: property.data.size,
-        unit: property.data.unit || "",
+        unit: property.data.unit?.toString(),
         block: property.data.block,
         road: property.data.road,
         plot: property.data.plot,
@@ -237,7 +228,7 @@ export function UpdateProperty({
                         <Select
                           name={field.name}
                           onValueChange={(v) => v && field.onChange(v)}
-                          value={field.value}
+                          value={field.value?.toString()}
                           disabled={typeLoading}
                           // disabled={true}
                         >
@@ -246,7 +237,10 @@ export function UpdateProperty({
                           </SelectTrigger>
                           <SelectContent>
                             {typeData?.data?.map((type: any) => (
-                              <SelectItem value={type?.id} key={type?.id}>
+                              <SelectItem
+                                value={type?.id.toString()}
+                                key={type?.id}
+                              >
                                 {type?.product_type_name}
                               </SelectItem>
                             ))}
@@ -268,7 +262,7 @@ export function UpdateProperty({
                         <Select
                           name={field.name}
                           onValueChange={(v) => v && field.onChange(v)}
-                          value={field.value}
+                          value={field.value?.toString()}
                           disabled={areaLoading}
                           // disabled={true}
                         >
@@ -277,7 +271,10 @@ export function UpdateProperty({
                           </SelectTrigger>
                           <SelectContent>
                             {areaData?.data?.map((area: any) => (
-                              <SelectItem value={area?.id} key={area?.id}>
+                              <SelectItem
+                                value={area?.id?.toString()}
+                                key={area?.id}
+                              >
                                 {area?.area_name}
                               </SelectItem>
                             ))}
@@ -301,6 +298,10 @@ export function UpdateProperty({
                           <Input
                             placeholder="Enter size of the property"
                             {...field}
+                            type="number"
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
                           />
                         </FormControl>
                         <FormDescription></FormDescription>
@@ -318,7 +319,7 @@ export function UpdateProperty({
                           <Select
                             name={field.name}
                             onValueChange={(v) => v && field.onChange(v)}
-                            value={field.value}
+                            value={field.value?.toString()}
                             disabled={unitLoading}
                           >
                             <SelectTrigger>
@@ -326,7 +327,10 @@ export function UpdateProperty({
                             </SelectTrigger>
                             <SelectContent>
                               {unitData?.data?.map((unit: any) => (
-                                <SelectItem value={unit?.id} key={unit?.id}>
+                                <SelectItem
+                                  value={unit?.id.toString()}
+                                  key={unit?.id}
+                                >
                                   {unit?.unit_name}
                                 </SelectItem>
                               ))}
@@ -392,7 +396,7 @@ export function UpdateProperty({
                     name="facing"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel>Unit Type*</FormLabel>
+                        <FormLabel>Facing*</FormLabel>
                         <FormControl>
                           <Select
                             name={field.name}
@@ -401,7 +405,7 @@ export function UpdateProperty({
                             disabled={field.disabled}
                           >
                             <SelectTrigger>
-                              <SelectValue placeholder="Select a unit type" />
+                              <SelectValue placeholder="Select a facing" />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value={"East"}>East</SelectItem>
@@ -479,6 +483,10 @@ export function UpdateProperty({
                         <Input
                           placeholder="Enter the price in bdt."
                           {...field}
+                          type="number"
+                          onChange={(e) =>
+                            field.onChange(e.target.valueAsNumber)
+                          }
                         />
                       </FormControl>
                       <FormDescription></FormDescription>
@@ -495,7 +503,11 @@ export function UpdateProperty({
                       <FormControl>
                         <Input
                           placeholder="Enter the price in bdt."
+                          type="number"
                           {...field}
+                          onChange={(e) =>
+                            field.onChange(e.target.valueAsNumber)
+                          }
                         />
                       </FormControl>
                       <FormDescription></FormDescription>
@@ -513,7 +525,7 @@ export function UpdateProperty({
                         <Select
                           name={field.name}
                           onValueChange={(v) => v && field.onChange(v)}
-                          value={field.value}
+                          value={field.value?.toString()}
                           disabled={unitLoading}
                         >
                           <SelectTrigger>
@@ -521,7 +533,10 @@ export function UpdateProperty({
                           </SelectTrigger>
                           <SelectContent>
                             {mediaData?.data?.map((media: any) => (
-                              <SelectItem value={media?.id} key={media?.id}>
+                              <SelectItem
+                                value={media?.id.toString()}
+                                key={media?.id}
+                              >
                                 {`${media?.first_name} ${media?.last_name}`}
                               </SelectItem>
                             ))}
