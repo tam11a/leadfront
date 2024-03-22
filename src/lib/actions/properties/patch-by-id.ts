@@ -6,7 +6,7 @@ const update = ({ id, data }: { id: number | string; data: any }) => {
   return instance.patch(`/crm-products/${id}`, { ...data });
 };
 
-export const useUpdateProduct = () => {
+export const useUpdateProducts = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: update,

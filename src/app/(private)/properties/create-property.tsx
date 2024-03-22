@@ -26,24 +26,21 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useGetAreas } from "@/lib/actions/configuration/areas/get-areas";
 import { useGetPropertyTypes } from "@/lib/actions/configuration/property-types/get-property-types";
 import { useGetPropertyUnits } from "@/lib/actions/configuration/property-units/get-property-units";
 import { useMedia } from "@/lib/actions/media/use-media";
-import { useGetProductById } from "@/lib/actions/properties/get-by-id";
-import { useUpdateProducts } from "@/lib/actions/properties/patch-by-id";
+import { useCreateProducts } from "@/lib/actions/properties/post-prodcts";
 import handleResponse from "@/lib/handle-response";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const UpdatePropertySchema = z.object({
+const CreatePropertySchema = z.object({
   product_uid: z.string().min(1, {
     message: "Property title must be at least 1 character.",
   }),
@@ -65,20 +62,14 @@ const UpdatePropertySchema = z.object({
   media_commision: z.any().optional(),
 });
 
-type PropertyFormValues = z.infer<typeof UpdatePropertySchema>;
+type PropertyFormValues = z.infer<typeof CreatePropertySchema>;
 
-export function UpdateProperty({
-  children,
-  propertyId,
-}: Readonly<{
-  children?: React.ReactNode;
-  propertyId: number;
-}>) {
+export function CreateProperty() {
   const [open, setOpen] = useState(false);
   const [search, _setSearch] = useState("");
-  const { data: property, isLoading } = useGetProductById(
-    open ? propertyId : undefined
-  );
+
+  const { mutateAsync: create, isPending } = useCreateProducts();
+
   const { data: areaData, isLoading: areaLoading } = useGetAreas(search);
   const { data: unitData, isLoading: unitLoading } =
     useGetPropertyUnits(search);
@@ -87,13 +78,12 @@ export function UpdateProperty({
   const { data: mediaData, isLoading: mediaLoading } = useMedia(search);
 
   const form = useForm<PropertyFormValues>({
-    resolver: zodResolver(UpdatePropertySchema),
+    resolver: zodResolver(CreatePropertySchema),
     defaultValues: {
       product_uid: "",
       block: "",
       road: "",
       plot: "",
-      facing: "",
       remarks: "",
       adress: "",
       media_commision: "",
@@ -101,45 +91,15 @@ export function UpdateProperty({
     mode: "onChange",
   });
 
-  useEffect(() => {
-    if (property?.data && form.formState.isDirty === false) {
-      form.reset({
-        product_uid: property.data.product_uid,
-        area: property.data.area?.toString(),
-        product_type: property.data.product_type?.toString(),
-        size: property.data.size,
-        unit: property.data.unit?.toString(),
-        block: property.data.block,
-        road: property.data.road,
-        plot: property.data.plot,
-        facing: property.data.facing,
-        remarks: property.data.remarks,
-        adress: property.data.adress,
-        price_private: property.data.price_private,
-        price_public: property.data.price_public,
-        media_id: property.data.media_id,
-        media_commision: property.data.media_commision,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [property]);
-
-  const { mutateAsync: update, isPending } = useUpdateProducts();
-
   async function onSubmit(data: PropertyFormValues) {
     form.clearErrors();
-    const res = await handleResponse(() =>
-      update({
-        id: propertyId,
-        data,
-      })
-    );
+    const res = await handleResponse(() => create(data), [201]);
     if (res.status) {
-      toast("Updated!", {
-        description: `Property details has been updated successfully.`,
-        closeButton: true,
+      toast("Added!", {
+        description: `Property has been created successfully.`,
         important: true,
       });
+      form.reset();
       setOpen(false);
     } else {
       if (typeof res.data === "object") {
@@ -150,7 +110,7 @@ export function UpdateProperty({
           });
         });
         toast("Error!", {
-          description: `There was an error updating Property details. Please try again.`,
+          description: `There was an error creating property. Please try again.`,
           important: true,
           action: {
             label: "Retry",
@@ -172,24 +132,13 @@ export function UpdateProperty({
   return (
     <>
       <Sheet open={open} onOpenChange={(o) => setOpen(o)}>
-        <SheetTrigger asChild>
-          {children || <Button>Update</Button>}
-        </SheetTrigger>
+        <Button onClick={() => setOpen(true)}>Add New</Button>
         <SheetContent className="max-h-screen overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>Update Property</SheetTitle>
+            <SheetTitle>Create Property</SheetTitle>
             <SheetDescription>
-              Please fill in the form to update the property data.
+              Complete the form below to create a new property.
             </SheetDescription>
-          </SheetHeader>
-          {isLoading ? (
-            <div className="space-y-4 mt-5">
-              <Skeleton className="h-16" />
-              <Skeleton className="h-16" />
-              <Skeleton className="h-16" />
-              <Skeleton className="h-10 w-24 float-right" />
-            </div>
-          ) : (
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -387,7 +336,7 @@ export function UpdateProperty({
                     name="facing"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel>Facing*</FormLabel>
+                        <FormLabel>Facing</FormLabel>
                         <FormControl>
                           <Select
                             name={field.name}
@@ -517,7 +466,7 @@ export function UpdateProperty({
                           name={field.name}
                           onValueChange={(v) => v && field.onChange(v)}
                           value={field.value?.toString()}
-                          disabled={mediaLoading}
+                          disabled={unitLoading}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Select a the name of the media" />
@@ -566,7 +515,7 @@ export function UpdateProperty({
                 </SheetFooter>
               </form>
             </Form>
-          )}
+          </SheetHeader>
         </SheetContent>
       </Sheet>
     </>

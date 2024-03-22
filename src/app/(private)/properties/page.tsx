@@ -1,5 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import PropertyTable from "./table";
+import { CreateProperty } from "./create-property";
 
 export default function properties() {
   return (
@@ -11,7 +12,7 @@ export default function properties() {
             Here&apos;s a list of your properties!
           </p>
         </div>
-        {/* <CreateProperties /> */}
+        <CreateProperty />
       </div>
       <Separator />
       <div className="px-9">
