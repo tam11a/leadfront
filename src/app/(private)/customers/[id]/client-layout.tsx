@@ -26,7 +26,12 @@ export default function ClientLayout({
 							Customer Details #{params.id}
 						</h1>
 						<p className="text-xl font-bold">
-							{[data?.data.first_name, data?.data.last_name].join(" ")}
+							{[data?.data.first_name, data?.data.last_name].join(" ")}{" "}
+							{data?.data.gender === "Male"
+								? "(He/Him)"
+								: data?.data.gender === "Female"
+								? "(She/Her)"
+								: ""}
 						</p>
 						<div>
 							<p className="text-sm text-muted-foreground font-medium">
