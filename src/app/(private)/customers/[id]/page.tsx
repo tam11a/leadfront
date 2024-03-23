@@ -6,6 +6,7 @@ import {
 	CardDescription,
 	Card,
 	CardHeader,
+	CardContent,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useGetInterests } from "@/lib/actions/interests/get-interests";
@@ -14,6 +15,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { FiActivity } from "react-icons/fi";
 import { MdOutlineDelete } from "react-icons/md";
+import { Loading } from "../../token-validation-checker";
 
 export default function CustomerInterestsPage({
 	params,
@@ -23,10 +25,12 @@ export default function CustomerInterestsPage({
 	};
 }) {
 	const [search, setSearch] = useState("");
-	const { data } = useGetInterests({
+	const { data, isLoading } = useGetInterests({
 		id: params.id,
 		varr: true,
 	});
+
+	if (isLoading) return <Loading />;
 
 	return !data?.data?.length ? (
 		<div className="flex flex-col w-full items-center justify-center min-h-[400px] gap-5">
@@ -68,15 +72,15 @@ export default function CustomerInterestsPage({
 								{interest.name}
 							</Link>
 						</CardTitle>
-						<CardDescription>
-							{interest.area}
+						<CardContent className="flex p-0 flex-row items-center flex-wrap">
+							<CardDescription>{interest.area}</CardDescription>
 							<Badge
 								className="ml-2"
 								variant={"outline"}
 							>
 								{interest.type}
 							</Badge>
-						</CardDescription>
+						</CardContent>
 					</CardHeader>
 					<CardHeader>
 						<Button

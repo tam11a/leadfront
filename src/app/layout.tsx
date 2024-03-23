@@ -23,7 +23,10 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={cn(outfit.className, "bg-background")}>
+			<body
+				className={cn(outfit.className, "bg-background")}
+				suppressHydrationWarning
+			>
 				<CookiesProvider>
 					<Contexts>
 						<ThemeProvider
