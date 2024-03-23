@@ -25,10 +25,12 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import useUser from "@/hooks/useUser";
+import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -49,6 +51,7 @@ export default function CustomerLogsPage({
 		id: number;
 	};
 }) {
+	const { data: customer, isLoading } = useGetCustomerById(params.id);
 	const { user } = useUser();
 	const form = useForm<CreateCustomerMessageFormValues>({
 		resolver: zodResolver(CreateCustomerMessageSchema),
@@ -57,7 +60,20 @@ export default function CustomerLogsPage({
 			followup: undefined,
 			status: undefined,
 		},
+		mode: "onChange",
 	});
+
+	useEffect(() => {
+		if (isLoading || !customer) return;
+		form.reset({
+			note: "",
+			status: customer.data.status,
+			followup: customer.data.followup,
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [customer]);
+
+	console.log(form.formState.dirtyFields);
 
 	const onSubmit = async (values: CreateCustomerMessageFormValues) => {
 		console.log(values);
@@ -71,7 +87,17 @@ export default function CustomerLogsPage({
 				</CardHeader>
 				<CardContent>
 					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)}>
+						<form
+							onSubmit={form.handleSubmit(onSubmit)}
+							onReset={() => {
+								if (isLoading || !customer) return;
+								form.reset({
+									note: "",
+									status: customer.data.status,
+									followup: customer.data.followup,
+								});
+							}}
+						>
 							<FormField
 								control={form.control}
 								name="status"
@@ -79,8 +105,8 @@ export default function CustomerLogsPage({
 									<FormItem>
 										<FormLabel>Status</FormLabel>
 										<Select
-											onValueChange={field.onChange}
-											defaultValue={field.value}
+											onValueChange={(v) => v && field.onChange(v)}
+											value={field.value}
 										>
 											<FormControl>
 												<SelectTrigger>
@@ -164,7 +190,15 @@ export default function CustomerLogsPage({
 									</FormItem>
 								)}
 							/>
-							<Button type="submit">Create Log</Button>
+							<div className="flex flex-row flex-wrap gap-2">
+								<Button type="submit">Create Log</Button>
+								<Button
+									type="reset"
+									variant={"secondary"}
+								>
+									Reset
+								</Button>
+							</div>
 						</form>
 					</Form>
 				</CardContent>
