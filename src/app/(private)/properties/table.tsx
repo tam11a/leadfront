@@ -41,39 +41,20 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { TbUserEdit } from "react-icons/tb";
 import Link from "next/link";
-import { useGetMedias } from "@/lib/actions/media/get-medias";
-import { UpdateMedia } from "./update-media";
+import { useGetProducts } from "@/lib/actions/properties/get-products";
+import { UpdateProperty } from "./update-property";
 
-export interface Media {
+export interface Property {
   id: number;
-  first_name: string;
-  last_name: string;
-  gender: string;
-  status: string;
-  priority: string;
-  source: string;
-  email: string;
-  phone: string;
-  dob: string;
-  bank_name?: string;
-  bank_branch?: string;
-  bank_account_number?: number;
-  bank_routing_number?: number;
-  address: string;
-  address2?: string;
-  zip_code: number;
-  nid: number;
-  is_active: boolean;
-  followup: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string;
-  assigned_employee_id?: number;
-  media_id?: number;
-  project_id?: number;
+  product_uid: string;
+  product_typeName: string;
+  areaName: string;
+  size: string;
+  unitName: string;
+  price_public: string;
 }
 
-export const columns: ColumnDef<Media>[] = [
+export const columns: ColumnDef<Property>[] = [
   {
     accessorKey: "id",
     header: () => {
@@ -82,58 +63,54 @@ export const columns: ColumnDef<Media>[] = [
     cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
   },
   {
-    id: "full_name",
-    accessorKey: "full_name",
+    id: "product_uid",
+    accessorKey: "product_uid",
     header: () => {
-      return <div className="mx-4">Full Name</div>;
+      return <div className="mx-4">Title</div>;
     },
     cell: ({ row }) => (
-      <Link href={`/medias/${row.original.id}`} className="mx-4">
-        <Button variant={"link"}>
-          {row.original.first_name} {row.original.last_name}
+      <Link href={`/properties/${row.original.id}`} className="mx-4">
+        <Button variant={"link"} className="capitalize">
+          {row.original.product_uid}
         </Button>
       </Link>
     ),
   },
   {
-    accessorKey: "phone",
+    accessorKey: "product_typeName",
     header: () => {
-      return <div className="mx-4">Phone</div>;
-    },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("phone")}</div>,
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+      return <div className="mx-4">Type</div>;
     },
     cell: ({ row }) => (
-      <>
-        <div className="lowercase">{row.getValue("email")}</div>
-      </>
+      <div className="mx-4">{row.getValue("product_typeName")}</div>
     ),
   },
   {
-    accessorKey: "gender",
+    accessorKey: "areaName",
     header: () => {
-      return <div className="mx-4">Gender</div>;
+      return <div className="mx-4">Area</div>;
     },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("gender")}</div>,
+    cell: ({ row }) => <div className="mx-4">{row.getValue("areaName")}</div>,
   },
   {
-    accessorKey: "dob",
+    accessorKey: "size",
     header: () => {
-      return <div className="mx-4">Date of Birth</div>;
+      return <div className="mx-4">Size</div>;
     },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("dob")}</div>,
+    cell: ({ row }) => (
+      <div className="mx-4">
+        {row.original.size} {row.original.unitName}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "price_public",
+    header: () => {
+      return <div className="mx-4">Price</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">{row.getValue("price_public")}</div>
+    ),
   },
   {
     accessorKey: "created_at",
@@ -147,14 +124,14 @@ export const columns: ColumnDef<Media>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const media = row.original;
+      const property = row.original;
       return (
         <>
-          <UpdateMedia mediaId={media.id}>
+          <UpdateProperty propertyId={property.id}>
             <Button size={"icon"} variant={"ghost"}>
               <TbUserEdit />
             </Button>
-          </UpdateMedia>
+          </UpdateProperty>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -167,11 +144,13 @@ export const columns: ColumnDef<Media>[] = [
               <DropdownMenuItem
                 onClick={() =>
                   navigator.clipboard.writeText(
-                    `ID: ${media.id?.toString()}\nFirst Name: ${
-                      media?.first_name
-                    }\nLast Name: ${media?.last_name}\nPhone: ${
-                      media.phone
-                    }\nEmail: ${media.email}`
+                    `ID: ${property.id?.toString()}\nTitle: ${
+                      property?.product_uid
+                    }\nProperty Type: ${property?.product_typeName}\nArea: ${
+                      property.product_typeName
+                    }\nSize: ${property.size} ${property.unitName}\nPrice: ${
+                      property.price_public
+                    } ৳\n`
                   )
                 }
               >
@@ -179,7 +158,7 @@ export const columns: ColumnDef<Media>[] = [
               </DropdownMenuItem>
 
               <DropdownMenuSeparator />
-              <Link href={`/medias/${media.id}`}>
+              <Link href={`/properties/${property.id}`}>
                 <DropdownMenuItem>View profile</DropdownMenuItem>
               </Link>
             </DropdownMenuContent>
@@ -190,7 +169,7 @@ export const columns: ColumnDef<Media>[] = [
   },
 ];
 
-export default function MediaTable() {
+export default function PropertyTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -200,8 +179,7 @@ export default function MediaTable() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const [search, setSearch] = React.useState<string>("");
-  const { data } = useGetMedias({ search });
-
+  const { data } = useGetProducts({ search });
   const table = useReactTable({
     data: React.useMemo(() => data?.data?.results || [], [data]),
     columns,
