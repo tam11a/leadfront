@@ -10,15 +10,14 @@ import { useGetProductById } from "@/lib/actions/properties/get-by-id";
 import { UpdateProperty } from "../update-property";
 import { Badge } from "@/components/ui/badge";
 import PropertiesSideBar from "./side-details";
+import TabNav from "./tab-nav";
 // import MediaContactBar from "./contact";
-// import TabNav from "./tab-nav";
 
 export default function PropertyLayout({
   children,
   params,
 }: Readonly<{ children: React.ReactNode; params: { id: number } }>) {
   const { data } = useGetProductById(params.id);
-  console.log(data);
   return !data ? (
     <Loading />
   ) : (
@@ -43,6 +42,7 @@ export default function PropertyLayout({
             </div>
           </div>
           <div className="hidden md:flex flex-row items-center gap-3">
+            <TabNav />
             <UpdateProperty propertyId={params.id}>
               <Button variant={"outline"}>Update</Button>
             </UpdateProperty>
@@ -57,13 +57,14 @@ export default function PropertyLayout({
           <PropertiesSideBar
             {...{
               id: params?.id,
-              phone: data?.data.phone,
-              email: data?.data.email,
-              address: data?.data.address,
-              address2: data?.data.address2,
-              product_typeName: data?.data.product_typeName,
-              land_type: data?.data.land_type,
-              size: data?.data.size,
+              phone: data?.data?.phone,
+              email: data?.data?.email,
+              address: data?.data?.address,
+              address2: data?.data?.address2,
+              product_typeName: data?.data?.product_typeName,
+              land_type: data?.data?.land_type,
+              size: data?.data?.size,
+              unitName: data?.data?.unitName,
             }}
           />
         </div>
