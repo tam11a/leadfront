@@ -51,7 +51,9 @@ export default function PropertyLayout({
         <Separator />
         <div className="flex h-full flex-1 relative flex-col-reverse md:flex-row items-start md:justify-between">
           <div className="flex-1 px-7 py-6">
-            <div className="md:hidden mb-4">{/* <TabNav /> */}</div>
+            <div className="md:hidden mb-4">
+              <TabNav />
+            </div>
             <div>{children}</div>
           </div>
           <PropertiesSideBar

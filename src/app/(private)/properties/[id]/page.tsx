@@ -26,12 +26,16 @@ export default function PropertyInfoPage({
           id: params?.id,
           phone: data?.data?.phone,
           email: data?.data?.email,
-          address: data?.data?.address,
+          adress: data?.data?.adress,
           address2: data?.data?.address2,
           product_typeName: data?.data?.product_typeName,
           land_type: data?.data?.land_type,
           size: data?.data?.size,
           unitName: data?.data?.unitName,
+          block: data?.data?.block,
+          road: data?.data?.road,
+          plot: data?.data?.plot,
+          facing: data?.data?.facing,
         }}
       />
     </div>
