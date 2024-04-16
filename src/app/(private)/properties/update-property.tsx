@@ -482,7 +482,7 @@ export function UpdateProperty({
 									name="price_private"
 									render={({ field }) => (
 										<FormItem className="flex-1">
-											<FormLabel>Pruchasing Price*</FormLabel>
+											<FormLabel>Purchasing Price*</FormLabel>
 											<FormControl>
 												<Input
 													placeholder="Enter the price in bdt."

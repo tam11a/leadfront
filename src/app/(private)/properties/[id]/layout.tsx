@@ -1,8 +1,9 @@
+import { getCustomerById } from "@/lib/actions/customers/get-by-id";
 import { notFound } from "next/navigation";
-import MediaLayout from "./media-layout";
-import { getMediaById } from "@/lib/actions/media/get-by-id";
+import PropertyLayout from "./properties-layout";
+import { getProductById } from "@/lib/actions/properties/get-by-id";
 
-export default async function MediaDetailLayout({
+export default async function PropertyDetailLayout({
   children,
   params,
 }: Readonly<{
@@ -13,7 +14,7 @@ export default async function MediaDetailLayout({
 }>) {
   async function getData() {
     try {
-      const res = await getMediaById(params.id);
+      const res = await getProductById(params.id);
       return res.data;
     } catch (error: any) {
       if (error.response?.status === 404) return null;
@@ -27,7 +28,7 @@ export default async function MediaDetailLayout({
 
   return (
     <>
-      <MediaLayout params={params}>{children}</MediaLayout>
+      <PropertyLayout params={params}>{children}</PropertyLayout>
     </>
   );
 }
