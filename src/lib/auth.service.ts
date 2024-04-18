@@ -13,6 +13,11 @@ export class AuthService {
 		return cookies.access_token;
 	}
 
+	getRefreshToken() {
+		const cookies = parseCookies(this.ctx);
+		return cookies.refresh_token;
+	}
+
 	setToken(token: string) {
 		setCookie(this.ctx, "access_token", token, {
 			maxAge: 1 * 24 * 60 * 60,
