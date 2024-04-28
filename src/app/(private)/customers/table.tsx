@@ -44,6 +44,8 @@ import { TbUserEdit } from "react-icons/tb";
 import { UpdateCustomer } from "./update-customer";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { parseAsInteger, useQueryState } from "nuqs";
+import { Loading } from "../token-validation-checker";
 
 export interface Customer {
 	id: number;
@@ -242,14 +244,25 @@ export default function CustomerTable() {
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = useState({});
 
-	const [search, setSearch] = useState<string>("");
+	const [search, setSearch] = useQueryState("search", {
+		defaultValue: "",
+		clearOnDefault: true,
+	});
+	const [page, setPage] = useQueryState(
+		"page",
+		parseAsInteger.withDefault(1).withOptions({
+			clearOnDefault: true,
+		})
+	);
 
-	const { data } = useGetCustomers({
+	const { data, isLoading } = useGetCustomers({
 		search,
+		page,
 	});
 
 	const table = useReactTable({
 		data: useMemo(() => data?.data?.results || [], [data]),
+
 		columns,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
@@ -336,7 +349,11 @@ export default function CustomerTable() {
 						))}
 					</TableHeader>
 					<TableBody>
-						{table.getRowModel().rows?.length ? (
+						{isLoading ? (
+							<>
+								<Loading />
+							</>
+						) : table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
 								<TableRow
 									key={row.id}
@@ -369,23 +386,22 @@ export default function CustomerTable() {
 
 			<div className="flex items-center justify-end space-x-2 py-4">
 				<div className="flex-1 text-sm text-muted-foreground">
-					{table.getFilteredSelectedRowModel().rows.length} of{" "}
-					{table.getFilteredRowModel().rows.length} row(s) selected.
+					{page} of {Math.ceil((data?.data?.count || 1) / 8)} page(s).
 				</div>
 				<div className="space-x-2">
 					<Button
 						variant="outline"
 						size="sm"
-						onClick={() => table.previousPage()}
-						disabled={!table.getCanPreviousPage()}
+						onClick={() => setPage((p) => p - 1)}
+						disabled={!data?.data?.previous}
 					>
 						Previous
 					</Button>
 					<Button
 						variant="outline"
 						size="sm"
-						onClick={() => table.nextPage()}
-						disabled={!table.getCanNextPage()}
+						onClick={() => setPage((p) => p + 1)}
+						disabled={!data?.data?.next}
 					>
 						Next
 					</Button>
