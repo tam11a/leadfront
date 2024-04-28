@@ -63,13 +63,17 @@ export default function CustomerContactBar(contact: {
 			</CardDescription>
 
 			<CardTitle>Address</CardTitle>
-			<CardDescription className="flex items-center space-x-2">
-				<IoLocationOutline className="text-primary" />
+			<CardDescription className="flex space-x-2 text-wrap max-w-xs items-start">
+				<span>
+					<IoLocationOutline className="text-primary mt-1" />
+				</span>
 				<span>{contact.address || "No Address Added"}</span>
 			</CardDescription>
 			{contact.address2 && (
-				<CardDescription className="flex items-center space-x-2">
-					<IoLocationOutline className="text-primary" />
+				<CardDescription className="flex space-x-2 text-wrap max-w-xs items-start">
+					<span>
+						<IoLocationOutline className="text-primary mt-1" />
+					</span>
 					<span>{contact.address2 || "No Address Added"}</span>
 				</CardDescription>
 			)}

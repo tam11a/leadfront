@@ -32,7 +32,7 @@ import { PiSignOutBold } from "react-icons/pi";
 
 export default function ResizableSidebar({
 	children,
-	defaultLayout = [265, 440, 655],
+	defaultLayout = [20, 80, 100],
 	defaultCollapsed = false,
 	navCollapsedSize,
 }: Readonly<{
