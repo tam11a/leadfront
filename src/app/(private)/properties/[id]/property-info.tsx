@@ -1,6 +1,8 @@
 "use client";
 
 import { CardDescription, CardTitle } from "@/components/ui/card";
+import ImageUpload from "@/components/ui/dropzone";
+import { useState } from "react";
 import { BiBuildingHouse } from "react-icons/bi";
 
 export function PropertyInfo(details: {
@@ -19,71 +21,77 @@ export function PropertyInfo(details: {
   facing?: string;
 }) {
   console.log(details);
+  const [files, setFiles] = useState<string[]>([]);
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div>
-        <span className="flex flex-row gap-2">
-          <BiBuildingHouse className="text-primary" />
-          <CardTitle>Type</CardTitle>
-        </span>
-        <CardDescription className="flex items-center space-x-2 px-6 my-2">
-          {details.product_typeName ? (
-            <>{[details.product_typeName, details.land_type].join(", ")} </>
-          ) : (
-            <>{"No Property Type Added"}</>
-          )}
-        </CardDescription>
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div>
+          <span className="flex flex-row gap-2">
+            <BiBuildingHouse className="text-primary" />
+            <CardTitle>Type</CardTitle>
+          </span>
+          <CardDescription className="flex items-center space-x-2 px-6 my-2">
+            {details.product_typeName ? (
+              <>{[details.product_typeName, details.land_type].join(", ")} </>
+            ) : (
+              <>{"No Property Type Added"}</>
+            )}
+          </CardDescription>
+        </div>
+        <div className="gap-2">
+          <span className="flex flex-row gap-2">
+            <BiBuildingHouse className="text-primary" />
+            <CardTitle>Size</CardTitle>
+          </span>
+          <CardDescription className="flex items-center space-x-2 px-6 my-2">
+            {details.product_typeName ? (
+              <>{[details.size, details.unitName].join(" ")} </>
+            ) : (
+              <>{"No Property Type Added"}</>
+            )}
+          </CardDescription>
+        </div>
+        <div className="gap-2">
+          <span className="flex flex-row gap-2">
+            <BiBuildingHouse className="text-primary" />
+            <CardTitle>Location</CardTitle>
+          </span>
+          <CardDescription className="flex items-center space-x-2 px-6 my-2">
+            <>
+              Block {details.block}, Road {details.road}, {details.adress}
+            </>
+          </CardDescription>
+        </div>
+        <div className="gap-2">
+          <span className="flex flex-row gap-2">
+            <BiBuildingHouse className="text-primary" />
+            <CardTitle>Property Size</CardTitle>
+          </span>
+          <CardDescription className="flex items-center space-x-2 px-6 my-2">
+            {details.product_typeName ? (
+              <>{[details.size, details.unitName].join(" ")} </>
+            ) : (
+              <>{"No Property Type Added"}</>
+            )}
+          </CardDescription>
+        </div>
+        <div className="gap-2">
+          <span className="flex flex-row gap-2">
+            <BiBuildingHouse className="text-primary" />
+            <CardTitle>Property Size</CardTitle>
+          </span>
+          <CardDescription className="flex items-center space-x-2 px-6 my-2">
+            {details.product_typeName ? (
+              <>{[details.size, details.unitName].join(" ")} </>
+            ) : (
+              <>{"No Property Type Added"}</>
+            )}
+          </CardDescription>
+        </div>
       </div>
-      <div className="gap-2">
-        <span className="flex flex-row gap-2">
-          <BiBuildingHouse className="text-primary" />
-          <CardTitle>Size</CardTitle>
-        </span>
-        <CardDescription className="flex items-center space-x-2 px-6 my-2">
-          {details.product_typeName ? (
-            <>{[details.size, details.unitName].join(" ")} </>
-          ) : (
-            <>{"No Property Type Added"}</>
-          )}
-        </CardDescription>
+      <div className="grid gap-4 py-4">
+        <ImageUpload />
       </div>
-      <div className="gap-2">
-        <span className="flex flex-row gap-2">
-          <BiBuildingHouse className="text-primary" />
-          <CardTitle>Location</CardTitle>
-        </span>
-        <CardDescription className="flex items-center space-x-2 px-6 my-2">
-          <>
-            Block {details.block}, Road {details.road}, {details.adress}
-          </>
-        </CardDescription>
-      </div>
-      <div className="gap-2">
-        <span className="flex flex-row gap-2">
-          <BiBuildingHouse className="text-primary" />
-          <CardTitle>Property Size</CardTitle>
-        </span>
-        <CardDescription className="flex items-center space-x-2 px-6 my-2">
-          {details.product_typeName ? (
-            <>{[details.size, details.unitName].join(" ")} </>
-          ) : (
-            <>{"No Property Type Added"}</>
-          )}
-        </CardDescription>
-      </div>
-      <div className="gap-2">
-        <span className="flex flex-row gap-2">
-          <BiBuildingHouse className="text-primary" />
-          <CardTitle>Property Size</CardTitle>
-        </span>
-        <CardDescription className="flex items-center space-x-2 px-6 my-2">
-          {details.product_typeName ? (
-            <>{[details.size, details.unitName].join(" ")} </>
-          ) : (
-            <>{"No Property Type Added"}</>
-          )}
-        </CardDescription>
-      </div>
-    </div>
+    </>
   );
 }
