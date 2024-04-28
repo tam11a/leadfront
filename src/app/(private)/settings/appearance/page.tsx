@@ -1,4 +1,5 @@
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import ThemeSwitch from "./theme-switch";
 
 export default function Appearance() {
 	return (
@@ -7,6 +8,9 @@ export default function Appearance() {
 				<CardTitle>Appearance</CardTitle>
 				<CardDescription>Update your appearance information</CardDescription>
 			</CardHeader>
+			<div className="space-y-4 my-6">
+				<ThemeSwitch />
+			</div>
 		</div>
 	);
 }
