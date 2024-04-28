@@ -47,6 +47,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
 	parseAsInteger,
+	parseAsString,
 	queryTypes,
 	useQueryState,
 	useQueryStates,
@@ -259,12 +260,13 @@ export default function CustomerTable() {
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = useState({});
 
-	console.log(columnFilters);
-
+	// Search
 	const [search, setSearch] = useQueryState("search", {
 		defaultValue: "",
 		clearOnDefault: true,
 	});
+
+	// Pagination
 	const [page, setPage] = useQueryState(
 		"page",
 		parseAsInteger.withDefault(1).withOptions({
@@ -272,19 +274,21 @@ export default function CustomerTable() {
 		})
 	);
 
-	const [status, setStatus] = useQueryState("status", {
-		defaultValue: "",
-		clearOnDefault: true,
-	});
-
-	// const [] = useQueryStates(queryTypes.(string|integer|float){
-
-	// })
+	// Filters
+	const [filters, setFilters] = useQueryStates(
+		{
+			status: parseAsString.withDefault(""),
+			assigned_employee_id: parseAsString.withDefault(""),
+		},
+		{
+			clearOnDefault: true,
+		}
+	);
 
 	const { data, isLoading } = useGetCustomers({
 		search,
 		page,
-		status,
+		...filters,
 	});
 
 	const table = useReactTable({
@@ -319,10 +323,14 @@ export default function CustomerTable() {
 				/>
 				<span className="flex flex-row items-center gap-2">
 					<Select
-						onValueChange={(v) => setStatus(v)}
-						value={status}
+						onValueChange={async (v) =>
+							await setFilters((f) => {
+								return { ...f, status: v };
+							})
+						}
+						value={filters.status}
 					>
-						<SelectTrigger className="border-dashed">
+						<SelectTrigger className="border-dashed gap-1">
 							<SelectValue placeholder="Status" />
 						</SelectTrigger>
 						<SelectContent>
@@ -336,14 +344,21 @@ export default function CustomerTable() {
 							))}
 						</SelectContent>
 					</Select>
-					<Button
-						variant="ghost"
-						onClick={() => table.resetColumnFilters()}
-						className="h-8 px-2 lg:px-3"
-					>
-						Reset
-						<Cross2Icon className="ml-2 h-4 w-4" />
-					</Button>
+					{Object.values(filters).some((v) => v !== "") && (
+						<Button
+							variant="ghost"
+							onClick={async () => {
+								await setFilters({
+									status: "",
+									assigned_employee_id: "",
+								});
+							}}
+							className="px-2 lg:px-3"
+						>
+							Reset
+							<Cross2Icon className="ml-2 h-4 w-4" />
+						</Button>
+					)}
 				</span>
 
 				<DropdownMenu>
