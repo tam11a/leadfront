@@ -2,6 +2,7 @@
 
 import {
 	CaretSortIcon,
+	Cross2Icon,
 	DotsHorizontalIcon,
 	MixerHorizontalIcon,
 } from "@radix-ui/react-icons";
@@ -46,6 +47,15 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { Loading } from "../token-validation-checker";
+import { DataTableFacetedFilter } from "@/components/ui/data-faced-filters";
+import { CustomerStatusList } from "./create-customer";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 export interface Customer {
 	id: number;
@@ -76,7 +86,7 @@ export interface Customer {
 	project_id?: number;
 }
 
-export const columns: ColumnDef<Customer>[] = [
+const columns: ColumnDef<Customer>[] = [
 	{
 		accessorKey: "id",
 		header: () => {
@@ -244,6 +254,8 @@ export default function CustomerTable() {
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = useState({});
 
+	console.log(columnFilters);
+
 	const [search, setSearch] = useQueryState("search", {
 		defaultValue: "",
 		clearOnDefault: true,
@@ -255,14 +267,19 @@ export default function CustomerTable() {
 		})
 	);
 
+	const [status, setStatus] = useQueryState("status", {
+		defaultValue: "",
+		clearOnDefault: true,
+	});
+
 	const { data, isLoading } = useGetCustomers({
 		search,
 		page,
+		status,
 	});
 
 	const table = useReactTable({
 		data: useMemo(() => data?.data?.results || [], [data]),
-
 		columns,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
@@ -291,6 +308,35 @@ export default function CustomerTable() {
 					}}
 					className="max-w-sm"
 				/>
+				<span className="flex flex-row items-center gap-2">
+					<Select
+						onValueChange={(v) => setStatus(v)}
+						value={status}
+					>
+						<SelectTrigger className="border-dashed">
+							<SelectValue placeholder="Status" />
+						</SelectTrigger>
+						<SelectContent>
+							{CustomerStatusList.map((option) => (
+								<SelectItem
+									key={option.value}
+									value={option.value}
+								>
+									{option.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+					<Button
+						variant="ghost"
+						onClick={() => table.resetColumnFilters()}
+						className="h-8 px-2 lg:px-3"
+					>
+						Reset
+						<Cross2Icon className="ml-2 h-4 w-4" />
+					</Button>
+				</span>
+
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button

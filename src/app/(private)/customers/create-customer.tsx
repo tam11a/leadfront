@@ -87,6 +87,41 @@ const CreateCustomerSchema = z.object({
 
 type CustomerFormValues = z.infer<typeof CreateCustomerSchema>;
 
+export const CustomerStatusList = [
+	{
+		label: "Raw",
+		value: "Raw",
+	},
+	{
+		label: "Prospect",
+		value: "Prospect",
+	},
+	{
+		label: "High Prospect",
+		value: "High Prospect",
+	},
+	{
+		label: "Priority",
+		value: "Priority",
+	},
+	{
+		label: "Booked",
+		value: "Booked",
+	},
+	{
+		label: "Sold",
+		value: "Sold",
+	},
+	{
+		label: "Closed",
+		value: "Closed",
+	},
+	{
+		label: "Junk",
+		value: "Junk",
+	},
+];
+
 export function CreateCustomer() {
 	const [open, setOpen] = useState(false);
 	const { mutateAsync: create, isPending } = useCreateCustomers();
