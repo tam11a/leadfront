@@ -93,7 +93,7 @@ export function Dropzone({
 					<input
 						ref={fileInputRef}
 						type="file"
-						accept={`.${fileExtension}`} // Set accepted file type
+						accept={fileExtension} // Set accepted file type
 						onChange={handleFileInputChange}
 						className="hidden"
 						multiple

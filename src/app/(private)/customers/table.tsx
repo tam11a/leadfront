@@ -45,7 +45,12 @@ import { TbUserEdit } from "react-icons/tb";
 import { UpdateCustomer } from "./update-customer";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { parseAsInteger, useQueryState } from "nuqs";
+import {
+	parseAsInteger,
+	queryTypes,
+	useQueryState,
+	useQueryStates,
+} from "nuqs";
 import { Loading } from "../token-validation-checker";
 import { DataTableFacetedFilter } from "@/components/ui/data-faced-filters";
 import { CustomerStatusList } from "./create-customer";
@@ -271,6 +276,10 @@ export default function CustomerTable() {
 		defaultValue: "",
 		clearOnDefault: true,
 	});
+
+	// const [] = useQueryStates(queryTypes.(string|integer|float){
+
+	// })
 
 	const { data, isLoading } = useGetCustomers({
 		search,
