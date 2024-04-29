@@ -12,7 +12,7 @@ export default function PropertyInfoPage({
   };
 }) {
   const { data } = useGetProductById(params.id);
-
+  console.log(data);
   return !data ? (
     <Loading />
   ) : (
@@ -35,7 +35,13 @@ export default function PropertyInfoPage({
           block: data?.data?.block,
           road: data?.data?.road,
           plot: data?.data?.plot,
+          sector: data?.data?.sector,
           facing: data?.data?.facing,
+          apartment_type: data?.data?.apartment_type,
+          floor: data?.data?.floor,
+          bedrooms: data?.data?.bedrooms,
+          bathrooms: data?.data?.bathrooms,
+          balcony: data?.data?.balcony,
         }}
       />
     </div>

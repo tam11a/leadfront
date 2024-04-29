@@ -27,7 +27,6 @@ export default function PropertiesSideBar(details: {
   const { data: mediaData, isLoading: mediaLoading } = useGetMediaById(
     details.media_id
   );
-  console.log(mediaData);
   return (
     <div className="space-y-3 px-8 py-6 border-l h-full md:min-w-[300px]">
       <h1 className="text-sm font-semibold text-muted-foreground">
