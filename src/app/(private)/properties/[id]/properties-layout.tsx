@@ -59,14 +59,14 @@ export default function PropertyLayout({
           <PropertiesSideBar
             {...{
               id: params?.id,
-              phone: data?.data?.phone,
-              email: data?.data?.email,
-              address: data?.data?.address,
+              publicPrice: data?.data?.price_public,
+              privatePrice: data?.data?.price_private,
+              address: data?.data?.adress,
+              areaName: data?.data?.areaName,
               address2: data?.data?.address2,
-              product_typeName: data?.data?.product_typeName,
-              land_type: data?.data?.land_type,
               size: data?.data?.size,
               unitName: data?.data?.unitName,
+              media_id: data?.data?.media_id,
             }}
           />
         </div>

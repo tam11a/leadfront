@@ -4,6 +4,7 @@ import { CardDescription, CardTitle } from "@/components/ui/card";
 import ImageUpload from "@/components/ui/dropzone";
 import { useState } from "react";
 import { BiBuildingHouse } from "react-icons/bi";
+import { GiResize } from "react-icons/gi";
 
 export function PropertyInfo(details: {
   id?: number;
@@ -40,14 +41,14 @@ export function PropertyInfo(details: {
         </div>
         <div className="gap-2">
           <span className="flex flex-row gap-2">
-            <BiBuildingHouse className="text-primary" />
+            <GiResize className="text-primary" />
             <CardTitle>Size</CardTitle>
           </span>
-          <CardDescription className="flex items-center space-x-2 px-6 my-2">
-            {details.product_typeName ? (
+          <CardDescription className="flex items-center space-x-2 px-6 my-2 lowercase">
+            {details.size ? (
               <>{[details.size, details.unitName].join(" ")} </>
             ) : (
-              <>{"No Property Type Added"}</>
+              <>{"No Property size Added"}</>
             )}
           </CardDescription>
         </div>
