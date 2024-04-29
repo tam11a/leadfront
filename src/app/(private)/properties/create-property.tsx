@@ -611,7 +611,7 @@ export function CreateProperty() {
                           name={field.name}
                           onValueChange={(v) => v && field.onChange(v)}
                           value={field.value?.toString()}
-                          disabled={unitLoading}
+                          disabled={mediaLoading}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Select a the name of the media" />

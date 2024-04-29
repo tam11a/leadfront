@@ -41,6 +41,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useGetInterests } from "@/lib/actions/interests/get-interests";
+import { CreateInterest } from "./create-interest";
 
 interface Customer {
   id: number;
@@ -201,10 +202,7 @@ export default function InterestedCustomersTable({
           }}
           className="max-w-sm"
         />
-
-        <Button variant="default" className="ml-auto">
-          Add New
-        </Button>
+        <CreateInterest />
       </div>
 
       <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
