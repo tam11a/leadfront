@@ -208,7 +208,10 @@ export default function InterestedCustomersTable({
 					}}
 					className="max-w-sm"
 				/>
-				<CreateInterest id={params.id} />
+				<CreateInterest
+					id={+params.id}
+					ignoreCustomer={data?.data?.map((d: any) => d.id)}
+				/>
 			</div>
 
 			<ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">

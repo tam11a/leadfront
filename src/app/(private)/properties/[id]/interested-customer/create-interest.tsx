@@ -35,16 +35,22 @@ import {
 } from "@/components/ui/select";
 import { useGetCustomers } from "@/lib/actions/customers/get-customers";
 import { useQueryState } from "nuqs";
+import { Textarea } from "@/components/ui/textarea";
+import useUser from "@/hooks/useUser";
 
 const CreateInterestSchema = z.object({
 	customer_id: z.string(),
-	note: z.string().optional(),
+	note: z.any().optional(),
 	product_id: z.number(),
+	employee_id: z.number(),
 });
 
 type InterestFormValues = z.infer<typeof CreateInterestSchema>;
 
-export function CreateInterest({ id }: Readonly<{ id: number }>) {
+export function CreateInterest({
+	id,
+	ignoreCustomer = [],
+}: Readonly<{ id: number; ignoreCustomer?: number[] }>) {
 	const [open, setOpen] = useState(false);
 	const [search, _setSearch] = useQueryState("search", {
 		defaultValue: "",
@@ -53,24 +59,22 @@ export function CreateInterest({ id }: Readonly<{ id: number }>) {
 	const { data: customerData, isLoading: customerLoading } = useGetCustomers({
 		search,
 	});
-	console.log(customerData?.data?.results);
-
+	const user = useUser();
+	console.log(user);
 	const { mutateAsync: create, isPending } = useCreateProductsInterest();
 
 	const form = useForm<InterestFormValues>({
 		resolver: zodResolver(CreateInterestSchema),
 		defaultValues: {
 			note: "",
+			product_id: id,
+			employee_id: user?.user?.data?.id,
 		},
 		mode: "onChange",
 	});
 	async function onSubmit(data: InterestFormValues) {
 		form.clearErrors();
-		const res = await handleResponse(
-			() => create({ product_id: id, data }),
-			[201]
-		);
-		console.log(res);
+		const res = await handleResponse(() => create({ ...data }), [201]);
 		if (res.status) {
 			toast("Added!", {
 				description: `Interested customer has been created successfully.`,
@@ -137,7 +141,7 @@ export function CreateInterest({ id }: Readonly<{ id: number }>) {
 										<Select
 											name={field.name}
 											onValueChange={(v) => v && field.onChange(v)}
-											value={field.value?.toString()}
+											value={field.value}
 											disabled={customerLoading}
 											// disabled={true}
 										>
@@ -145,16 +149,38 @@ export function CreateInterest({ id }: Readonly<{ id: number }>) {
 												<SelectValue placeholder="Select a customer" />
 											</SelectTrigger>
 											<SelectContent>
-												{customerData?.data?.results?.map((d: any) => (
-													<SelectItem
-														value={d?.id?.toString()}
-														key={d?.id}
-													>
-														{[d?.first_name, d?.last_name].join(" ")}
-													</SelectItem>
-												))}
+												{customerData?.data?.results?.map(
+													(d: any) =>
+														!ignoreCustomer?.includes(d?.id) && (
+															<SelectItem
+																value={d?.id?.toString()}
+																key={d?.id}
+															>
+																{[d?.first_name, d?.last_name].join(" ")}
+															</SelectItem>
+														)
+												)}
 											</SelectContent>
 										</Select>
+									</FormControl>
+									<FormDescription></FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="note"
+							render={({ field }) => (
+								<FormItem className="flex-1">
+									<FormLabel>Remarks</FormLabel>
+									<FormControl>
+										<Textarea
+											rows={5}
+											placeholder="Input any remarks about this interest"
+											className="resize-none"
+											{...field}
+										/>
 									</FormControl>
 									<FormDescription></FormDescription>
 									<FormMessage />
