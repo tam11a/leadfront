@@ -1,6 +1,6 @@
 "use client";
 
-import { CardDescription, CardTitle } from "@/components/ui/card";
+import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import ImageUpload from "@/components/ui/dropzone";
 
 //icons
@@ -32,6 +32,7 @@ export function PropertyInfo(details: {
 	bedrooms?: number;
 	bathrooms?: number;
 	balcony?: number;
+	description?: string;
 }) {
 	return (
 		<>
@@ -153,9 +154,22 @@ export function PropertyInfo(details: {
 					</CardDescription>
 				</div>
 			</div>
-			<div className="grid gap-4 py-4">
-				<ImageUpload />
+			<div className="space-y-6">
+				<CardHeader className="p-0">
+					<CardTitle>Description</CardTitle>
+					<CardDescription>Description about the property</CardDescription>
+				</CardHeader>
+				{details.description ? (
+					<>
+						<p>{details?.description}</p>
+					</>
+				) : (
+					""
+				)}
 			</div>
+			{/* <div className="grid gap-4 py-4">
+				<ImageUpload />
+			</div> */}
 		</>
 	);
 }

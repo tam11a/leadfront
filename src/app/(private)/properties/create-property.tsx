@@ -46,6 +46,7 @@ const CreatePropertySchema = z.object({
 	}),
 	area: z.string(),
 	product_type: z.string(),
+	description: z.any().optional(),
 	size: z.number(),
 	unit: z.string(),
 	plot: z.any().optional(),
@@ -532,6 +533,28 @@ export function CreateProperty() {
 										)}
 									/>
 								</div>
+								<FormField
+									control={form.control}
+									name="description"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Description</FormLabel>
+											<FormControl>
+												<Textarea
+													rows={5}
+													placeholder="Aaa.."
+													className="resize-none"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription>
+												This is property&apos;s description. Please enter a
+												detailed description of the property.
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 								<FormField
 									control={form.control}
 									name="remarks"

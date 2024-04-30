@@ -41,6 +41,7 @@ export default function PropertyInfoPage({
 					bedrooms: data?.data?.bedrooms,
 					bathrooms: data?.data?.bathrooms,
 					balcony: data?.data?.balcony,
+					description: data?.data?.description,
 				}}
 			/>
 		</div>
