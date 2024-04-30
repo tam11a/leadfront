@@ -50,6 +50,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Priorities, PriorityIcon } from "./[id]/contact";
+import { useMedia } from "@/lib/actions/media/use-media";
 
 const UpdateCustomerSchema = z.object({
 	first_name: z.string().min(1, {
@@ -82,7 +83,8 @@ const UpdateCustomerSchema = z.object({
 	status: z.any(),
 	priority: z.any(),
 	source: z.any().optional(),
-	media_id: z.number().optional(),
+	media_id: z.any().optional(),
+	media_commision: z.any().optional(),
 	assigned_employee_id: z.number().optional(),
 	project_id: z.number().optional(),
 });
@@ -97,10 +99,12 @@ export function UpdateCustomer({
 	customerId: number;
 }>) {
 	const [open, setOpen] = useState(false);
+	const [search, _setSearch] = useState("");
 
 	const { data: customer, isLoading } = useGetCustomerById(
 		open ? customerId : undefined
 	);
+	const { data: mediaData, isLoading: mediaLoading } = useMedia(search);
 
 	const form = useForm<CustomerFormValues>({
 		resolver: zodResolver(UpdateCustomerSchema),
@@ -122,7 +126,7 @@ export function UpdateCustomer({
 			status: "",
 			priority: "",
 			source: "",
-			// media_id: undefined,
+			media_id: undefined,
 			// assigned_employee_id: undefined,
 			// project_id: undefined,
 		},
@@ -150,6 +154,8 @@ export function UpdateCustomer({
 				status: customer.data.status || "",
 				priority: customer.data.priority || "",
 				source: customer.data.source || "",
+				media_id: customer.data.media_id,
+				media_commision: customer.data.media_commision,
 			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -631,6 +637,56 @@ export function UpdateCustomer({
 												<Input
 													type="number"
 													placeholder="10123*****"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription></FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="media_id"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Media</FormLabel>
+											<FormControl>
+												<Select
+													name={field.name}
+													onValueChange={(v) => v && field.onChange(v)}
+													value={field.value?.toString()}
+													disabled={mediaLoading}
+												>
+													<SelectTrigger>
+														<SelectValue placeholder="Select a Media" />
+													</SelectTrigger>
+													<SelectContent>
+														{mediaData?.data?.map((media: any) => (
+															<SelectItem
+																value={media?.id.toString()}
+																key={media?.id}
+															>
+																{`${media?.first_name} ${media?.last_name}`}
+															</SelectItem>
+														))}
+													</SelectContent>
+												</Select>
+											</FormControl>
+											<FormDescription></FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="media_commision"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Media Commision</FormLabel>
+											<FormControl>
+												<Input
+													placeholder="Enter the amount in bdt."
 													{...field}
 												/>
 											</FormControl>

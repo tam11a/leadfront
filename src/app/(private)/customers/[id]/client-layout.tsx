@@ -14,7 +14,6 @@ export default function ClientLayout({
 	params,
 }: Readonly<{ children: React.ReactNode; params: { id: number } }>) {
 	const { data } = useGetCustomerById(params.id);
-
 	return !data ? (
 		<Loading />
 	) : (
@@ -66,6 +65,7 @@ export default function ClientLayout({
 							status: data?.data.status,
 							priority: data?.data.priority,
 							source: data?.data.source,
+							media_id: data?.data.media_id,
 						}}
 					/>
 				</div>

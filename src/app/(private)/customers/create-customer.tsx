@@ -37,6 +37,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateCustomers } from "@/lib/actions/customers/post-customers";
+import { useMedia } from "@/lib/actions/media/use-media";
 import handleResponse from "@/lib/handle-response";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -80,7 +81,8 @@ const CreateCustomerSchema = z.object({
 	status: z.any(),
 	priority: z.any().optional(),
 	source: z.any().optional(),
-	media_id: z.number().optional(),
+	media_id: z.any().optional(),
+	media_commision: z.any().optional(),
 	assigned_employee_id: z.number().optional(),
 	project_id: z.number().optional(),
 });
@@ -124,7 +126,10 @@ export const CustomerStatusList = [
 
 export function CreateCustomer() {
 	const [open, setOpen] = useState(false);
+	const [search, _setSearch] = useState("");
+
 	const { mutateAsync: create, isPending } = useCreateCustomers();
+	const { data: mediaData, isLoading: mediaLoading } = useMedia(search);
 
 	const form = useForm<CustomerFormValues>({
 		resolver: zodResolver(CreateCustomerSchema),
@@ -136,6 +141,7 @@ export function CreateCustomer() {
 			phone: "",
 			address: "",
 			nid: undefined,
+			bank_account_number: undefined,
 			is_active: true,
 		},
 		mode: "onChange",
@@ -593,7 +599,56 @@ export function CreateCustomer() {
 									</FormItem>
 								)}
 							/>
-
+							<FormField
+								control={form.control}
+								name="media_id"
+								render={({ field }) => (
+									<FormItem className="flex-1">
+										<FormLabel>Media</FormLabel>
+										<FormControl>
+											<Select
+												name={field.name}
+												onValueChange={(v) => v && field.onChange(v)}
+												value={field.value?.toString()}
+												disabled={mediaLoading}
+											>
+												<SelectTrigger>
+													<SelectValue placeholder="Select a Media" />
+												</SelectTrigger>
+												<SelectContent>
+													{mediaData?.data?.map((media: any) => (
+														<SelectItem
+															value={media?.id.toString()}
+															key={media?.id}
+														>
+															{`${media?.first_name} ${media?.last_name}`}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										</FormControl>
+										<FormDescription></FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="media_commision"
+								render={({ field }) => (
+									<FormItem className="flex-1">
+										<FormLabel>Media Commision</FormLabel>
+										<FormControl>
+											<Input
+												placeholder="Enter the amount in bdt."
+												{...field}
+											/>
+										</FormControl>
+										<FormDescription></FormDescription>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 							<FormField
 								control={form.control}
 								name="is_active"
