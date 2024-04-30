@@ -33,15 +33,15 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { useGetCustomers } from "@/lib/actions/customers/get-customers";
 import { useQueryState } from "nuqs";
 import { Textarea } from "@/components/ui/textarea";
 import useUser from "@/hooks/useUser";
+import { useGetProducts } from "@/lib/actions/properties/get-products";
 
 const CreateInterestSchema = z.object({
-	customer_id: z.string(),
+	customer_id: z.number(),
 	note: z.any().optional(),
-	product_id: z.number(),
+	product_id: z.string(),
 	employee_id: z.number(),
 });
 
@@ -49,14 +49,14 @@ type InterestFormValues = z.infer<typeof CreateInterestSchema>;
 
 export function CreateInterest({
 	id,
-	ignoreCustomer = [],
-}: Readonly<{ id: number; ignoreCustomer?: number[] }>) {
+	ignoreProperties = [],
+}: Readonly<{ id: number; ignoreProperties?: number[] }>) {
 	const [open, setOpen] = useState(false);
 	const [search, _setSearch] = useQueryState("search", {
 		defaultValue: "",
 		clearOnDefault: true,
 	});
-	const { data: customerData, isLoading: customerLoading } = useGetCustomers({
+	const { data: propertyData, isLoading: propertyLoading } = useGetProducts({
 		search,
 	});
 	const user = useUser();
@@ -66,7 +66,7 @@ export function CreateInterest({
 		resolver: zodResolver(CreateInterestSchema),
 		defaultValues: {
 			note: "",
-			product_id: id,
+			customer_id: id,
 			employee_id: user?.user?.data?.id,
 		},
 		mode: "onChange",
@@ -132,7 +132,7 @@ export function CreateInterest({
 					>
 						<FormField
 							control={form.control}
-							name="customer_id"
+							name="product_id"
 							render={({ field }) => (
 								<FormItem className="flex-1">
 									<FormLabel>Name*</FormLabel>
@@ -140,22 +140,22 @@ export function CreateInterest({
 										<Select
 											name={field.name}
 											onValueChange={(v) => v && field.onChange(v)}
-											value={field.value}
-											disabled={customerLoading}
+											value={field.value?.toString()}
+											disabled={propertyLoading}
 											// disabled={true}
 										>
 											<SelectTrigger>
 												<SelectValue placeholder="Select a customer" />
 											</SelectTrigger>
 											<SelectContent>
-												{customerData?.data?.results?.map(
+												{propertyData?.data?.results?.map(
 													(d: any) =>
-														!ignoreCustomer?.includes(d?.id) && (
+														!ignoreProperties?.includes(d?.id) && (
 															<SelectItem
 																value={d?.id?.toString()}
 																key={d?.id}
 															>
-																{[d?.first_name, d?.last_name].join(" ")}
+																{d?.product_uid}
 															</SelectItem>
 														)
 												)}
