@@ -3,7 +3,6 @@
 import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
 import { Loading } from "../../token-validation-checker";
-import { useGetMediaById } from "@/lib/actions/media/get-by-id";
 // import { UpdateMedia } from "../update-media";
 import { Button } from "@/components/ui/button";
 import { useGetProductById } from "@/lib/actions/properties/get-by-id";
@@ -67,6 +66,7 @@ export default function PropertyLayout({
 							size: data?.data?.size,
 							unitName: data?.data?.unitName,
 							media_id: data?.data?.media_id,
+							remarks: data?.data?.remarks,
 						}}
 					/>
 				</div>

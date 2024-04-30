@@ -317,7 +317,7 @@ export function CreateProperty() {
 												<FormLabel>Size*</FormLabel>
 												<FormControl>
 													<Input
-														placeholder="Enter size of the property"
+														placeholder="Enter property size"
 														{...field}
 														type="number"
 														onChange={(e) =>
@@ -409,7 +409,7 @@ export function CreateProperty() {
 												<FormLabel>Plot</FormLabel>
 												<FormControl>
 													<Input
-														placeholder="Enter size of the property"
+														placeholder="Enter plot number"
 														{...field}
 													/>
 												</FormControl>
@@ -542,7 +542,7 @@ export function CreateProperty() {
 											<FormControl>
 												<Textarea
 													rows={5}
-													placeholder="Aaa.."
+													placeholder="Enter a property description here..."
 													className="resize-none"
 													{...field}
 												/>
@@ -604,7 +604,7 @@ export function CreateProperty() {
 											<FormLabel>Purchasing Price*</FormLabel>
 											<FormControl>
 												<Input
-													placeholder="Enter the price in bdt."
+													placeholder="Enter an amount"
 													{...field}
 													type="number"
 													onChange={(e) =>
@@ -612,7 +612,9 @@ export function CreateProperty() {
 													}
 												/>
 											</FormControl>
-											<FormDescription></FormDescription>
+											<FormDescription>
+												Make sure the amount is in bdt.
+											</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}
@@ -625,7 +627,7 @@ export function CreateProperty() {
 											<FormLabel>Selling Price*</FormLabel>
 											<FormControl>
 												<Input
-													placeholder="Enter the price in bdt."
+													placeholder="Enter an amount"
 													type="number"
 													{...field}
 													onChange={(e) =>
@@ -633,7 +635,9 @@ export function CreateProperty() {
 													}
 												/>
 											</FormControl>
-											<FormDescription></FormDescription>
+											<FormDescription>
+												Make sure the amount is in bdt.
+											</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}
@@ -679,11 +683,13 @@ export function CreateProperty() {
 											<FormLabel>Media Commision</FormLabel>
 											<FormControl>
 												<Input
-													placeholder="Enter the price in bdt."
+													placeholder="Enter an amount"
 													{...field}
 												/>
 											</FormControl>
-											<FormDescription></FormDescription>
+											<FormDescription>
+												Make sure the amount is in bdt.
+											</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}

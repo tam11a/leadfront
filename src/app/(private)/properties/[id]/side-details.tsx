@@ -7,11 +7,11 @@ import {
 	IoPricetagOutline,
 	IoPricetagsOutline,
 } from "react-icons/io5";
-import { GiResize } from "react-icons/gi";
 
 //api call
 import { useGetMediaById } from "@/lib/actions/media/get-by-id";
 import Link from "next/link";
+import { PiNoteLight } from "react-icons/pi";
 
 export default function PropertiesSideBar(details: {
 	id?: number;
@@ -22,6 +22,7 @@ export default function PropertiesSideBar(details: {
 	publicPrice: number;
 	privatePrice: number;
 	media_id: number;
+	remarks: string;
 }) {
 	const { data: mediaData, isLoading: mediaLoading } = useGetMediaById(
 		details.media_id
@@ -82,6 +83,15 @@ export default function PropertiesSideBar(details: {
 					) || "No media assigned"}
 				</Link>
 			</CardDescription>
+			{details.remarks && (
+				<>
+					<CardTitle>Remarks</CardTitle>
+					<CardDescription className="flex space-x-2 text-wrap max-w-xs items-center">
+						<PiNoteLight className="text-primary text-base" />
+						<span>{details?.remarks}</span>
+					</CardDescription>
+				</>
+			)}
 		</div>
 	);
 }

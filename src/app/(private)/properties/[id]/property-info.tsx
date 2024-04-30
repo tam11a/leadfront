@@ -1,7 +1,7 @@
 "use client";
 
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import ImageUpload from "@/components/ui/dropzone";
+// import ImageUpload from "@/components/ui/dropzone";
 
 //icons
 import { BiBath, BiBuildingHouse, BiDirections } from "react-icons/bi";
@@ -154,19 +154,15 @@ export function PropertyInfo(details: {
 					</CardDescription>
 				</div>
 			</div>
-			<div className="space-y-6">
-				<CardHeader className="p-0">
-					<CardTitle>Description</CardTitle>
-					<CardDescription>Description about the property</CardDescription>
-				</CardHeader>
-				{details.description ? (
-					<>
-						<p>{details?.description}</p>
-					</>
-				) : (
-					""
-				)}
-			</div>
+			{details.description && (
+				<div className="space-y-6">
+					<CardHeader className="p-0">
+						<CardTitle>Description</CardTitle>
+						<CardDescription>Description about the property</CardDescription>
+					</CardHeader>
+					<p>{details?.description}</p>
+				</div>
+			)}
 			{/* <div className="grid gap-4 py-4">
 				<ImageUpload />
 			</div> */}

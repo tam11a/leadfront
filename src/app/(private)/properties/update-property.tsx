@@ -375,7 +375,7 @@ export function UpdateProperty({
 												<FormLabel>Size*</FormLabel>
 												<FormControl>
 													<Input
-														placeholder="Enter size of the property"
+														placeholder="Enter property size"
 														{...field}
 														type="number"
 														onChange={(e) =>
@@ -467,7 +467,7 @@ export function UpdateProperty({
 												<FormLabel>Plot</FormLabel>
 												<FormControl>
 													<Input
-														placeholder="Enter size of the property"
+														placeholder="Enter plot number"
 														{...field}
 													/>
 												</FormControl>
@@ -600,7 +600,7 @@ export function UpdateProperty({
 											<FormControl>
 												<Textarea
 													rows={5}
-													placeholder="Aaa.."
+													placeholder="Enter a description of the property."
 													className="resize-none"
 													{...field}
 												/>
@@ -662,7 +662,7 @@ export function UpdateProperty({
 											<FormLabel>Purchasing Price*</FormLabel>
 											<FormControl>
 												<Input
-													placeholder="Enter an amount."
+													placeholder="Enter an amount"
 													{...field}
 													type="number"
 													onChange={(e) =>
@@ -685,7 +685,7 @@ export function UpdateProperty({
 											<FormLabel>Selling Price*</FormLabel>
 											<FormControl>
 												<Input
-													placeholder="Enter an amount."
+													placeholder="Enter an amount"
 													type="number"
 													{...field}
 													onChange={(e) =>

@@ -686,11 +686,13 @@ export function UpdateCustomer({
 											<FormLabel>Media Commision</FormLabel>
 											<FormControl>
 												<Input
-													placeholder="Enter the amount in bdt."
+													placeholder="Enter an amount"
 													{...field}
 												/>
 											</FormControl>
-											<FormDescription></FormDescription>
+											<FormDescription>
+												Make sure to enter the commision amount in bdt.
+											</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}
