@@ -22,14 +22,16 @@ export default function PropertyLayout({
 	) : (
 		<>
 			<div className="min-h-screen flex flex-col">
-				<div className="flex flex-row items-center justify-between py-5 px-8">
-					<div className="space-y-1">
+				<div className="flex flex-row items-start md:items-center justify-between py-5 px-8">
+					<div className="space-y-2">
 						<h1 className="text-sm font-semibold text-muted-foreground">
 							Property Details #{params.id}
 						</h1>
-						<div className="flex flex-row gap-4">
+						<div className="flex flex-col sm:flex-row md:gap-4">
 							<p className="text-xl font-bold">{data?.data.product_uid}</p>
-							<Badge className="h-6">Available</Badge>
+							<div className="sm:px-2">
+								<Badge className="h-6">Available</Badge>
+							</div>
 						</div>
 						<div>
 							<p className="text-sm text-muted-foreground font-medium">
@@ -39,6 +41,11 @@ export default function PropertyLayout({
 								Created: {format(data?.data.created_at, "PPP")}
 							</p>
 						</div>
+					</div>
+					<div className="md:hidden">
+						<UpdateProperty propertyId={params.id}>
+							<Button variant={"outline"}>Update</Button>
+						</UpdateProperty>
 					</div>
 					<div className="hidden md:flex flex-row items-center gap-3">
 						<TabNav />
