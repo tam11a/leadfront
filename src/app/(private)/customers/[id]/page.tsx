@@ -37,7 +37,10 @@ export default function CustomerInterestsPage({
 		<div className="flex flex-col w-full items-center justify-center min-h-[400px] gap-5">
 			<FiActivity className="text-5xl mx-auto text-gray-400" />
 			<CardDescription>No interest added yet.</CardDescription>
-			<Button>Add Interest</Button>
+			<CreateInterest
+				id={+params.id}
+				ignoreProperties={data?.data?.map((d: any) => d.id)}
+			/>
 		</div>
 	) : (
 		<div className="space-y-3 max-w-lg">

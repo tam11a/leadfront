@@ -116,13 +116,13 @@ export function CreateInterest({
 			onOpenChange={(o) => setOpen(o)}
 		>
 			<DialogTrigger asChild>
-				<Button onClick={() => setOpen(true)}>Add New</Button>
+				<Button onClick={() => setOpen(true)}>Add Interest</Button>
 			</DialogTrigger>
 			<DialogContent className="max-w-[425px] sm:max-w-[525px] rounded-lg">
 				<DialogHeader>
-					<DialogTitle>Add Customer</DialogTitle>
+					<DialogTitle>Add Property</DialogTitle>
 					<DialogDescription>
-						Select and add a new customer interested in this property
+						Select and add a new property that this customer is interested in.
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
@@ -135,7 +135,7 @@ export function CreateInterest({
 							name="product_id"
 							render={({ field }) => (
 								<FormItem className="flex-1">
-									<FormLabel>Name*</FormLabel>
+									<FormLabel>Property Name*</FormLabel>
 									<FormControl>
 										<Select
 											name={field.name}
@@ -145,7 +145,7 @@ export function CreateInterest({
 											// disabled={true}
 										>
 											<SelectTrigger>
-												<SelectValue placeholder="Select a customer" />
+												<SelectValue placeholder="Select a proprty" />
 											</SelectTrigger>
 											<SelectContent>
 												{propertyData?.data?.results?.map(
@@ -176,7 +176,7 @@ export function CreateInterest({
 									<FormControl>
 										<Textarea
 											rows={5}
-											placeholder="Input any remarks about this interest"
+											placeholder="Input note or remarks.."
 											className="resize-none"
 											{...field}
 										/>
