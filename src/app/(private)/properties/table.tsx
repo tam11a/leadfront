@@ -1,11 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-	CaretSortIcon,
-	DotsHorizontalIcon,
-	MixerHorizontalIcon,
-} from "@radix-ui/react-icons";
+import { DotsHorizontalIcon, MixerHorizontalIcon } from "@radix-ui/react-icons";
 import {
 	ColumnDef,
 	ColumnFiltersState,

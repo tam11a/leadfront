@@ -49,12 +49,18 @@ const UpdatePropertySchema = z.object({
 	}),
 	area: z.string(),
 	product_type: z.string(),
+	apartment_type: z.any().optional(),
+	land_type: z.any().optional(),
 	size: z.number(),
 	unit: z.string(),
 	plot: z.any().optional(),
 	facing: z.string(),
 	block: z.any().optional(),
 	road: z.any().optional(),
+	bedrooms: z.any().optional(),
+	bathrooms: z.any().optional(),
+	balcony: z.any().optional(),
+	floor: z.any().optional(),
 	remarks: z.any().optional(),
 	adress: z.string().min(1, {
 		message: "Address must be at least 1 character.",
@@ -63,6 +69,7 @@ const UpdatePropertySchema = z.object({
 	price_public: z.number(),
 	media_id: z.any().optional(),
 	media_commision: z.any().optional(),
+	description: z.any().optional(),
 });
 
 type PropertyFormValues = z.infer<typeof UpdatePropertySchema>;
@@ -107,18 +114,25 @@ export function UpdateProperty({
 				product_uid: property.data.product_uid,
 				area: property.data.area?.toString(),
 				product_type: property.data.product_type?.toString(),
+				apartment_type: property.data.apartment_type?.toString(),
+				land_type: property.data.land_type,
 				size: property.data.size,
 				unit: property.data.unit?.toString(),
 				block: property.data.block,
 				road: property.data.road,
 				plot: property.data.plot,
 				facing: property.data.facing,
+				floor: property.data.floor,
+				bathrooms: property.data.bathrooms,
+				bedrooms: property.data.bedrooms,
+				balcony: property.data.balcony,
 				remarks: property.data.remarks,
 				adress: property.data.adress,
 				price_private: property.data.price_private,
 				price_public: property.data.price_public,
 				media_id: property.data.media_id,
 				media_commision: property.data.media_commision,
+				description: property.data.description,
 			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -217,6 +231,40 @@ export function UpdateProperty({
 								/>
 								<FormField
 									control={form.control}
+									name="area"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Area*</FormLabel>
+											<FormControl>
+												<Select
+													name={field.name}
+													onValueChange={(v) => v && field.onChange(v)}
+													value={field.value?.toString()}
+													disabled={areaLoading}
+													// disabled={true}
+												>
+													<SelectTrigger>
+														<SelectValue placeholder="Select an area" />
+													</SelectTrigger>
+													<SelectContent>
+														{areaData?.data?.map((area: any) => (
+															<SelectItem
+																value={area?.id?.toString()}
+																key={area?.id}
+															>
+																{area?.area_name}
+															</SelectItem>
+														))}
+													</SelectContent>
+												</Select>
+											</FormControl>
+											<FormDescription></FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
 									name="product_type"
 									render={({ field }) => (
 										<FormItem className="flex-1">
@@ -251,30 +299,64 @@ export function UpdateProperty({
 								/>
 								<FormField
 									control={form.control}
-									name="area"
+									name="land_type"
 									render={({ field }) => (
 										<FormItem className="flex-1">
-											<FormLabel>Area*</FormLabel>
+											<FormLabel>Land Type</FormLabel>
 											<FormControl>
 												<Select
 													name={field.name}
 													onValueChange={(v) => v && field.onChange(v)}
-													value={field.value?.toString()}
-													disabled={areaLoading}
-													// disabled={true}
+													value={field.value}
+													disabled={field.disabled}
 												>
 													<SelectTrigger>
-														<SelectValue placeholder="Select an area" />
+														<SelectValue placeholder="Select a land type" />
 													</SelectTrigger>
 													<SelectContent>
-														{areaData?.data?.map((area: any) => (
-															<SelectItem
-																value={area?.id?.toString()}
-																key={area?.id}
-															>
-																{area?.area_name}
-															</SelectItem>
-														))}
+														<SelectItem value={"Agricultural"}>
+															Agricultural
+														</SelectItem>
+														<SelectItem value={"Residential"}>
+															Residential
+														</SelectItem>
+														<SelectItem value={"Commercial"}>
+															Commercial
+														</SelectItem>
+														<SelectItem value={"Others"}>Others</SelectItem>
+													</SelectContent>
+												</Select>
+											</FormControl>
+											<FormDescription></FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="apartment_type"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Apartment Type</FormLabel>
+											<FormControl>
+												<Select
+													name={field.name}
+													onValueChange={(v) => v && field.onChange(v)}
+													value={field.value}
+													disabled={field.disabled}
+												>
+													<SelectTrigger>
+														<SelectValue placeholder="Select a apartment type" />
+													</SelectTrigger>
+													<SelectContent>
+														<SelectItem value={"Studio"}>Studio</SelectItem>
+														<SelectItem value={"Duplex"}>Duplex</SelectItem>
+														<SelectItem value={"Triplex"}>Triplex</SelectItem>
+														<SelectItem value={"Garden"}>Garden</SelectItem>
+														<SelectItem value={"High-rise"}>
+															High-rise
+														</SelectItem>
+														<SelectItem value={"Others"}>Others</SelectItem>
 													</SelectContent>
 												</Select>
 											</FormControl>
@@ -293,7 +375,7 @@ export function UpdateProperty({
 												<FormLabel>Size*</FormLabel>
 												<FormControl>
 													<Input
-														placeholder="Enter size of the property"
+														placeholder="Enter property size"
 														{...field}
 														type="number"
 														onChange={(e) =>
@@ -385,7 +467,7 @@ export function UpdateProperty({
 												<FormLabel>Plot</FormLabel>
 												<FormControl>
 													<Input
-														placeholder="Enter size of the property"
+														placeholder="Enter plot number"
 														{...field}
 													/>
 												</FormControl>
@@ -436,6 +518,101 @@ export function UpdateProperty({
 										)}
 									/>
 								</div>
+								<div className="flex flex-row items-start gap-3">
+									<FormField
+										control={form.control}
+										name="floor"
+										disabled={true}
+										render={({ field }) => (
+											<FormItem className="flex-1">
+												<FormLabel>Floor</FormLabel>
+												<FormControl>
+													<Input
+														placeholder="Enter floor number"
+														{...field}
+													/>
+												</FormControl>
+												<FormDescription></FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="balcony"
+										render={({ field }) => (
+											<FormItem className="flex-1">
+												<FormLabel>Balcony</FormLabel>
+												<FormControl>
+													<Input
+														placeholder="Enter number of balcony"
+														{...field}
+													/>
+												</FormControl>
+												<FormDescription></FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+								<div className="flex flex-row items-start gap-3">
+									<FormField
+										control={form.control}
+										name="bedrooms"
+										render={({ field }) => (
+											<FormItem className="flex-1">
+												<FormLabel>Bedrooms</FormLabel>
+												<FormControl>
+													<Input
+														placeholder="Enter number of bedrooms"
+														{...field}
+													/>
+												</FormControl>
+												<FormDescription></FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="bathrooms"
+										render={({ field }) => (
+											<FormItem className="flex-1">
+												<FormLabel>Bathrooms</FormLabel>
+												<FormControl>
+													<Input
+														placeholder="Enter number of bathrooms"
+														{...field}
+													/>
+												</FormControl>
+												<FormDescription></FormDescription>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+								<FormField
+									control={form.control}
+									name="description"
+									render={({ field }) => (
+										<FormItem className="flex-1">
+											<FormLabel>Description</FormLabel>
+											<FormControl>
+												<Textarea
+													rows={5}
+													placeholder="Enter a description of the property."
+													className="resize-none"
+													{...field}
+												/>
+											</FormControl>
+											<FormDescription>
+												This is property&apos;s description. Please enter a
+												detailed description of the property.
+											</FormDescription>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 								<FormField
 									control={form.control}
 									name="remarks"
@@ -485,7 +662,7 @@ export function UpdateProperty({
 											<FormLabel>Purchasing Price*</FormLabel>
 											<FormControl>
 												<Input
-													placeholder="Enter the price in bdt."
+													placeholder="Enter an amount"
 													{...field}
 													type="number"
 													onChange={(e) =>
@@ -493,7 +670,9 @@ export function UpdateProperty({
 													}
 												/>
 											</FormControl>
-											<FormDescription></FormDescription>
+											<FormDescription>
+												Make sure the amount is in bdt.
+											</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}
@@ -506,7 +685,7 @@ export function UpdateProperty({
 											<FormLabel>Selling Price*</FormLabel>
 											<FormControl>
 												<Input
-													placeholder="Enter the price in bdt."
+													placeholder="Enter an amount"
 													type="number"
 													{...field}
 													onChange={(e) =>
@@ -514,7 +693,9 @@ export function UpdateProperty({
 													}
 												/>
 											</FormControl>
-											<FormDescription></FormDescription>
+											<FormDescription>
+												Make sure the amount is in bdt.
+											</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}
@@ -560,11 +741,13 @@ export function UpdateProperty({
 											<FormLabel>Media Commision</FormLabel>
 											<FormControl>
 												<Input
-													placeholder="Enter the price in bdt."
+													placeholder="Enter an amount"
 													{...field}
 												/>
 											</FormControl>
-											<FormDescription></FormDescription>
+											<FormDescription>
+												Make sure the amount is in bdt.
+											</FormDescription>
 											<FormMessage />
 										</FormItem>
 									)}

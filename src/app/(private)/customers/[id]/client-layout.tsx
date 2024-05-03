@@ -14,13 +14,12 @@ export default function ClientLayout({
 	params,
 }: Readonly<{ children: React.ReactNode; params: { id: number } }>) {
 	const { data } = useGetCustomerById(params.id);
-
 	return !data ? (
 		<Loading />
 	) : (
 		<>
 			<div className="min-h-screen flex flex-col">
-				<div className="flex flex-row items-center justify-between py-5 px-8">
+				<div className="flex flex-row items-start md:items-center justify-between py-5 px-8">
 					<div className="space-y-1">
 						<h1 className="text-sm font-semibold text-muted-foreground">
 							Customer Details #{params.id}
@@ -41,6 +40,11 @@ export default function ClientLayout({
 								Created: {format(data?.data.created_at, "PPP")}
 							</p>
 						</div>
+					</div>
+					<div className=" md:hidden">
+						<UpdateCustomer customerId={params.id}>
+							<Button variant={"outline"}>Update</Button>
+						</UpdateCustomer>
 					</div>
 					<div className="hidden md:flex flex-row items-center gap-3">
 						<TabNav />
@@ -66,6 +70,7 @@ export default function ClientLayout({
 							status: data?.data.status,
 							priority: data?.data.priority,
 							source: data?.data.source,
+							media_id: data?.data.media_id,
 						}}
 					/>
 				</div>
