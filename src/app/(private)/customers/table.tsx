@@ -62,6 +62,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import useUser from "@/hooks/useUser";
+import { Switch } from "@/components/ui/switch";
 
 export interface Customer {
 	id: number;
@@ -255,6 +257,7 @@ const columns: ColumnDef<Customer>[] = [
 ];
 
 export default function CustomerTable() {
+	const { user, isLoading: userLoading } = useUser();
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -344,6 +347,7 @@ export default function CustomerTable() {
 							))}
 						</SelectContent>
 					</Select>
+					<Switch>Me Mode</Switch>
 					{Object.values(filters).some((v) => v !== "") && (
 						<Button
 							variant="ghost"
