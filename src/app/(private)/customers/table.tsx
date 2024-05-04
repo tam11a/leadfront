@@ -53,7 +53,7 @@ import {
 	useQueryStates,
 } from "nuqs";
 import { Loading } from "../token-validation-checker";
-import { DataTableFacetedFilter } from "@/components/ui/data-faced-filters";
+
 import { CustomerStatusList } from "./create-customer";
 import {
 	Select,

@@ -2,7 +2,7 @@ import { CardDescription, CardTitle } from "@/components/ui/card";
 
 // Icons
 import { FiMail } from "react-icons/fi";
-import { IoLocationOutline } from "react-icons/io5";
+import { IoLocationOutline, IoPersonOutline } from "react-icons/io5";
 import { LuPhoneCall } from "react-icons/lu";
 import { HiOutlineStatusOnline } from "react-icons/hi";
 import { VscSourceControl } from "react-icons/vsc";
@@ -13,6 +13,8 @@ import { RiArrowUpSLine } from "react-icons/ri";
 import { PiEqualsBold } from "react-icons/pi";
 import { RiArrowDownSLine } from "react-icons/ri";
 import { RiArrowDownDoubleFill } from "react-icons/ri";
+import { useGetMediaById } from "@/lib/actions/media/get-by-id";
+import Link from "next/link";
 
 export const Priorities = [
 	"Lowest",
@@ -47,7 +49,10 @@ export default function CustomerContactBar(contact: {
 	status?: string;
 	priority?: string;
 	source?: string;
+	media_id?: number;
 }) {
+	const { data } = useGetMediaById(contact.media_id);
+	console.log(data);
 	return (
 		<div className="space-y-3 px-8 py-6 border-l h-full md:min-w-[300px]">
 			<CardTitle>Phone</CardTitle>
@@ -94,6 +99,17 @@ export default function CustomerContactBar(contact: {
 			<CardDescription className="flex items-center space-x-2">
 				<VscSourceControl className="text-primary" />
 				<span>{contact.source || "No Source Added"}</span>
+			</CardDescription>
+			<CardTitle>Media</CardTitle>
+			<CardDescription className="flex items-center space-x-2">
+				<IoPersonOutline className="text-primary" />
+				<Link
+					href={`/medias/${contact?.media_id}`}
+					className="mx-4 text-primary underline-offset-4 hover:underline"
+				>
+					{[data?.data?.first_name, data?.data?.last_name].join(" ") ||
+						"No Source Added"}
+				</Link>
 			</CardDescription>
 		</div>
 	);
