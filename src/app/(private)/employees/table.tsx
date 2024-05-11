@@ -46,6 +46,7 @@ import { TbUserEdit } from "react-icons/tb";
 import { FiActivity } from "react-icons/fi";
 import { LogDialog } from "./log-dialog";
 import { CreateAccessDialog } from "./create-access";
+import { parseAsInteger, useQueryState } from "nuqs";
 
 export interface Employee {
   id: number;
@@ -222,10 +223,17 @@ export default function EmployeeTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
-  const { data } = useEmployees();
+  const [page, setPage] = useQueryState(
+    "page",
+    parseAsInteger.withDefault(1).withOptions({
+      clearOnDefault: true,
+    })
+  );
+
+  const { data } = useEmployees({ page });
 
   const table = useReactTable({
-    data: data?.data || [],
+    data: React.useMemo(() => data?.data || [], [data]),
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -338,6 +346,32 @@ export default function EmployeeTable() {
         </Table>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
+
+      {/* PAGINATION */}
+
+      {/* <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="flex-1 text-sm text-muted-foreground">
+          {page} of {Math.ceil((data?.data?.count || 1) / 8)} page(s).
+        </div>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((p) => p - 1)}
+            disabled={!data?.data?.previous}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((p) => p + 1)}
+            disabled={!data?.data?.next}
+          >
+            Next
+          </Button>
+        </div>
+      </div> */}
     </div>
   );
 }
