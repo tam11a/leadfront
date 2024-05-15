@@ -69,6 +69,9 @@ import { Switch } from "@/components/ui/switch";
 
 import { Separator } from "@/components/ui/separator";
 import { useMedia } from "@/lib/actions/media/use-media";
+import { useDeleteCustomer } from "@/lib/actions/customers/delete-customers";
+import handleResponse from "@/lib/handle-response";
+import { toast } from "sonner";
 
 export interface Customer {
   id: number;
@@ -240,10 +243,11 @@ const columns: ColumnDef<Customer>[] = [
                 Copy Information
               </DropdownMenuItem>
 
-              <DropdownMenuSeparator />
               <Link href={`/customers/${customer.id}`}>
                 <DropdownMenuItem>View profile</DropdownMenuItem>
               </Link>
+              <DropdownMenuSeparator />
+              <DeleteCustomer id={customer.id} />
             </DropdownMenuContent>
           </DropdownMenu>
         </>
@@ -251,6 +255,41 @@ const columns: ColumnDef<Customer>[] = [
     },
   },
 ];
+
+const DeleteCustomer: React.FC<{ id: number }> = ({ id }) => {
+  const { mutateAsync: Delete, isPending: isDeleting } = useDeleteCustomer();
+
+  async function onDelete(id: number) {
+    const res = await handleResponse(() => Delete(id), 204);
+    if (res.status) {
+      toast("Deleted!", {
+        description: `Customer has been deleted successfully.`,
+        closeButton: true,
+        important: true,
+      });
+    } else {
+      toast("Error!", {
+        description: res.message,
+        important: true,
+        action: {
+          label: "Retry",
+          onClick: () => onDelete(id),
+        },
+      });
+    }
+  }
+  return (
+    <>
+      <DropdownMenuItem
+        className="bg-red-500 focus:bg-red-400 text-white focus:text-white"
+        onClick={() => onDelete(id)}
+        disabled={isDeleting}
+      >
+        Delete Account
+      </DropdownMenuItem>
+    </>
+  );
+};
 
 export default function CustomerTable() {
   const { user, isLoading: userLoading } = useUser();
