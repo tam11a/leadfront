@@ -39,7 +39,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { TbUserEdit } from "react-icons/tb";
+import { TbHomeEdit } from "react-icons/tb";
 import Link from "next/link";
 import { useGetProducts } from "@/lib/actions/properties/get-products";
 import { UpdateProperty } from "./update-property";
@@ -59,6 +59,9 @@ import {
 import { useMedia } from "@/lib/actions/media/use-media";
 import { Separator } from "@/components/ui/separator";
 import { useGetPropertyTypes } from "@/lib/actions/configuration/property-types/get-property-types";
+import { useDeleteProperty } from "@/lib/actions/properties/delete-properties";
+import handleResponse from "@/lib/handle-response";
+import { toast } from "sonner";
 
 export interface Property {
   id: number;
@@ -145,7 +148,7 @@ export const columns: ColumnDef<Property>[] = [
         <>
           <UpdateProperty propertyId={property.id}>
             <Button size={"icon"} variant={"ghost"}>
-              <TbUserEdit />
+              <TbHomeEdit />
             </Button>
           </UpdateProperty>
           <DropdownMenu>
@@ -173,10 +176,11 @@ export const columns: ColumnDef<Property>[] = [
                 Copy Information
               </DropdownMenuItem>
 
-              <DropdownMenuSeparator />
               <Link href={`/properties/${property.id}`}>
                 <DropdownMenuItem>View profile</DropdownMenuItem>
               </Link>
+              <DropdownMenuSeparator />
+              <DeleteProperties id={property.id} />
             </DropdownMenuContent>
           </DropdownMenu>
         </>
@@ -184,6 +188,41 @@ export const columns: ColumnDef<Property>[] = [
     },
   },
 ];
+
+const DeleteProperties: React.FC<{ id: number }> = ({ id }) => {
+  const { mutateAsync: Delete, isPending: isDeleting } = useDeleteProperty();
+
+  async function onDelete(id: number) {
+    const res = await handleResponse(() => Delete(id), 204);
+    if (res.status) {
+      toast("Deleted!", {
+        description: `Property has been deleted successfully.`,
+        closeButton: true,
+        important: true,
+      });
+    } else {
+      toast("Error!", {
+        description: res.message,
+        important: true,
+        action: {
+          label: "Retry",
+          onClick: () => onDelete(id),
+        },
+      });
+    }
+  }
+  return (
+    <>
+      <DropdownMenuItem
+        className="bg-red-500 focus:bg-red-400 text-white focus:text-white"
+        onClick={() => onDelete(id)}
+        disabled={isDeleting}
+      >
+        Delete Property
+      </DropdownMenuItem>
+    </>
+  );
+};
 
 export default function PropertyTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
