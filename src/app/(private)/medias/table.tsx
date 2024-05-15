@@ -44,6 +44,9 @@ import Link from "next/link";
 import { useGetMedias } from "@/lib/actions/media/get-medias";
 import { UpdateMedia } from "./update-media";
 import { parseAsInteger, useQueryState } from "nuqs";
+import { useDeleteMedia } from "@/lib/actions/media/delete-media";
+import handleResponse from "@/lib/handle-response";
+import { toast } from "sonner";
 
 export interface Media {
   id: number;
@@ -179,10 +182,11 @@ export const columns: ColumnDef<Media>[] = [
                 Copy Information
               </DropdownMenuItem>
 
-              <DropdownMenuSeparator />
               <Link href={`/medias/${media.id}`}>
                 <DropdownMenuItem>View profile</DropdownMenuItem>
               </Link>
+              <DropdownMenuSeparator />
+              <DeleteMedia id={media.id} />
             </DropdownMenuContent>
           </DropdownMenu>
         </>
@@ -190,6 +194,41 @@ export const columns: ColumnDef<Media>[] = [
     },
   },
 ];
+
+const DeleteMedia: React.FC<{ id: number }> = ({ id }) => {
+  const { mutateAsync: Delete, isPending: isDeleting } = useDeleteMedia();
+
+  async function onDelete(id: number) {
+    const res = await handleResponse(() => Delete(id), 204);
+    if (res.status) {
+      toast("Deleted!", {
+        description: `Media has been deleted successfully.`,
+        closeButton: true,
+        important: true,
+      });
+    } else {
+      toast("Error!", {
+        description: res.message,
+        important: true,
+        action: {
+          label: "Retry",
+          onClick: () => onDelete(id),
+        },
+      });
+    }
+  }
+  return (
+    <>
+      <DropdownMenuItem
+        className="bg-red-500 focus:bg-red-400 text-white focus:text-white"
+        onClick={() => onDelete(id)}
+        disabled={isDeleting}
+      >
+        Delete Account
+      </DropdownMenuItem>
+    </>
+  );
+};
 
 export default function MediaTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);

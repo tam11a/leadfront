@@ -6,7 +6,6 @@ import {
   Cross2Icon,
   DotsHorizontalIcon,
   MixerHorizontalIcon,
-  PlusCircledIcon,
 } from "@radix-ui/react-icons";
 import {
   ColumnDef,
