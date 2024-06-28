@@ -84,39 +84,19 @@ export function CreateAccessDialog({
 		useUpdateEmployee();
 
 	async function onSubmit(data: CreateAccessValues) {
-		const res = await handleResponse(() => register(data), [201]);
+		const res = await handleResponse(
+			() =>
+				register({
+					...data,
+					employee_id: employeeId,
+				}),
+			[201]
+		);
 		if (res.status) {
-			// This is the part that is different from the original snippet
-			const res2 = await handleResponse(() =>
-				update({
-					id: employeeId,
-					data: {
-						user_id: res.data.id,
-					},
-				})
-			);
-			if (res2.status) {
-				toast("Access created successfully.", {
-					important: true,
-				});
-				setOpen(false);
-			} else {
-				form.reset({
-					email,
-					username: "",
-					password: "",
-					password2: "",
-					role: "Admin",
-				});
-				toast("Error!", {
-					description: `There was an error creating access. Please create new credentials and try again.`,
-					important: true,
-					action: {
-						label: "Retry",
-						onClick: () => onSubmit(data),
-					},
-				});
-			}
+			toast("Access created successfully.", {
+				important: true,
+			});
+			setOpen(false);
 		} else {
 			if (typeof res.data === "object") {
 				Object.entries(res.data).forEach(([key, value]) => {
@@ -279,7 +259,7 @@ export function CreateAccessDialog({
 								</DialogTrigger>
 								<Button
 									type="submit"
-									disabled={true || isPending || isUpdatePending}
+									disabled={isPending || isUpdatePending}
 								>
 									Save
 								</Button>
