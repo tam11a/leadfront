@@ -239,10 +239,10 @@ export function CreateAccessDialog({
 													Admin (Full Access)
 												</SelectItem>
 												<SelectItem value="Staff">
-													Staff (Limited Access)
+													Customer Representative (Limited Access)
 												</SelectItem>
 												<SelectItem value="Staff2">
-													Staff2 (Limited Access)
+													Data Entry (Limited Access)
 												</SelectItem>
 											</SelectContent>
 										</Select>
