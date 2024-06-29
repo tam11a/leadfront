@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import instance from "..";
 
 const register = (data: any) => {
@@ -6,5 +6,14 @@ const register = (data: any) => {
 };
 
 export const useRegister = () => {
-	return useMutation({ mutationFn: register });
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: register,
+		onSuccess: () => {
+			// Query invalidation
+			queryClient.invalidateQueries({
+				queryKey: ["get-employees"],
+			});
+		},
+	});
 };

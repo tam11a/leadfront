@@ -29,7 +29,6 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { useRegister } from "@/lib/actions/auth/register";
-import { useUpdateEmployee } from "@/lib/actions/employees/patch-by-id";
 import handleResponse from "@/lib/handle-response";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -80,8 +79,6 @@ export function CreateAccessDialog({
 	});
 
 	const { mutateAsync: register, isPending } = useRegister();
-	const { mutateAsync: update, isPending: isUpdatePending } =
-		useUpdateEmployee();
 
 	async function onSubmit(data: CreateAccessValues) {
 		const res = await handleResponse(
@@ -259,7 +256,7 @@ export function CreateAccessDialog({
 								</DialogTrigger>
 								<Button
 									type="submit"
-									disabled={isPending || isUpdatePending}
+									disabled={isPending}
 								>
 									Save
 								</Button>
