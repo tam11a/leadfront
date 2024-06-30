@@ -29,7 +29,8 @@ import { useForm } from "react-hook-form";
 import { MdOutlineEdit } from "react-icons/md";
 import { toast } from "sonner";
 import { z } from "zod";
-import { TypeAttribute } from "./property-type-attribute";
+import TypeAttribute from "./property-type-attribute";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const UpdatePropertyTypesSchema = z.object({
   product_type_name: z
@@ -116,7 +117,7 @@ export function UpdateSheet({
           <MdOutlineEdit />
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="max-h-screen overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Update property type</SheetTitle>
           <SheetDescription>
@@ -154,7 +155,7 @@ export function UpdateSheet({
               </Button>
             </SheetFooter>
           </form>
-          <TypeAttribute />
+          <TypeAttribute id={old_data?.id} />
         </Form>
       </SheetContent>
     </Sheet>
