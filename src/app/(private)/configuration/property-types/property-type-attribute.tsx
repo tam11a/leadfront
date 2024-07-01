@@ -141,12 +141,15 @@ export default function TypeAttribute({ id }: { id: number }) {
       {show ? (
         <>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="border rounded-xl p-3"
+            >
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem className="mt-5">
+                  <FormItem>
                     <FormLabel>Field Name</FormLabel>
                     <FormControl>
                       <Input placeholder="bedroom, belcony." {...field} />
@@ -160,7 +163,7 @@ export default function TypeAttribute({ id }: { id: number }) {
                 control={form.control}
                 name="data_type"
                 render={({ field }) => (
-                  <FormItem className="mt-5">
+                  <FormItem>
                     <FormLabel>Field Type</FormLabel>
                     <FormControl>
                       <Select
@@ -190,7 +193,7 @@ export default function TypeAttribute({ id }: { id: number }) {
                 control={form.control}
                 name="slug"
                 render={({ field }) => (
-                  <FormItem className="mt-5">
+                  <FormItem>
                     <FormLabel>Slug Name</FormLabel>
                     <FormControl>
                       <Input
@@ -205,7 +208,7 @@ export default function TypeAttribute({ id }: { id: number }) {
                   </FormItem>
                 )}
               />
-              <SheetFooter className="gap-2 flex-row justify-end my-4">
+              <SheetFooter className=" flex-row justify-end mt-4">
                 <Button
                   variant="destructive"
                   onClick={() => setShow(false)}
@@ -222,7 +225,7 @@ export default function TypeAttribute({ id }: { id: number }) {
         </>
       ) : null}
 
-      <div className="max-w-xl pr-3">
+      <div className="max-w-xl">
         {isLoading ? (
           <>
             <Skeleton className="h-24 w-full rounded-2xl" />
@@ -270,7 +273,7 @@ function AttributesCard({ attribute }: { attribute: any }) {
       className="flex flex-row gap-2 items-center my-2 pb-0"
     >
       <CardHeader className="flex-1">
-        <CardTitle>{attribute.name}</CardTitle>
+        <CardTitle className="mb-1">{attribute.name}</CardTitle>
         <CardDescription className="text-xs">
           Slug Name: <span className="text-primary">{attribute.slug}</span>
         </CardDescription>
