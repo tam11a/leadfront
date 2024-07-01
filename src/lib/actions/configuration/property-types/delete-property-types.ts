@@ -12,7 +12,7 @@ export const useDeletPropertyTypes = () => {
     onSuccess: () => {
       // Query invalidation
       queryClient.invalidateQueries({
-        queryKey: ["get-property-types"],
+        queryKey: ["get-property-attributes-by-ids"],
       });
     },
   });
