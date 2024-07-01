@@ -30,7 +30,6 @@ import { MdOutlineEdit } from "react-icons/md";
 import { toast } from "sonner";
 import { z } from "zod";
 import TypeAttribute from "./property-type-attribute";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const UpdatePropertyTypesSchema = z.object({
   product_type_name: z

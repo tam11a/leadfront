@@ -180,7 +180,6 @@ export default function TypeAttribute({ id }: { id: number }) {
                           </SelectGroup>
                         </SelectContent>
                       </Select>
-                      {/* <Input placeholder="number, string, boolean" {...field} /> */}
                     </FormControl>
                     <FormDescription></FormDescription>
                     <FormMessage />
