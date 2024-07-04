@@ -1,7 +1,8 @@
 "use client";
 
 import { useCurrentUser } from "@/lib/actions/auth/current_user";
-import { useEmployeeById } from "@/lib/actions/employees/get-by-id";
+import { useEmployees } from "@/lib/actions/employees/users";
+import React from "react";
 
 const useUser = () => {
 	const { data, isLoading, isError, error } = useCurrentUser();
@@ -10,10 +11,21 @@ const useUser = () => {
 		isLoading: emp_isLoading,
 		isError: emp_isError,
 		error: emp_error,
-	} = useEmployeeById(data?.data?.user_id);
+	} = useEmployees(
+		{
+			user_id: data?.data?.user_id,
+		},
+		!!data?.data?.user_id
+	);
+
+	const user = React.useMemo(() => {
+		if (!emp_data) return undefined;
+
+		return emp_data?.data?.length ? emp_data?.data?.[0] : undefined;
+	}, [emp_data]);
 
 	return {
-		user: emp_data,
+		user,
 		access: data,
 		isLoading: isLoading || emp_isLoading,
 		isError: isError || emp_isError,
