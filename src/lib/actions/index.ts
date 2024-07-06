@@ -25,7 +25,6 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.request.use((configuration) => {
 	// Check if the token exists in cookies
 	const token = authService.getToken();
-
 	if (token) {
 		configuration.headers.Authorization = token;
 	}
