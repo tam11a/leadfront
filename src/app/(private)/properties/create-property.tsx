@@ -50,13 +50,9 @@ const CreatePropertySchema = z.object({
   size: z.number(),
   unit: z.string(),
   plot: z.any().optional(),
-  facing: z.string(),
   block: z.any().optional(),
+  sector: z.any().optional(),
   road: z.any().optional(),
-  bedrooms: z.any().optional(),
-  bathrooms: z.any().optional(),
-  balcony: z.any().optional(),
-  floor: z.any().optional(),
   remarks: z.any().optional(),
   adress: z.string().min(1, {
     message: "Address must be at least 1 character.",
@@ -65,8 +61,7 @@ const CreatePropertySchema = z.object({
   price_public: z.number(),
   media_id: z.any().optional(),
   media_commision: z.any().optional(),
-  land_type: z.any().optional(),
-  apartment_type: z.any().optional(),
+  status: z.string(),
 });
 
 type PropertyFormValues = z.infer<typeof CreatePropertySchema>;
@@ -93,12 +88,12 @@ export function CreateProperty() {
       plot: "",
       remarks: "",
       adress: "",
-      media_commision: null,
     },
     mode: "onChange",
   });
-
+  console.log(form);
   async function onSubmit(data: PropertyFormValues) {
+    console.log(data);
     form.clearErrors();
     const res = await handleResponse(
       () => create({ ...data, attributes: [] }),
@@ -202,6 +197,7 @@ export function CreateProperty() {
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="product_type"
@@ -238,31 +234,26 @@ export function CreateProperty() {
                 />
                 <FormField
                   control={form.control}
-                  name="land_type"
+                  name="status"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Land Type</FormLabel>
+                      <FormLabel>Property Status*</FormLabel>
                       <FormControl>
                         <Select
                           name={field.name}
                           onValueChange={(v) => v && field.onChange(v)}
-                          value={field.value}
-                          disabled={field.disabled}
+                          value={field.value?.toString()}
+                          disabled={typeLoading}
+                          // disabled={true}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a land type" />
+                            <SelectValue placeholder="Select a status" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value={"Agricultural"}>
-                              Agricultural
-                            </SelectItem>
-                            <SelectItem value={"Residential"}>
-                              Residential
-                            </SelectItem>
-                            <SelectItem value={"Commercial"}>
-                              Commercial
-                            </SelectItem>
-                            <SelectItem value={"Others"}>Others</SelectItem>
+                            <SelectItem value="available">Available</SelectItem>
+                            <SelectItem value="booked">Booked</SelectItem>
+                            <SelectItem value="sold">Sold</SelectItem>
+                            <SelectItem value="junk">Junk</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>
@@ -271,40 +262,6 @@ export function CreateProperty() {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="apartment_type"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Apartment Type</FormLabel>
-                      <FormControl>
-                        <Select
-                          name={field.name}
-                          onValueChange={(v) => v && field.onChange(v)}
-                          value={field.value}
-                          disabled={field.disabled}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a apartment type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value={"Studio"}>Studio</SelectItem>
-                            <SelectItem value={"Duplex"}>Duplex</SelectItem>
-                            <SelectItem value={"Triplex"}>Triplex</SelectItem>
-                            <SelectItem value={"Garden"}>Garden</SelectItem>
-                            <SelectItem value={"High-rise"}>
-                              High-rise
-                            </SelectItem>
-                            <SelectItem value={"Others"}>Others</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormDescription></FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
                 <div className="flex flex-row items-start gap-3">
                   <FormField
                     control={form.control}
@@ -367,7 +324,7 @@ export function CreateProperty() {
                     name="block"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel>Block/Sector</FormLabel>
+                        <FormLabel>Block</FormLabel>
                         <FormControl>
                           <Input placeholder="Enter block number" {...field} />
                         </FormControl>
@@ -376,6 +333,22 @@ export function CreateProperty() {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name="sector"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Sector</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter sector number" {...field} />
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex flex-row items-start gap-3">
                   <FormField
                     control={form.control}
                     name="road"
@@ -390,8 +363,6 @@ export function CreateProperty() {
                       </FormItem>
                     )}
                   />
-                </div>
-                <div className="flex flex-row items-start gap-3">
                   <FormField
                     control={form.control}
                     name="plot"
@@ -406,118 +377,30 @@ export function CreateProperty() {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name="facing"
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Facing</FormLabel>
-                        <FormControl>
-                          <Select
-                            name={field.name}
-                            onValueChange={(v) => v && field.onChange(v)}
-                            value={field.value}
-                            disabled={field.disabled}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a facing" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={"East"}>East</SelectItem>
-                              <SelectItem value={"West"}>West</SelectItem>
-                              <SelectItem value={"North"}>North</SelectItem>
-                              <SelectItem value={"South"}>South</SelectItem>
-                              <SelectItem value={"Southeast"}>
-                                Southeast
-                              </SelectItem>
-                              <SelectItem value={"Southwest"}>
-                                Southwest
-                              </SelectItem>
-                              <SelectItem value={"Northeast"}>
-                                Northeast
-                              </SelectItem>
-                              <SelectItem value={"Northwest"}>
-                                Northwest
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormDescription></FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </div>
-                <div className="flex flex-row items-start gap-3">
-                  <FormField
-                    control={form.control}
-                    name="floor"
-                    disabled={true}
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Floor</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter floor number" {...field} />
-                        </FormControl>
-                        <FormDescription></FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="balcony"
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Balcony</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter number of balcony"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription></FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="flex flex-row items-start gap-3">
-                  <FormField
-                    control={form.control}
-                    name="bedrooms"
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Bedrooms</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter number of bedrooms"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription></FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="bathrooms"
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Bathrooms</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter number of bathrooms"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription></FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="adress"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Address*</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          rows={5}
+                          placeholder="1234 Main St, City, Country"
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        This is property&apos;s address. It must be a valid
+                        address.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="description"
@@ -559,28 +442,7 @@ export function CreateProperty() {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="adress"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Address*</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          rows={5}
-                          placeholder="1234 Main St, City, Country"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        This is property&apos;s address. It must be a valid
-                        address.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+
                 <FormField
                   control={form.control}
                   name="price_private"
