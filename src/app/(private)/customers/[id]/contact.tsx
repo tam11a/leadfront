@@ -52,7 +52,6 @@ export default function CustomerContactBar(contact: {
 	media_id?: number;
 }) {
 	const { data } = useGetMediaById(contact.media_id);
-	console.log(data);
 	return (
 		<div className="space-y-3 px-8 py-6 border-l h-full md:min-w-[300px]">
 			<CardTitle>Phone</CardTitle>
