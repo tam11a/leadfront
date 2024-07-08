@@ -151,138 +151,191 @@ export function CreateProperty() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-3 mt-6 px-1"
               >
-                <FormField
-                  control={form.control}
-                  name="product_uid"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Title*</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Bashundhara.." {...field} />
-                      </FormControl>
-                      <FormDescription></FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="area"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Area*</FormLabel>
-                      <FormControl>
-                        <Select
-                          name={field.name}
-                          onValueChange={(v) => v && field.onChange(v)}
-                          value={field.value?.toString()}
-                          disabled={areaLoading}
-                          // disabled={true}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select an area" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {areaData?.data?.map((area: any) => (
-                              <SelectItem
-                                value={area?.id?.toString()}
-                                key={area?.id}
-                              >
-                                {area?.area_name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormDescription></FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="product_type"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Property Type*</FormLabel>
-                      <FormControl>
-                        <Select
-                          name={field.name}
-                          onValueChange={(v) => {
-                            v && field.onChange(v), setPropertyTypeId(v);
-                          }}
-                          value={field.value?.toString()}
-                          disabled={typeLoading}
-                          // disabled={true}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {typeData?.data?.map((type: any) => (
-                              <SelectItem
-                                value={type?.id.toString()}
-                                key={type?.id}
-                              >
-                                {type?.product_type_name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormDescription></FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="status"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Property Status*</FormLabel>
-                      <FormControl>
-                        <Select
-                          name={field.name}
-                          onValueChange={(v) => v && field.onChange(v)}
-                          value={field.value?.toString()}
-                          disabled={typeLoading}
-                          // disabled={true}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="available">Available</SelectItem>
-                            <SelectItem value="booked">Booked</SelectItem>
-                            <SelectItem value="sold">Sold</SelectItem>
-                            <SelectItem value="junk">Junk</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormDescription></FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="flex flex-row items-start gap-3">
+                <div className="border rounded-xl p-3">
                   <FormField
                     control={form.control}
-                    name="size"
+                    name="product_uid"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel>Size*</FormLabel>
+                        <FormLabel>Title*</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Bashundhara.." {...field} />
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex flex-row items-start gap-3">
+                    <FormField
+                      control={form.control}
+                      name="size"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Size*</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter property size"
+                              {...field}
+                              type="number"
+                              onChange={(e) =>
+                                field.onChange(e.target.valueAsNumber)
+                              }
+                            />
+                          </FormControl>
+                          <FormDescription></FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="unit"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Unit Type*</FormLabel>
+                          <FormControl>
+                            <Select
+                              name={field.name}
+                              onValueChange={(v) => v && field.onChange(v)}
+                              value={field.value?.toString()}
+                              disabled={unitLoading}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a unit type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {unitData?.data?.map((unit: any) => (
+                                  <SelectItem
+                                    value={unit?.id.toString()}
+                                    key={unit?.id}
+                                  >
+                                    {unit?.unit_name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormDescription></FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="price_private"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Purchasing Price*</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Enter property size"
+                            placeholder="Enter an amount"
                             {...field}
                             type="number"
                             onChange={(e) =>
                               field.onChange(e.target.valueAsNumber)
                             }
                           />
+                        </FormControl>
+                        <FormDescription>
+                          Make sure the amount is in bdt.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="price_public"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Selling Price*</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter an amount"
+                            type="number"
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Make sure the amount is in bdt.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            rows={5}
+                            placeholder="Enter a property description here..."
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Please enter a detailed description of the property.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="remarks"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Remarks</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            rows={3}
+                            placeholder="Enter any additional comments or notes here..."
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="rounded-xl border p-3">
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Property Status*</FormLabel>
+                        <FormControl>
+                          <Select
+                            name={field.name}
+                            onValueChange={(v) => v && field.onChange(v)}
+                            value={field.value?.toString()}
+                            disabled={typeLoading}
+                            // disabled={true}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="available">
+                                Available
+                              </SelectItem>
+                              <SelectItem value="booked">Booked</SelectItem>
+                              <SelectItem value="sold">Sold</SelectItem>
+                              <SelectItem value="junk">Junk</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
@@ -291,27 +344,30 @@ export function CreateProperty() {
                   />
                   <FormField
                     control={form.control}
-                    name="unit"
+                    name="product_type"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel>Unit Type*</FormLabel>
+                        <FormLabel>Property Type*</FormLabel>
                         <FormControl>
                           <Select
                             name={field.name}
-                            onValueChange={(v) => v && field.onChange(v)}
+                            onValueChange={(v) => {
+                              v && field.onChange(v), setPropertyTypeId(v);
+                            }}
                             value={field.value?.toString()}
-                            disabled={unitLoading}
+                            disabled={typeLoading}
+                            // disabled={true}
                           >
                             <SelectTrigger>
-                              <SelectValue placeholder="Select a unit type" />
+                              <SelectValue placeholder="Select a type" />
                             </SelectTrigger>
                             <SelectContent>
-                              {unitData?.data?.map((unit: any) => (
+                              {typeData?.data?.map((type: any) => (
                                 <SelectItem
-                                  value={unit?.id.toString()}
-                                  key={unit?.id}
+                                  value={type?.id.toString()}
+                                  key={type?.id}
                                 >
-                                  {unit?.unit_name}
+                                  {type?.product_type_name}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -322,38 +378,60 @@ export function CreateProperty() {
                       </FormItem>
                     )}
                   />
+                  <div>
+                    {attributeData?.data?.map((a: any) => (
+                      <FormField
+                        control={form.control}
+                        name={a?.slug}
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <FormLabel>{a?.name}</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder={`Enter ${a?.name}`}
+                                {...field}
+
+                                // onChange={(e: any) => setInput(e.target.value)}
+                              />
+                            </FormControl>
+                            <FormDescription></FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    ))}
+                  </div>
                 </div>
-                <FormField
-                  control={form.control}
-                  name="adress"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Address*</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          rows={5}
-                          placeholder="1234 Main St, City, Country"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        This is property&apos;s address. It must be a valid
-                        address.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex flex-row items-start gap-3">
+
+                <div className="border rounded-xl p-3">
                   <FormField
                     control={form.control}
-                    name="block"
+                    name="area"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel>Block</FormLabel>
+                        <FormLabel>Area*</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter block number" {...field} />
+                          <Select
+                            name={field.name}
+                            onValueChange={(v) => v && field.onChange(v)}
+                            value={field.value?.toString()}
+                            disabled={areaLoading}
+                            // disabled={true}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select an area" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {areaData?.data?.map((area: any) => (
+                                <SelectItem
+                                  value={area?.id?.toString()}
+                                  key={area?.id}
+                                >
+                                  {area?.area_name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
@@ -362,66 +440,36 @@ export function CreateProperty() {
                   />
                   <FormField
                     control={form.control}
-                    name="sector"
+                    name="adress"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel>Sector</FormLabel>
+                        <FormLabel>Address*</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter sector number" {...field} />
+                          <Textarea
+                            rows={5}
+                            placeholder="1234 Main St, City, Country"
+                            className="resize-none"
+                            {...field}
+                          />
                         </FormControl>
-                        <FormDescription></FormDescription>
+                        <FormDescription>
+                          This is property address. It must be a valid address.
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                </div>
-                <div className="flex flex-row items-start gap-3">
-                  <FormField
-                    control={form.control}
-                    name="road"
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Road</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter road number" {...field} />
-                        </FormControl>
-                        <FormDescription></FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="plot"
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel>Plot</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter plot number" {...field} />
-                        </FormControl>
-                        <FormDescription></FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div>
-                  {attributeData?.data?.map((a: any) => (
+                  <div className="flex flex-row items-start gap-3">
                     <FormField
                       control={form.control}
-                      name={a?.slug}
+                      name="block"
                       render={({ field }) => (
                         <FormItem className="flex-1">
-                          <FormLabel>{a?.name}</FormLabel>
+                          <FormLabel>Block</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder={`Enter ${a?.name}`}
+                              placeholder="Enter block number"
                               {...field}
-                              onChange={(e) =>
-                                field.onChange(e.target.valueAsNumber)
-                              }
-
-                              // onChange={(e: any) => setInput(e.target.value)}
                             />
                           </FormControl>
                           <FormDescription></FormDescription>
@@ -429,144 +477,107 @@ export function CreateProperty() {
                         </FormItem>
                       )}
                     />
-                  ))}
+                    <FormField
+                      control={form.control}
+                      name="sector"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Sector</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter sector number"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription></FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-row items-start gap-3">
+                    <FormField
+                      control={form.control}
+                      name="road"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Road</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter road number" {...field} />
+                          </FormControl>
+                          <FormDescription></FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="plot"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>Plot</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter plot number" {...field} />
+                          </FormControl>
+                          <FormDescription></FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          rows={5}
-                          placeholder="Enter a property description here..."
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        This is property&apos;s description. Please enter a
-                        detailed description of the property.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="remarks"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Remarks</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          rows={3}
-                          placeholder="Enter any additional comments or notes here..."
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription></FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="price_private"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Purchasing Price*</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter an amount"
-                          {...field}
-                          type="number"
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Make sure the amount is in bdt.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="price_public"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Selling Price*</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter an amount"
-                          type="number"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(e.target.valueAsNumber)
-                          }
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Make sure the amount is in bdt.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="media_id"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Media</FormLabel>
-                      <FormControl>
-                        <Select
-                          name={field.name}
-                          onValueChange={(v) => v && field.onChange(v)}
-                          value={field.value?.toString()}
-                          disabled={mediaLoading}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a media" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {mediaData?.data?.map((media: any) => (
-                              <SelectItem
-                                value={media?.id.toString()}
-                                key={media?.id}
-                              >
-                                {`${media?.first_name} ${media?.last_name}`}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormDescription></FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="media_commision"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Media Commision</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter an amount" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        Make sure the amount is in bdt.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="border rounded-xl p-3">
+                  <FormField
+                    control={form.control}
+                    name="media_id"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Media</FormLabel>
+                        <FormControl>
+                          <Select
+                            name={field.name}
+                            onValueChange={(v) => v && field.onChange(v)}
+                            value={field.value?.toString()}
+                            disabled={mediaLoading}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a media" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {mediaData?.data?.map((media: any) => (
+                                <SelectItem
+                                  value={media?.id.toString()}
+                                  key={media?.id}
+                                >
+                                  {`${media?.first_name} ${media?.last_name}`}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="media_commision"
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel>Media Commision</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter an amount" {...field} />
+                        </FormControl>
+                        <FormDescription>
+                          Make sure the amount is in bdt.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
                 <SheetFooter>
                   <SheetClose asChild>
                     <Button variant={"ghost"}>Cancel</Button>
