@@ -30,6 +30,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useGetAreas } from "@/lib/actions/configuration/areas/get-areas";
 import { useGetPropertyTypes } from "@/lib/actions/configuration/property-types/get-property-types";
+import { useGetPropertyAttributes } from "@/lib/actions/configuration/property-types/property-attributes/get-property-attributes";
 import { useGetPropertyUnits } from "@/lib/actions/configuration/property-units/get-property-units";
 import { useMedia } from "@/lib/actions/media/use-media";
 import { useCreateProducts } from "@/lib/actions/properties/post-prodcts";
@@ -69,7 +70,10 @@ type PropertyFormValues = z.infer<typeof CreatePropertySchema>;
 export function CreateProperty() {
   const [open, setOpen] = useState(false);
   const [search, _setSearch] = useState("");
+  const [propertyTypeId, setPropertyTypeId] = useState("");
 
+  const { data: attributeData, isLoading: attributeLoading } =
+    useGetPropertyAttributes(parseInt(propertyTypeId));
   const { mutateAsync: create, isPending } = useCreateProducts();
 
   const { data: areaData, isLoading: areaLoading } = useGetAreas(search);
@@ -91,9 +95,7 @@ export function CreateProperty() {
     },
     mode: "onChange",
   });
-  console.log(form);
   async function onSubmit(data: PropertyFormValues) {
-    console.log(data);
     form.clearErrors();
     const res = await handleResponse(
       () => create({ ...data, attributes: [] }),
@@ -197,7 +199,6 @@ export function CreateProperty() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="product_type"
@@ -207,7 +208,9 @@ export function CreateProperty() {
                       <FormControl>
                         <Select
                           name={field.name}
-                          onValueChange={(v) => v && field.onChange(v)}
+                          onValueChange={(v) => {
+                            v && field.onChange(v), setPropertyTypeId(v);
+                          }}
                           value={field.value?.toString()}
                           disabled={typeLoading}
                           // disabled={true}
@@ -232,6 +235,7 @@ export function CreateProperty() {
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="status"
@@ -262,6 +266,7 @@ export function CreateProperty() {
                     </FormItem>
                   )}
                 />
+
                 <div className="flex flex-row items-start gap-3">
                   <FormField
                     control={form.control}
@@ -318,6 +323,28 @@ export function CreateProperty() {
                     )}
                   />
                 </div>
+                <FormField
+                  control={form.control}
+                  name="adress"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Address*</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          rows={5}
+                          placeholder="1234 Main St, City, Country"
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        This is property&apos;s address. It must be a valid
+                        address.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <div className="flex flex-row items-start gap-3">
                   <FormField
                     control={form.control}
@@ -378,29 +405,32 @@ export function CreateProperty() {
                     )}
                   />
                 </div>
-                <FormField
-                  control={form.control}
-                  name="adress"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Address*</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          rows={5}
-                          placeholder="1234 Main St, City, Country"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        This is property&apos;s address. It must be a valid
-                        address.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div>
+                  {attributeData?.data?.map((a: any) => (
+                    <FormField
+                      control={form.control}
+                      name={a?.slug}
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>{a?.name}</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder={`Enter ${a?.name}`}
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(e.target.valueAsNumber)
+                              }
 
+                              // onChange={(e: any) => setInput(e.target.value)}
+                            />
+                          </FormControl>
+                          <FormDescription></FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                </div>
                 <FormField
                   control={form.control}
                   name="description"
@@ -442,7 +472,6 @@ export function CreateProperty() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="price_private"

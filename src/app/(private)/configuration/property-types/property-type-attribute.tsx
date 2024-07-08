@@ -66,7 +66,7 @@ type CreatePropertyAttributeValues = z.infer<
 export default function TypeAttribute({ id }: { id: number }) {
   const [show, setShow] = useState(false);
   //Get Attribute List
-  const { data, isLoading, isError, error } = useGetPropertyAttributes(id);
+  const { data, isLoading } = useGetPropertyAttributes(id);
 
   //Create Attribute Under Property Types
   const { mutateAsync: create, isPending } = useCreatePropertyAttribute();
