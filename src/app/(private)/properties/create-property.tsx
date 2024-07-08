@@ -141,7 +141,7 @@ export function CreateProperty() {
       <Sheet open={open} onOpenChange={(o) => setOpen(o)}>
         <Button onClick={() => setOpen(true)}>Add New</Button>
         <SheetContent className="max-h-screen overflow-y-auto">
-          <SheetHeader>
+          <SheetHeader className="text-left">
             <SheetTitle>Create Property</SheetTitle>
             <SheetDescription>
               Complete the form below to create a new property.
@@ -230,7 +230,7 @@ export function CreateProperty() {
                         <FormLabel>Purchasing Price*</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Enter an amount"
+                            placeholder="Enter an amount in bdt."
                             {...field}
                             type="number"
                             onChange={(e) =>
@@ -238,9 +238,7 @@ export function CreateProperty() {
                             }
                           />
                         </FormControl>
-                        <FormDescription>
-                          Make sure the amount is in bdt.
-                        </FormDescription>
+                        <FormDescription></FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -253,7 +251,7 @@ export function CreateProperty() {
                         <FormLabel>Selling Price*</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Enter an amount"
+                            placeholder="Enter an amount in bdt."
                             type="number"
                             {...field}
                             onChange={(e) =>
@@ -261,9 +259,7 @@ export function CreateProperty() {
                             }
                           />
                         </FormControl>
-                        <FormDescription>
-                          Make sure the amount is in bdt.
-                        </FormDescription>
+                        <FormDescription></FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}

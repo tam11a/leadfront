@@ -179,7 +179,7 @@ export function UpdateProperty({
           {children || <Button>Update</Button>}
         </SheetTrigger>
         <SheetContent className="max-h-screen overflow-y-auto">
-          <SheetHeader>
+          <SheetHeader className="text-left">
             <SheetTitle>Update Property</SheetTitle>
             <SheetDescription>
               Please fill in the form to update the property data.
