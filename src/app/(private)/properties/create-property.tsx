@@ -63,6 +63,7 @@ const CreatePropertySchema = z.object({
   media_id: z.any().optional(),
   media_commision: z.any().optional(),
   status: z.string(),
+  attributes: z.any(),
 });
 
 type PropertyFormValues = z.infer<typeof CreatePropertySchema>;
@@ -92,13 +93,22 @@ export function CreateProperty() {
       plot: "",
       remarks: "",
       adress: "",
+      attributes: {},
     },
     mode: "onChange",
   });
   async function onSubmit(data: PropertyFormValues) {
+    console.log(data);
     form.clearErrors();
     const res = await handleResponse(
-      () => create({ ...data, attributes: [] }),
+      () =>
+        create({
+          ...data,
+          attributes: Array.from(Object.keys(data.attributes), (v) => ({
+            name: v,
+            value: data?.attributes?.[v],
+          })),
+        }),
       [201]
     );
     if (res.status) {
@@ -378,7 +388,7 @@ export function CreateProperty() {
                     {attributeData?.data?.map((a: any) => (
                       <FormField
                         control={form.control}
-                        name={a?.slug}
+                        name={`attributes.${a.slug}`}
                         render={({ field }) => (
                           <FormItem className="flex-1">
                             <FormLabel>{a?.name}</FormLabel>
@@ -386,7 +396,6 @@ export function CreateProperty() {
                               <Input
                                 placeholder={`Enter ${a?.name}`}
                                 {...field}
-
                                 // onChange={(e: any) => setInput(e.target.value)}
                               />
                             </FormControl>
