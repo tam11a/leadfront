@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetClose,
@@ -32,6 +33,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useGetAreas } from "@/lib/actions/configuration/areas/get-areas";
 import { useGetPropertyTypes } from "@/lib/actions/configuration/property-types/get-property-types";
+import { useGetPropertyAttributes } from "@/lib/actions/configuration/property-types/property-attributes/get-property-attributes";
 import { useGetPropertyUnits } from "@/lib/actions/configuration/property-units/get-property-units";
 import { useMedia } from "@/lib/actions/media/use-media";
 import { useGetProductById } from "@/lib/actions/properties/get-by-id";
@@ -65,6 +67,7 @@ const UpdatePropertySchema = z.object({
   media_commision: z.any().optional(),
   description: z.any().optional(),
   sector: z.any().optional(),
+  attributes: z.any(),
 });
 
 type PropertyFormValues = z.infer<typeof UpdatePropertySchema>;
@@ -84,8 +87,8 @@ export function UpdateProperty({
   const { data: areaData, isLoading: areaLoading } = useGetAreas(search);
   const { data: unitData, isLoading: unitLoading } =
     useGetPropertyUnits(search);
-  const { data: typeData, isLoading: typeLoading } =
-    useGetPropertyTypes(search);
+  const { data: attributeData, isLoading: attributeLoading } =
+    useGetPropertyAttributes(property?.data?.product_type);
   const { data: mediaData, isLoading: mediaLoading } = useMedia(search);
 
   const form = useForm<PropertyFormValues>({
@@ -98,6 +101,7 @@ export function UpdateProperty({
       remarks: "",
       adress: "",
       media_commision: "",
+      attributes: {},
     },
     mode: "onChange",
   });
@@ -122,6 +126,13 @@ export function UpdateProperty({
         media_id: property.data.media_id,
         media_commision: property.data.media_commision,
         description: property.data.description,
+        attributes: property?.data?.attributes.reduce(
+          (acc: any, current: any) => {
+            acc[`${current.attribute__slug}`] = current.value;
+            return acc;
+          },
+          {}
+        ),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -134,7 +145,13 @@ export function UpdateProperty({
     const res = await handleResponse(() =>
       update({
         id: propertyId,
-        data,
+        data: {
+          ...data,
+          attributes: Array.from(Object.keys(data.attributes), (v) => ({
+            name: v,
+            value: data?.attributes?.[v],
+          })),
+        },
       })
     );
     if (res.status) {
@@ -196,9 +213,9 @@ export function UpdateProperty({
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-3 mt-6 px-1"
+                className=" mt-6 px-1"
               >
-                <div className="border rounded-xl p-3">
+                <div className="space-y-3 my-5">
                   <FormField
                     control={form.control}
                     name="product_uid"
@@ -277,7 +294,7 @@ export function UpdateProperty({
                         <FormLabel>Purchasing Price*</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Enter an amount"
+                            placeholder="Enter an amount in bdt."
                             {...field}
                             type="number"
                             onChange={(e) =>
@@ -285,9 +302,7 @@ export function UpdateProperty({
                             }
                           />
                         </FormControl>
-                        <FormDescription>
-                          Make sure the amount is in bdt.
-                        </FormDescription>
+                        <FormDescription></FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -300,7 +315,7 @@ export function UpdateProperty({
                         <FormLabel>Selling Price*</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Enter an amount"
+                            placeholder="Enter an amount in bdt."
                             type="number"
                             {...field}
                             onChange={(e) =>
@@ -308,9 +323,7 @@ export function UpdateProperty({
                             }
                           />
                         </FormControl>
-                        <FormDescription>
-                          Make sure the amount is in bdt.
-                        </FormDescription>
+                        <FormDescription></FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -356,7 +369,13 @@ export function UpdateProperty({
                     )}
                   />
                 </div>
-                <div className="rounded-xl border p-3">
+                <div className="space-y-3 my-7">
+                  <SheetTitle>Property Information</SheetTitle>
+                  <SheetDescription>
+                    Fill in the following fields for property type and
+                    attributes.
+                  </SheetDescription>
+                  <Separator className="mb-2 mt-3" />
                   <FormField
                     control={form.control}
                     name="status"
@@ -368,7 +387,8 @@ export function UpdateProperty({
                             name={field.name}
                             onValueChange={(v) => v && field.onChange(v)}
                             value={field.value?.toString()}
-                            disabled={["sold", "junk"].includes(status)}
+                            disabled={["sold", "junk"].includes(field.value)}
+                            // disabled={true}
                           >
                             <SelectTrigger>
                               <SelectValue placeholder="Select a status" />
@@ -424,11 +444,11 @@ export function UpdateProperty({
                       </FormItem>
                     )}
                   /> */}
-                  {/* <div>
+                  <div>
                     {attributeData?.data?.map((a: any) => (
                       <FormField
                         control={form.control}
-                        name={a?.slug}
+                        name={`attributes.${a.slug}`}
                         render={({ field }) => (
                           <FormItem className="flex-1">
                             <FormLabel>{a?.name}</FormLabel>
@@ -436,7 +456,6 @@ export function UpdateProperty({
                               <Input
                                 placeholder={`Enter ${a?.name}`}
                                 {...field}
-
                                 // onChange={(e: any) => setInput(e.target.value)}
                               />
                             </FormControl>
@@ -446,10 +465,16 @@ export function UpdateProperty({
                         )}
                       />
                     ))}
-                  </div> */}
+                  </div>
                 </div>
 
-                <div className="border rounded-xl p-3">
+                <div className="space-y-3 my-7">
+                  <SheetTitle>Address Information</SheetTitle>
+                  <SheetDescription>
+                    Fill in the following fields for an accurate location.
+                  </SheetDescription>
+                  <Separator className="mb-2 mt-3" />
+
                   <FormField
                     control={form.control}
                     name="area"
@@ -489,7 +514,7 @@ export function UpdateProperty({
                     name="adress"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel>Address*</FormLabel>
+                        <FormLabel>Full address*</FormLabel>
                         <FormControl>
                           <Textarea
                             rows={5}
@@ -572,7 +597,12 @@ export function UpdateProperty({
                     />
                   </div>
                 </div>
-                <div className="border rounded-xl p-3">
+                <div className="space-y-3 my-7">
+                  <SheetTitle>Media Information</SheetTitle>
+                  <SheetDescription>
+                    Please select the media of this property from the selection
+                    field below.
+                  </SheetDescription>
                   <FormField
                     control={form.control}
                     name="media_id"

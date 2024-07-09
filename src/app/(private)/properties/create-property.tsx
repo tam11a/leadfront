@@ -75,7 +75,7 @@ export function CreateProperty() {
   const [propertyTypeId, setPropertyTypeId] = useState("");
 
   const { data: attributeData, isLoading: attributeLoading } =
-    useGetPropertyAttributes(parseInt(propertyTypeId));
+    useGetPropertyAttributes(propertyTypeId);
   const { mutateAsync: create, isPending } = useCreateProducts();
 
   const { data: areaData, isLoading: areaLoading } = useGetAreas(search);
@@ -99,7 +99,6 @@ export function CreateProperty() {
     mode: "onChange",
   });
   async function onSubmit(data: PropertyFormValues) {
-    console.log(data);
     form.clearErrors();
     const res = await handleResponse(
       () =>

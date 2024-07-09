@@ -1,7 +1,7 @@
 import instance from "@/lib/actions";
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetPropertyAttributes = (product_type: number) => {
+export const useGetPropertyAttributes = (product_type: any) => {
   return useQuery({
     queryKey: ["get-property-attribute", product_type],
     queryFn: () => {
@@ -11,5 +11,6 @@ export const useGetPropertyAttributes = (product_type: number) => {
         },
       });
     },
+    enabled: !!product_type,
   });
 };
