@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetClose,
@@ -156,12 +157,14 @@ export function CreateProperty() {
             <SheetDescription>
               Complete the form below to create a new property.
             </SheetDescription>
+            <Separator className="mb-3 mt-5" />
+
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-3 mt-6 px-1"
+                className="mt-6 px-1"
               >
-                <div className="border rounded-xl p-3">
+                <div className="space-y-3 my-5">
                   <FormField
                     control={form.control}
                     name="product_uid"
@@ -315,7 +318,13 @@ export function CreateProperty() {
                     )}
                   />
                 </div>
-                <div className="rounded-xl border p-3">
+                <div className="space-y-3 my-7">
+                  <SheetTitle>Property Information</SheetTitle>
+                  <SheetDescription>
+                    Fill in the following fields for property type and
+                    attributes.
+                  </SheetDescription>
+                  <Separator className="mb-2 mt-3" />
                   <FormField
                     control={form.control}
                     name="status"
@@ -408,7 +417,13 @@ export function CreateProperty() {
                   </div>
                 </div>
 
-                <div className="border rounded-xl p-3">
+                <div className="space-y-3 my-7">
+                  <SheetTitle>Address Information</SheetTitle>
+                  <SheetDescription>
+                    Fill in the following fields for an accurate location.
+                  </SheetDescription>
+                  <Separator className="mb-2 mt-3" />
+
                   <FormField
                     control={form.control}
                     name="area"
@@ -531,7 +546,12 @@ export function CreateProperty() {
                     />
                   </div>
                 </div>
-                <div className="border rounded-xl p-3">
+                <div className="space-y-3 my-7">
+                  <SheetTitle>Media Information</SheetTitle>
+                  <SheetDescription>
+                    Please select the media of this property from the selection
+                    field below.
+                  </SheetDescription>
                   <FormField
                     control={form.control}
                     name="media_id"
