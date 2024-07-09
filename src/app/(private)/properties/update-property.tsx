@@ -84,9 +84,8 @@ export function UpdateProperty({
   const { data: property, isLoading } = useGetProductById(
     open ? propertyId : undefined
   );
-  const { data: areaData, isLoading: areaLoading } = useGetAreas(search);
-  const { data: unitData, isLoading: unitLoading } =
-    useGetPropertyUnits(search);
+  const { data: areaData, isLoading: areaLoading } = useGetAreas();
+  const { data: unitData, isLoading: unitLoading } = useGetPropertyUnits();
   const { data: attributeData, isLoading: attributeLoading } =
     useGetPropertyAttributes(property?.data?.product_type);
   const { data: mediaData, isLoading: mediaLoading } = useMedia(search);
@@ -450,7 +449,7 @@ export function UpdateProperty({
                         control={form.control}
                         name={`attributes.${a.slug}`}
                         render={({ field }) => (
-                          <FormItem className="flex-1">
+                          <FormItem className="flex-1" key={a.id}>
                             <FormLabel>{a?.name}</FormLabel>
                             <FormControl>
                               <Input
