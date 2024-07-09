@@ -370,7 +370,7 @@ export function UpdateProperty({
                   />
                 </div>
                 <div className="space-y-3 my-7">
-                  <SheetTitle>Property Information</SheetTitle>
+                  <SheetTitle>Additional Information</SheetTitle>
                   <SheetDescription>
                     Fill in the following fields for property type and
                     attributes.
