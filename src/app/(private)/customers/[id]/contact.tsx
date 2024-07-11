@@ -17,99 +17,99 @@ import { useGetMediaById } from "@/lib/actions/media/get-by-id";
 import Link from "next/link";
 
 export const Priorities = [
-	"Lowest",
-	"Low",
-	"Medium",
-	"High",
-	"Highest",
+  "Lowest",
+  "Low",
+  "Medium",
+  "High",
+  "Highest",
 ] as const;
 
 export const PriorityIcon = ({ priority }: { priority?: string }) => {
-	switch (priority) {
-		case "Highest":
-			return <RiArrowUpDoubleFill className="text-primary" />;
-		case "High":
-			return <RiArrowUpSLine className="text-primary" />;
-		case "Medium":
-			return <PiEqualsBold className="text-primary" />;
-		case "Low":
-			return <RiArrowDownSLine className="text-primary" />;
-		case "Lowest":
-			return <RiArrowDownDoubleFill className="text-primary" />;
-		default:
-			return <PiEqualsBold className="text-primary" />;
-	}
+  switch (priority) {
+    case "Highest":
+      return <RiArrowUpDoubleFill className="text-primary" />;
+    case "High":
+      return <RiArrowUpSLine className="text-primary" />;
+    case "Medium":
+      return <PiEqualsBold className="text-primary" />;
+    case "Low":
+      return <RiArrowDownSLine className="text-primary" />;
+    case "Lowest":
+      return <RiArrowDownDoubleFill className="text-primary" />;
+    default:
+      return <PiEqualsBold className="text-primary" />;
+  }
 };
 
 export default function CustomerContactBar(contact: {
-	phone?: string;
-	email?: string;
-	address?: string;
-	address2?: string;
-	status?: string;
-	priority?: string;
-	source?: string;
-	media_id?: number;
+  phone?: string;
+  email?: string;
+  address?: string;
+  address2?: string;
+  status?: string;
+  priority?: string;
+  source?: string;
+  media_id?: number;
 }) {
-	const { data } = useGetMediaById(contact.media_id);
-	return (
-		<div className="space-y-3 px-8 py-6 border-l h-full md:min-w-[300px]">
-			<CardTitle>Phone</CardTitle>
-			<CardDescription className="flex items-center space-x-2">
-				<LuPhoneCall className="text-primary" />
-				<span>{contact.phone || "No Phone Number Added"}</span>
-			</CardDescription>
+  const { data } = useGetMediaById(contact.media_id);
+  return (
+    <div className="space-y-3 px-8 py-6 border-r h-full md:min-w-[300px]">
+      <CardTitle>Phone</CardTitle>
+      <CardDescription className="flex items-center space-x-2">
+        <LuPhoneCall className="text-primary" />
+        <span>{contact.phone || "No Phone Number Added"}</span>
+      </CardDescription>
 
-			<CardTitle>Email</CardTitle>
-			<CardDescription className="flex items-center space-x-2">
-				<FiMail className="text-primary" />
-				<span>{contact.email || "No Email Added"}</span>
-			</CardDescription>
+      <CardTitle>Email</CardTitle>
+      <CardDescription className="flex items-center space-x-2">
+        <FiMail className="text-primary" />
+        <span>{contact.email || "No Email Added"}</span>
+      </CardDescription>
 
-			<CardTitle>Address</CardTitle>
-			<CardDescription className="flex space-x-2 text-wrap max-w-xs items-start">
-				<span>
-					<IoLocationOutline className="text-primary mt-1" />
-				</span>
-				<span>{contact.address || "No Address Added"}</span>
-			</CardDescription>
-			{contact.address2 && (
-				<CardDescription className="flex space-x-2 text-wrap max-w-xs items-start">
-					<span>
-						<IoLocationOutline className="text-primary mt-1" />
-					</span>
-					<span>{contact.address2 || "No Address Added"}</span>
-				</CardDescription>
-			)}
+      <CardTitle>Address</CardTitle>
+      <CardDescription className="flex space-x-2 text-wrap max-w-xs items-start">
+        <span>
+          <IoLocationOutline className="text-primary mt-1" />
+        </span>
+        <span>{contact.address || "No Address Added"}</span>
+      </CardDescription>
+      {contact.address2 && (
+        <CardDescription className="flex space-x-2 text-wrap max-w-xs items-start">
+          <span>
+            <IoLocationOutline className="text-primary mt-1" />
+          </span>
+          <span>{contact.address2 || "No Address Added"}</span>
+        </CardDescription>
+      )}
 
-			<CardTitle>Status</CardTitle>
-			<CardDescription className="flex items-center space-x-2">
-				<HiOutlineStatusOnline className="text-primary" />
-				<span>{contact.status || "No Status Added"}</span>
-			</CardDescription>
+      <CardTitle>Status</CardTitle>
+      <CardDescription className="flex items-center space-x-2">
+        <HiOutlineStatusOnline className="text-primary" />
+        <span>{contact.status || "No Status Added"}</span>
+      </CardDescription>
 
-			<CardTitle>Priority</CardTitle>
-			<CardDescription className="flex items-center space-x-2">
-				<PriorityIcon priority={contact.priority} />
-				<span>{contact.priority || "No Priority Added"}</span>
-			</CardDescription>
+      <CardTitle>Priority</CardTitle>
+      <CardDescription className="flex items-center space-x-2">
+        <PriorityIcon priority={contact.priority} />
+        <span>{contact.priority || "No Priority Added"}</span>
+      </CardDescription>
 
-			<CardTitle>Source</CardTitle>
-			<CardDescription className="flex items-center space-x-2">
-				<VscSourceControl className="text-primary" />
-				<span>{contact.source || "No Source Added"}</span>
-			</CardDescription>
-			<CardTitle>Media</CardTitle>
-			<CardDescription className="flex items-center space-x-2">
-				<IoPersonOutline className="text-primary" />
-				<Link
-					href={`/medias/${contact?.media_id}`}
-					className="mx-4 text-primary underline-offset-4 hover:underline"
-				>
-					{[data?.data?.first_name, data?.data?.last_name].join(" ") ||
-						"No Source Added"}
-				</Link>
-			</CardDescription>
-		</div>
-	);
+      <CardTitle>Source</CardTitle>
+      <CardDescription className="flex items-center space-x-2">
+        <VscSourceControl className="text-primary" />
+        <span>{contact.source || "No Source Added"}</span>
+      </CardDescription>
+      <CardTitle>Media</CardTitle>
+      <CardDescription className="flex items-center space-x-2">
+        <IoPersonOutline className="text-primary" />
+        <Link
+          href={`/medias/${contact?.media_id}`}
+          className="mx-4 text-primary underline-offset-4 hover:underline"
+        >
+          {[data?.data?.first_name, data?.data?.last_name].join(" ") ||
+            "No Source Added"}
+        </Link>
+      </CardDescription>
+    </div>
+  );
 }
