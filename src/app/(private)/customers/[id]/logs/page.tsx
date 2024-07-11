@@ -35,19 +35,19 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CreateLog } from "./create-log";
 
-const CreateCustomerMessageSchema = z.object({
-  note: z.string().optional(),
-  followup: z.any().optional(),
-  status: z.any().optional(),
-});
+// const CreateCustomerMessageSchema = z.object({
+//   note: z.string().optional(),
+//   followup: z.any().optional(),
+//   status: z.any().optional(),
+// });
 
-type CreateCustomerMessageFormValues = z.infer<
-  typeof CreateCustomerMessageSchema
->;
+// type CreateCustomerMessageFormValues = z.infer<
+//   typeof CreateCustomerMessageSchema
+// >;
 
 export default function CustomerLogsPage({ id }: { id: number }) {
   return (
-    <div className="space-y-3 px-8 py-6 border-l h-full md:min-h-[400px] md:min-w-[400px]">
+    <div className="space-y-3 px-8 py-6 border-l h-full min-h-[400px] md:min-w-[300px]">
       <CreateLog id={id} />
     </div>
   );
