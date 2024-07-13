@@ -31,7 +31,7 @@ import { MdOutlineDelete } from "react-icons/md";
 
 export default function BusinessAreasList() {
 	const [search, setSearch] = useState("");
-	const { data, isLoading, isError, error } = useGetAreas(search);
+	const { data, isLoading, isError, error } = useGetAreas();
 
 	if (isError) throw new Error(error.message);
 
