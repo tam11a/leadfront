@@ -78,11 +78,9 @@ export function CreateProperty() {
 		useGetPropertyAttributes(propertyTypeId);
 	const { mutateAsync: create, isPending } = useCreateProducts();
 
-	const { data: areaData, isLoading: areaLoading } = useGetAreas(search);
-	const { data: unitData, isLoading: unitLoading } =
-		useGetPropertyUnits(search);
-	const { data: typeData, isLoading: typeLoading } =
-		useGetPropertyTypes(search);
+	const { data: areaData, isLoading: areaLoading } = useGetAreas();
+	const { data: unitData, isLoading: unitLoading } = useGetPropertyUnits();
+	const { data: typeData, isLoading: typeLoading } = useGetPropertyTypes();
 	const { data: mediaData, isLoading: mediaLoading } = useMedia(search);
 
 	const form = useForm<PropertyFormValues>({
