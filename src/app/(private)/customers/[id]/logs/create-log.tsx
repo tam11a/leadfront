@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { CalendarDatePicker } from "@/components/ui/calendar-date-picker";
 import {
   DialogDescription,
   Dialog,
@@ -80,6 +81,11 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
   const onSubmit = async (values: CreateCustomerMessageFormValues) => {
     console.log(values);
   };
+
+  const [selectedDateRange, setSelectedDateRange] = useState({
+    from: new Date(new Date().getFullYear(), 0, 1),
+    to: new Date(),
+  });
   return (
     <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
       <DialogTrigger asChild>
@@ -160,14 +166,11 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">
-                        <Calendar
-                          mode="single"
-                          fromDate={new Date()}
-                          selected={new Date(field.value)}
-                          onSelect={(e: any) =>
-                            field.onChange(format(e as Date, "yyyy-MM-dd"))
-                          }
-                          initialFocus={false}
+                        <CalendarDatePicker
+                          date={selectedDateRange}
+                          onDateSelect={(e: any) => (
+                            console.log(e), setSelectedDateRange(e)
+                          )}
                         />
                       </PopoverContent>
                     </Popover>
