@@ -5,7 +5,7 @@ import { UpdateCustomer } from "../update-customer";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
-import TabNav from "./tab-nav";
+// import TabNav from "./tab-nav";
 import CustomerContactBar from "./contact";
 import { Loading } from "../../token-validation-checker";
 import CustomerLogsPage from "./logs/log-list";
@@ -48,7 +48,7 @@ export default function ClientLayout({
             </UpdateCustomer>
           </div> */}
 					<div className="md:flex flex-row items-center gap-3">
-						<TabNav />
+						{/* <TabNav /> */}
 						<UpdateCustomer customerId={params.id}>
 							<Button variant={"outline"}>Update</Button>
 						</UpdateCustomer>
