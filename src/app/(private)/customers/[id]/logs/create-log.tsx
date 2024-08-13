@@ -30,6 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useGetCustomerLogById } from "@/lib/actions/customer-logs/get-logs";
 import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,6 +54,9 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
   // const [open, setOpen] = useState(false);
 
   const { data: customer, isLoading } = useGetCustomerById(id);
+  const { data: log, isLoading: isLogLoading } = useGetCustomerLogById(
+    customer?.data?.id
+  );
   const form = useForm<CreateCustomerMessageFormValues>({
     resolver: zodResolver(CreateCustomerMessageSchema),
     defaultValues: {
@@ -78,6 +82,7 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
   const onSubmit = async (values: CreateCustomerMessageFormValues) => {
     console.log(values);
   };
+  console.log(log);
   return (
     <>
       {/* <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
