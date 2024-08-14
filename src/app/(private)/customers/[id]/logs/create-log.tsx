@@ -54,9 +54,7 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
   // const [open, setOpen] = useState(false);
 
   const { data: customer, isLoading } = useGetCustomerById(id);
-  const { data: log, isLoading: isLogLoading } = useGetCustomerLogById(
-    customer?.data?.id
-  );
+
   const form = useForm<CreateCustomerMessageFormValues>({
     resolver: zodResolver(CreateCustomerMessageSchema),
     defaultValues: {
@@ -82,7 +80,6 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
   const onSubmit = async (values: CreateCustomerMessageFormValues) => {
     console.log(values);
   };
-  console.log(log);
   return (
     <>
       {/* <Dialog open={open} onOpenChange={(o) => setOpen(o)}>

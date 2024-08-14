@@ -1,4 +1,5 @@
 "use client";
+import { useGetCustomerLogById } from "@/lib/actions/customer-logs/get-logs";
 // import { Button } from "@/components/ui/button";
 // import { Calendar } from "@/components/ui/calendar";
 // import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,6 +35,7 @@
 // import { useForm } from "react-hook-form";
 // import { z } from "zod";
 import { CreateLog } from "./create-log";
+import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
 
 // const CreateCustomerMessageSchema = z.object({
 //   note: z.string().optional(),
@@ -46,9 +48,16 @@ import { CreateLog } from "./create-log";
 // >;
 
 export default function CustomerLogsPage({ id }: Readonly<{ id: number }>) {
-	return (
-		<div className="space-y-3 px-8 py-6 border-l h-full min-h-[400px] md:min-w-[300px]">
-			<CreateLog id={id} />
-		</div>
-	);
+  const { data: customer, isLoading } = useGetCustomerById(id);
+
+  const { data: logData, isLoading: isLogLoading } = useGetCustomerLogById(
+    customer?.data?.id
+  );
+  console.log(logData);
+
+  return (
+    <div className="space-y-3 px-8 py-6 border-l h-full min-h-[400px] md:min-w-[300px]">
+      <CreateLog id={id} />
+    </div>
+  );
 }
