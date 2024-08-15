@@ -30,7 +30,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useGetCustomerLogById } from "@/lib/actions/customer-logs/get-logs";
 import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
