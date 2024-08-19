@@ -30,19 +30,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import useUser from "@/hooks/useUser";
+import { useCreateCustomerComment } from "@/lib/actions/customer-logs/post-customer-comment";
 import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
+import handleResponse from "@/lib/handle-response";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
+import { create } from "domain";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const CreateCustomerMessageSchema = z.object({
-  note: z.string().optional(),
-  followup: z.any().optional(),
-  status: z.any().optional(),
+  note: z.string(),
+  name: z.string(),
+  type: z.number(),
+  customer_id: z.number().optional(),
+  employee_id: z.number().optional(),
+  description: z.string().optional(),
 });
 
 type CreateCustomerMessageFormValues = z.infer<
@@ -52,14 +60,18 @@ type CreateCustomerMessageFormValues = z.infer<
 export function CreateLog({ id }: Readonly<{ id: number }>) {
   // const [open, setOpen] = useState(false);
 
+  const { access, user } = useUser();
   const { data: customer, isLoading } = useGetCustomerById(id);
+  const { mutateAsync: create, isPending } = useCreateCustomerComment();
 
   const form = useForm<CreateCustomerMessageFormValues>({
     resolver: zodResolver(CreateCustomerMessageSchema),
     defaultValues: {
       note: "",
-      followup: undefined,
-      status: undefined,
+      type: 5,
+      customer_id: customer?.data?.id,
+      employee_id: access?.data?.user_id,
+      description: "added a note.",
     },
     mode: "onChange",
   });
@@ -67,17 +79,57 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
   useEffect(() => {
     if (isLoading || !customer) return;
     form.reset({
+      name: access?.data?.username,
       note: "",
+      type: 5,
+      description: "added a note.",
+      customer_id: customer?.data?.id,
+      employee_id: access?.data?.user_id,
     });
     //status: customer.data.status,
     //followup: customer.data.followup,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer]);
 
-  console.log(form.formState.dirtyFields);
+  console.log(access?.data, user);
 
-  const onSubmit = async (values: CreateCustomerMessageFormValues) => {
-    console.log(values);
+  const onSubmit = async (data: CreateCustomerMessageFormValues) => {
+    console.log(data);
+    form.clearErrors();
+    const res = await handleResponse(() => create(data), [201]);
+    if (res.status) {
+      toast("Added!", {
+        description: `Note has been Added successfully.`,
+        important: true,
+      });
+      form.reset();
+    } else {
+      if (typeof res.data === "object") {
+        Object.entries(res.data).forEach(([key, value]) => {
+          form.setError(key as keyof CreateCustomerMessageFormValues, {
+            type: "validate",
+            message: value as string,
+          });
+        });
+        toast("Error!", {
+          description: `There was an error adding note. Please try again.`,
+          important: true,
+          action: {
+            label: "Retry",
+            onClick: () => onSubmit(data),
+          },
+        });
+      } else {
+        toast("Error!", {
+          description: res.message,
+          important: true,
+          action: {
+            label: "Retry",
+            onClick: () => onSubmit(data),
+          },
+        });
+      }
+    }
   };
   return (
     <>
@@ -97,12 +149,10 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
             if (isLoading || !customer) return;
             form.reset({
               note: "",
-              status: customer.data.status,
-              followup: customer.data.followup,
             });
           }}
         >
-          <FormField
+          {/* <FormField
             control={form.control}
             name="status"
             render={({ field }) => (
@@ -132,8 +182,8 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
                 <FormMessage />
               </FormItem>
             )}
-          />
-          <FormField
+          /> */}
+          {/* <FormField
             control={form.control}
             name="followup"
             render={({ field }) => (
@@ -174,7 +224,7 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           <FormField
             control={form.control}
             name="note"

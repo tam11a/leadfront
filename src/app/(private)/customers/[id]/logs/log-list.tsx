@@ -55,7 +55,7 @@ export default function CustomerLogsPage({ id }: Readonly<{ id: number }>) {
   const { data: logData, isLoading: isLogLoading } = useGetCustomerLogs({
     customer_id: customer?.data?.id,
   });
-  console.log(logData);
+  // console.log(logData);
 
   return (
     <div className="space-y-3 px-8 py-6 border-l h-full min-h-[400px] md:min-w-[300px]">
