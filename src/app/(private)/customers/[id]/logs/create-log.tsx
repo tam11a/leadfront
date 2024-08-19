@@ -37,11 +37,9 @@ type CreateCustomerMessageFormValues = z.infer<
 >;
 
 export function CreateLog({ id }: Readonly<{ id: number }>) {
-  // const [open, setOpen] = useState(false);
-
   const { access, user } = useUser();
   const { data: customer, isLoading } = useGetCustomerById(id);
-  const { mutateAsync: create, isPending } = useCreateCustomerComment();
+  const { mutateAsync: create } = useCreateCustomerComment();
 
   const form = useForm<CreateCustomerMessageFormValues>({
     resolver: zodResolver(CreateCustomerMessageSchema),
@@ -68,7 +66,6 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
   }, [customer]);
 
   const onSubmit = async (data: CreateCustomerMessageFormValues) => {
-    console.log(data);
     form.clearErrors();
     const res = await handleResponse(() => create(data), [201]);
     if (res.status) {
