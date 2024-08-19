@@ -82,12 +82,12 @@ export default function CustomerLogsPage({ id }: Readonly<{ id: number }>) {
                   </p>
                 </div>
 
-                <p className="font-medium text-sm bg-slate-100 text-text p-3 my-1 max-w-xs whitespace-pre-wrap rounded">
+                <p className="font-medium text-sm bg-slate-100 dark:bg-slate-900 text-text p-3 my-1 max-w-xs whitespace-pre-wrap rounded">
                   {item?.note}
                 </p>
               </>
             ) : item?.type === "conversation" ? (
-              <div className="font-medium text-sm bg-slate-100 text-text p-3 my-1 max-w-xs whitespace-pre-wrap rounded">
+              <div className="font-medium text-sm bg-slate-100 dark:bg-slate-900 text-text p-3 my-1 max-w-xs whitespace-pre-wrap rounded">
                 {item?.conversation}
               </div>
             ) : (
