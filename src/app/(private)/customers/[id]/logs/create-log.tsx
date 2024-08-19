@@ -1,13 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  DialogDescription,
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import {
   Form,
   FormControl,
@@ -17,35 +9,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Textarea } from "@/components/ui/textarea";
 import useUser from "@/hooks/useUser";
 import { useCreateCustomerComment } from "@/lib/actions/customer-logs/post-customer-comment";
 import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
 import handleResponse from "@/lib/handle-response";
-import { cn } from "@/lib/utils";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
-import { create } from "domain";
-import React, { useEffect, useState } from "react";
+
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 const CreateCustomerMessageSchema = z.object({
-  note: z.string(),
+  note: z.string().min(1),
   name: z.string(),
   type: z.number(),
   customer_id: z.number().optional(),
@@ -84,14 +63,9 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
       type: 5,
       description: "added a note.",
       customer_id: customer?.data?.id,
-      employee_id: access?.data?.user_id,
+      employee_id: user?.id,
     });
-    //status: customer.data.status,
-    //followup: customer.data.followup,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer]);
-
-  console.log(access?.data, user);
 
   const onSubmit = async (data: CreateCustomerMessageFormValues) => {
     console.log(data);
@@ -143,16 +117,7 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
           <DialogDescription>Create a custtomer log.</DialogDescription>
         </DialogHeader> */}
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          onReset={() => {
-            if (isLoading || !customer) return;
-            form.reset({
-              note: "",
-            });
-          }}
-        >
-          {/* <FormField
+        {/* <FormField
             control={form.control}
             name="status"
             render={({ field }) => (
@@ -183,7 +148,7 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
               </FormItem>
             )}
           /> */}
-          {/* <FormField
+        {/* <FormField
             control={form.control}
             name="followup"
             render={({ field }) => (
@@ -225,6 +190,15 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
               </FormItem>
             )}
           /> */}
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          onReset={() => {
+            if (isLoading || !customer) return;
+            form.reset({
+              note: "",
+            });
+          }}
+        >
           <FormField
             control={form.control}
             name="note"
@@ -239,7 +213,7 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
               </FormItem>
             )}
           />
-          <div className="flex flex-row flex-wrap gap-2">
+          <div className="flex flex-row flex-wrap gap-2 mt-2">
             <Button type="submit">Create Log</Button>
             <Button type="reset" variant={"secondary"}>
               Reset
