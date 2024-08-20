@@ -43,6 +43,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
+import moment from "moment";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -332,10 +333,13 @@ export function CreateCustomer() {
 												<PopoverContent className="w-auto p-0">
 													<Calendar
 														mode="single"
+														captionLayout="dropdown-buttons"
 														selected={new Date(field.value)}
 														onSelect={(e: any) =>
 															field.onChange(format(e as Date, "yyyy-MM-dd"))
 														}
+														fromYear={moment().year() - 100}
+														toYear={moment().year()}
 														initialFocus
 													/>
 												</PopoverContent>
