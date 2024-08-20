@@ -37,6 +37,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
+  TableLoading,
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -53,7 +54,6 @@ import {
   useQueryState,
   useQueryStates,
 } from "nuqs";
-import { Loading } from "../token-validation-checker";
 
 import { CustomerStatusList } from "./create-customer";
 import {
@@ -64,7 +64,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useUser from "@/hooks/useUser";
-import { Switch } from "@/components/ui/switch";
 
 import { Separator } from "@/components/ui/separator";
 import { useMedia } from "@/lib/actions/media/use-media";
@@ -497,9 +496,15 @@ export default function CustomerTable() {
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <>
-                <Loading />
-              </>
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  <TableLoading />
+                </TableCell>
+                /
+              </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
