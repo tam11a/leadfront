@@ -36,6 +36,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
+  TableLoading,
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -262,7 +263,7 @@ export default function EmployeeTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
-  const { data } = useEmployees();
+  const { data, isLoading } = useEmployees();
 
   const table = useReactTable({
     data: React.useMemo(() => data?.data || [], [data]),
@@ -348,7 +349,17 @@ export default function EmployeeTable() {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  <TableLoading />
+                </TableCell>
+                /
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
