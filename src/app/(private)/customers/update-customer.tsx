@@ -52,6 +52,8 @@ import { z } from "zod";
 import { Priorities, PriorityIcon } from "./[id]/contact";
 import { useMedia } from "@/lib/actions/media/use-media";
 import moment from "moment";
+import Selection from "@/components/ui/selection";
+import { CustomerStatusList } from "./create-customer";
 
 const UpdateCustomerSchema = z.object({
 	first_name: z.string().min(1, {
@@ -394,30 +396,12 @@ export function UpdateCustomer({
 												<FormItem>
 													<FormLabel>Status*</FormLabel>
 													<FormControl>
-														<Select
-															onValueChange={(v) => v && field.onChange(v)}
+														<Selection
+															options={CustomerStatusList}
 															value={field.value}
-														>
-															<SelectTrigger>
-																<SelectValue placeholder="Select a status" />
-															</SelectTrigger>
-															<SelectContent>
-																<SelectItem value="Raw">Raw</SelectItem>
-																<SelectItem value="Prospect">
-																	Prospect
-																</SelectItem>
-																<SelectItem value="High Prospect">
-																	High Prospect
-																</SelectItem>
-																<SelectItem value="Priority">
-																	Priority
-																</SelectItem>
-																<SelectItem value="Booked">Booked</SelectItem>
-																<SelectItem value="Sold">Sold</SelectItem>
-																<SelectItem value="Closed">Closed</SelectItem>
-																<SelectItem value="Junk">Junk</SelectItem>
-															</SelectContent>
-														</Select>
+															onChange={(v) => field.onChange(v)}
+															placeholder="Select a status"
+														/>
 													</FormControl>
 													<FormDescription></FormDescription>
 													<FormMessage />
