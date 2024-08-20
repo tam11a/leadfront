@@ -51,6 +51,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { Priorities, PriorityIcon } from "./[id]/contact";
 import { useMedia } from "@/lib/actions/media/use-media";
+import moment from "moment";
 
 const UpdateCustomerSchema = z.object({
 	first_name: z.string().min(1, {
@@ -371,6 +372,9 @@ export function UpdateCustomer({
 															onSelect={(e: any) =>
 																field.onChange(format(e as Date, "yyyy-MM-dd"))
 															}
+															captionLayout="dropdown-buttons"
+															fromYear={moment().year() - 100}
+															toYear={moment().year()}
 															initialFocus
 														/>
 													</PopoverContent>
