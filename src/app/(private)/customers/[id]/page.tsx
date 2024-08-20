@@ -33,7 +33,6 @@ export default function CustomerInterestsPage({
     id: params.id,
     varr: true,
   });
-  console.log(data);
 
   const { mutateAsync: Delete, isPending: isDeleting } = useDeleteInterest();
 

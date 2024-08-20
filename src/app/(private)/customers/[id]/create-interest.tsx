@@ -61,7 +61,7 @@ export function CreateInterest({
     useGetProductsFilter({
       area: 1,
     });
-  // console.log(propertyfilteredData);
+  console.log(propertyfilteredData);
   const user = useUser();
   const { mutateAsync: create, isPending } = useCreateProductsInterest();
 
