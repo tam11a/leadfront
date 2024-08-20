@@ -36,7 +36,7 @@ import {
 import { useQueryState } from "nuqs";
 import { Textarea } from "@/components/ui/textarea";
 import useUser from "@/hooks/useUser";
-import { useGetProducts } from "@/lib/actions/properties/get-products";
+import { useGetProductsFilter } from "@/lib/actions/interests/get-products-filter";
 
 const CreateInterestSchema = z.object({
   customer_id: z.number(),
@@ -56,9 +56,12 @@ export function CreateInterest({
     defaultValue: "",
     clearOnDefault: true,
   });
-  const { data: propertyData, isLoading: propertyLoading } = useGetProducts({
-    search,
-  });
+
+  const { data: propertyfilteredData, isLoading: propertyFilteredLoading } =
+    useGetProductsFilter({
+      area: 1,
+    });
+  // console.log(propertyfilteredData);
   const user = useUser();
   const { mutateAsync: create, isPending } = useCreateProductsInterest();
 
@@ -138,14 +141,14 @@ export function CreateInterest({
                       name={field.name}
                       onValueChange={(v) => v && field.onChange(v)}
                       value={field.value?.toString()}
-                      disabled={propertyLoading}
+                      disabled={propertyFilteredLoading}
                       // disabled={true}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a proprty" />
                       </SelectTrigger>
                       <SelectContent>
-                        {propertyData?.data?.results?.map(
+                        {propertyfilteredData?.data?.map(
                           (d: any) =>
                             !ignoreProperties?.includes(d?.id) && (
                               <SelectItem value={d?.id?.toString()} key={d?.id}>
