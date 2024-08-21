@@ -43,6 +43,7 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useGetPropertyUnits } from "@/lib/actions/configuration/property-units/get-property-units";
+import Selection from "@/components/ui/selection";
 
 const CreateInterestSchema = z.object({
   customer_id: z.number(),
@@ -59,7 +60,7 @@ export function CreateInterest({
 }: Readonly<{ id: number; ignoreProperties?: number[] }>) {
   //states
   const [open, setOpen] = useState(false);
-  const [area, setArea] = useState("");
+  const [area, setArea] = useState<string | null>("");
   const [propertyType, setPropertyType] = useState("");
   const [unit, setUnit] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -158,7 +159,16 @@ export function CreateInterest({
           >
             <FormItem className="flex-1">
               <FormLabel className="pb-2">Area</FormLabel>
-              <Select
+              <Selection
+                options={areaData?.data?.flatMap((d: any) => ({
+                  label: d?.area_name,
+                  value: d?.id?.toString(),
+                }))}
+                value={area}
+                onChange={(v) => setArea(v)}
+                allowClear
+              />
+              {/* <Select
                 value={area}
                 onValueChange={(v) => setArea(v)}
                 disabled={isAreaDataLoading}
@@ -182,7 +192,7 @@ export function CreateInterest({
                     Clear filters
                   </Button>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </FormItem>
             <div className="flex flex-row items-start gap-3">
               <FormItem className="flex-1">
