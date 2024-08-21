@@ -39,6 +39,10 @@ import useUser from "@/hooks/useUser";
 import { useGetProductsFilter } from "@/lib/actions/interests/get-products-filter";
 import { useGetAreas } from "@/lib/actions/configuration/areas/get-areas";
 import { useGetPropertyTypes } from "@/lib/actions/configuration/property-types/get-property-types";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useGetPropertyUnits } from "@/lib/actions/configuration/property-units/get-property-units";
 
 const CreateInterestSchema = z.object({
   customer_id: z.number(),
@@ -53,24 +57,32 @@ export function CreateInterest({
   id,
   ignoreProperties = [],
 }: Readonly<{ id: number; ignoreProperties?: number[] }>) {
+  //states
   const [open, setOpen] = useState(false);
-  const user = useUser();
-  const [search, _setSearch] = useQueryState("search", {
-    defaultValue: "",
-    clearOnDefault: true,
-  });
-
   const [area, setArea] = useState("");
   const [propertyType, setPropertyType] = useState("");
+  const [unit, setUnit] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxSize, setMaxSize] = useState("");
+  const [minSize, setMinSize] = useState("");
 
+  //api calls
+  const user = useUser();
   const { data: areaData, isLoading: isAreaDataLoading } = useGetAreas();
+  const { data: unitData, isLoading: isUnitDataLoading } =
+    useGetPropertyUnits();
   const { data: propertyTypeData, isLoading: isPropertyTypeDataLoading } =
     useGetPropertyTypes();
-  console.log(propertyTypeData);
   const { data: propertyfilteredData, isLoading: propertyFilteredLoading } =
     useGetProductsFilter({
       area: area,
       product_type: propertyType,
+      price_public__gte: maxPrice,
+      price_public__lte: minPrice,
+      size__gte: maxSize,
+      size__lte: minSize,
+      unit: unit,
     });
   const { mutateAsync: create, isPending } = useCreateProductsInterest();
 
@@ -93,6 +105,9 @@ export function CreateInterest({
         important: true,
       });
       form.reset();
+      setArea("");
+      setPropertyType("");
+      setUnit("");
       setOpen(false);
     } else {
       if (typeof res.data === "object") {
@@ -141,30 +156,35 @@ export function CreateInterest({
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-3  px-1"
           >
-            <div className="flex flex-row items-start gap-3">
-              <FormItem className="flex-1">
-                <FormLabel>Area</FormLabel>
-                <FormControl>
-                  <Select
-                    value={area}
-                    onValueChange={(v) => setArea(v)}
-                    disabled={isAreaDataLoading}
-
-                    // disabled={true}
+            <FormItem className="flex-1">
+              <FormLabel className="pb-2">Area</FormLabel>
+              <Select
+                value={area}
+                onValueChange={(v) => setArea(v)}
+                disabled={isAreaDataLoading}
+                // disabled={true}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select an Area" />
+                </SelectTrigger>
+                <SelectContent>
+                  {areaData?.data?.map((d: any) => (
+                    <SelectItem value={d?.id?.toString()} key={d?.id}>
+                      {d?.area_name}
+                    </SelectItem>
+                  ))}
+                  <Separator />
+                  <Button
+                    variant="ghost"
+                    className="w-full mt-1 font-normal"
+                    onClick={() => setArea("")}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select an Area" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {areaData?.data?.map((d: any) => (
-                        <SelectItem value={d?.id?.toString()} key={d?.id}>
-                          {d?.area_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </FormItem>
+                    Clear filters
+                  </Button>
+                </SelectContent>
+              </Select>
+            </FormItem>
+            <div className="flex flex-row items-start gap-3">
               <FormItem className="flex-1">
                 <FormLabel>Property type</FormLabel>
                 <FormControl>
@@ -172,11 +192,9 @@ export function CreateInterest({
                     value={propertyType}
                     onValueChange={(v) => setPropertyType(v)}
                     disabled={isPropertyTypeDataLoading}
-
-                    // disabled={true}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a proprty" />
+                      <SelectValue placeholder="Select a property type" />
                     </SelectTrigger>
                     <SelectContent>
                       {propertyTypeData?.data?.map((d: any) => (
@@ -184,10 +202,93 @@ export function CreateInterest({
                           {d?.product_type_name}
                         </SelectItem>
                       ))}
+                      <Button
+                        variant="ghost"
+                        className="w-full mt-1 font-normal"
+                        onClick={() => setPropertyType("")}
+                      >
+                        Clear filters
+                      </Button>
                     </SelectContent>
                   </Select>
                 </FormControl>
               </FormItem>
+              <FormItem className="flex-1">
+                <FormLabel>Unit</FormLabel>
+                <FormControl>
+                  <Select
+                    value={propertyType}
+                    onValueChange={(v) => setUnit(v)}
+                    disabled={isUnitDataLoading}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a unit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {unitData?.data?.map((d: any) => (
+                        <SelectItem value={d?.id?.toString()} key={d?.id}>
+                          {d?.unit_name}
+                        </SelectItem>
+                      ))}
+                      <Button
+                        variant="ghost"
+                        className="w-full mt-1 font-normal"
+                        onClick={() => setUnit("")}
+                      >
+                        Clear filters
+                      </Button>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            </div>
+            <div className="flex flex-row items-start gap-3">
+              <div className="flex-1">
+                <Label>Highest Price</Label>
+                <Input
+                  placeholder="Enter an amount in bdt"
+                  value={maxPrice}
+                  onChange={(event) => {
+                    setMaxPrice(event.target.value);
+                  }}
+                  className="max-w-sm mt-2"
+                />
+              </div>
+              <div className="flex-1">
+                <Label>Lowest Price</Label>
+                <Input
+                  placeholder="Enter an amount in bdt"
+                  value={minPrice}
+                  onChange={(event) => {
+                    setMinPrice(event.target.value);
+                  }}
+                  className="max-w-sm mt-2"
+                />
+              </div>
+            </div>
+            <div className="flex flex-row items-start gap-3">
+              <div className="flex-1">
+                <Label>Maximum Size</Label>
+                <Input
+                  placeholder="Enter maximum size of the property"
+                  value={maxSize}
+                  onChange={(event) => {
+                    setMaxSize(event.target.value);
+                  }}
+                  className="max-w-sm mt-2"
+                />
+              </div>
+              <div className="flex-1">
+                <Label>Minimum Size</Label>
+                <Input
+                  placeholder="Enter minimum size of the property"
+                  value={minSize}
+                  onChange={(event) => {
+                    setMinSize(event.target.value);
+                  }}
+                  className="max-w-sm mt-2"
+                />
+              </div>
             </div>
             <FormField
               control={form.control}
@@ -201,19 +302,27 @@ export function CreateInterest({
                       onValueChange={(v) => v && field.onChange(v)}
                       value={field.value?.toString()}
                       disabled={propertyFilteredLoading}
-                      // disabled={true}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a proprty" />
+                        <SelectValue placeholder="Select a property" />
                       </SelectTrigger>
                       <SelectContent>
-                        {propertyfilteredData?.data?.map(
-                          (d: any) =>
-                            !ignoreProperties?.includes(d?.id) && (
-                              <SelectItem value={d?.id?.toString()} key={d?.id}>
-                                {d?.product_uid}
-                              </SelectItem>
-                            )
+                        {propertyfilteredData?.data.length === 0 ? (
+                          <p className="text-center p-1 text-sm">
+                            No Properties Found
+                          </p>
+                        ) : (
+                          propertyfilteredData?.data?.map(
+                            (d: any) =>
+                              !ignoreProperties?.includes(d?.id) && (
+                                <SelectItem
+                                  value={d?.id?.toString()}
+                                  key={d?.id}
+                                >
+                                  {d?.product_uid}
+                                </SelectItem>
+                              )
+                          )
                         )}
                       </SelectContent>
                     </Select>
