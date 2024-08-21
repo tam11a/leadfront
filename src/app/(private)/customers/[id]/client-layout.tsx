@@ -68,6 +68,7 @@ export default function ClientLayout({
 							priority: data?.data.priority,
 							source: data?.data.source,
 							media_id: data?.data.media_id,
+							followup: data?.data.followup,
 						}}
 					/>
 					<div className="flex-1 px-7 py-6">

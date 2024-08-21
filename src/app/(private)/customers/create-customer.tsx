@@ -3,6 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	CommandList,
+} from "@/components/ui/command";
+import {
 	Form,
 	FormControl,
 	FormDescription,
@@ -25,6 +33,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import Selection from "@/components/ui/selection";
 import {
 	Sheet,
 	SheetClose,
@@ -41,8 +50,10 @@ import { useMedia } from "@/lib/actions/media/use-media";
 import handleResponse from "@/lib/handle-response";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarIcon } from "@radix-ui/react-icons";
+import { CalendarIcon, CaretSortIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
+import { CheckIcon } from "lucide-react";
+import moment from "moment";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -332,10 +343,13 @@ export function CreateCustomer() {
 												<PopoverContent className="w-auto p-0">
 													<Calendar
 														mode="single"
+														captionLayout="dropdown-buttons"
 														selected={new Date(field.value)}
 														onSelect={(e: any) =>
 															field.onChange(format(e as Date, "yyyy-MM-dd"))
 														}
+														fromYear={moment().year() - 100}
+														toYear={moment().year()}
 														initialFocus
 													/>
 												</PopoverContent>
@@ -354,28 +368,12 @@ export function CreateCustomer() {
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>Status*</FormLabel>
-												<Select
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-												>
-													<FormControl>
-														<SelectTrigger>
-															<SelectValue placeholder="Select a status" />
-														</SelectTrigger>
-													</FormControl>
-													<SelectContent>
-														<SelectItem value="Raw">Raw</SelectItem>
-														<SelectItem value="Prospect">Prospect</SelectItem>
-														<SelectItem value="High Prospect">
-															High Prospect
-														</SelectItem>
-														<SelectItem value="Priority">Priority</SelectItem>
-														<SelectItem value="Booked">Booked</SelectItem>
-														<SelectItem value="Sold">Sold</SelectItem>
-														<SelectItem value="Closed">Closed</SelectItem>
-														<SelectItem value="Junk">Junk</SelectItem>
-													</SelectContent>
-												</Select>
+												<Selection
+													options={CustomerStatusList}
+													value={field.value}
+													onChange={(v) => field.onChange(v)}
+													placeholder="Select a status"
+												/>
 												<FormDescription></FormDescription>
 												<FormMessage />
 											</FormItem>
