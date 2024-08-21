@@ -217,7 +217,7 @@ export function CreateInterest({
                 <FormLabel>Unit</FormLabel>
                 <FormControl>
                   <Select
-                    value={propertyType}
+                    value={unit}
                     onValueChange={(v) => setUnit(v)}
                     disabled={isUnitDataLoading}
                   >
