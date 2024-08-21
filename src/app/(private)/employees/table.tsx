@@ -177,7 +177,7 @@ export const columns: ColumnDef<Employee>[] = [
               <TbUserEdit />
             </Button>
           </UpdateEmployee>
-          <LogDialog employeeId={employee.id}>
+          <LogDialog employeeId={employee.user_id}>
             <Button
               size={"icon"}
               variant={"ghost"}
