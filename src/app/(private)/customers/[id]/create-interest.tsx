@@ -37,6 +37,8 @@ import { useQueryState } from "nuqs";
 import { Textarea } from "@/components/ui/textarea";
 import useUser from "@/hooks/useUser";
 import { useGetProductsFilter } from "@/lib/actions/interests/get-products-filter";
+import { useGetAreas } from "@/lib/actions/configuration/areas/get-areas";
+import { useGetPropertyTypes } from "@/lib/actions/configuration/property-types/get-property-types";
 
 const CreateInterestSchema = z.object({
   customer_id: z.number(),
@@ -52,19 +54,27 @@ export function CreateInterest({
   ignoreProperties = [],
 }: Readonly<{ id: number; ignoreProperties?: number[] }>) {
   const [open, setOpen] = useState(false);
+  const user = useUser();
   const [search, _setSearch] = useQueryState("search", {
     defaultValue: "",
     clearOnDefault: true,
   });
 
+  const [area, setArea] = useState("");
+  const [propertyType, setPropertyType] = useState("");
+
+  const { data: areaData, isLoading: isAreaDataLoading } = useGetAreas();
+  const { data: propertyTypeData, isLoading: isPropertyTypeDataLoading } =
+    useGetPropertyTypes();
+  console.log(propertyTypeData);
   const { data: propertyfilteredData, isLoading: propertyFilteredLoading } =
     useGetProductsFilter({
-      area: 1,
+      area: area,
+      product_type: propertyType,
     });
-  console.log(propertyfilteredData);
-  const user = useUser();
   const { mutateAsync: create, isPending } = useCreateProductsInterest();
 
+  //submit form
   const form = useForm<InterestFormValues>({
     resolver: zodResolver(CreateInterestSchema),
     defaultValues: {
@@ -125,11 +135,60 @@ export function CreateInterest({
             Select and add a new property that this customer is interested in.
           </DialogDescription>
         </DialogHeader>
+
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-3 mt-6 px-1"
+            className="space-y-3  px-1"
           >
+            <div className="flex flex-row items-start gap-3">
+              <FormItem className="flex-1">
+                <FormLabel>Area</FormLabel>
+                <FormControl>
+                  <Select
+                    value={area}
+                    onValueChange={(v) => setArea(v)}
+                    disabled={isAreaDataLoading}
+
+                    // disabled={true}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select an Area" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {areaData?.data?.map((d: any) => (
+                        <SelectItem value={d?.id?.toString()} key={d?.id}>
+                          {d?.area_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+              <FormItem className="flex-1">
+                <FormLabel>Property type</FormLabel>
+                <FormControl>
+                  <Select
+                    value={propertyType}
+                    onValueChange={(v) => setPropertyType(v)}
+                    disabled={isPropertyTypeDataLoading}
+
+                    // disabled={true}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a proprty" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {propertyTypeData?.data?.map((d: any) => (
+                        <SelectItem value={d?.id?.toString()} key={d?.id}>
+                          {d?.product_type_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            </div>
             <FormField
               control={form.control}
               name="product_id"
