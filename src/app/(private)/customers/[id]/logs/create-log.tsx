@@ -24,7 +24,9 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const CreateCustomerMessageSchema = z.object({
-  note: z.string().min(1),
+  note: z
+    .string()
+    .min(1, { message: "Note must contain at least 1 character(s)" }),
   name: z.string(),
   type: z.number(),
   customer_id: z.number().optional(),

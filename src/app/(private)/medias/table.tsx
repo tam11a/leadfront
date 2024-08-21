@@ -36,6 +36,7 @@ import {
   TableCell,
   TableHead,
   TableHeader,
+  TableLoading,
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -251,7 +252,7 @@ export default function MediaTable() {
     })
   );
 
-  const { data } = useGetMedias({ search, page });
+  const { data, isLoading } = useGetMedias({ search, page });
 
   const table = useReactTable({
     data: React.useMemo(() => data?.data?.results || [], [data]),
@@ -338,7 +339,17 @@ export default function MediaTable() {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  <TableLoading />
+                </TableCell>
+                /
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
