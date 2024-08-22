@@ -34,17 +34,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-	ColumnDef,
-	ColumnFiltersState,
-	SortingState,
-	VisibilityState,
-	flexRender,
-	getCoreRowModel,
-	getFilteredRowModel,
-	getPaginationRowModel,
-	getSortedRowModel,
-	useReactTable,
-} from "@tanstack/react-table"
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -64,25 +64,32 @@ import { Label } from "@/components/ui/label";
 import { useGetPropertyUnits } from "@/lib/actions/configuration/property-units/get-property-units";
 import Selection from "@/components/ui/selection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export interface property {
   id: number;
-	first_name: string;
-	last_name: string;
+  first_name: string;
+  last_name: string;
 }
 
 const columns: ColumnDef<property>[] = [
-	{
-		accessorKey: "id",
-		header: () => {
-			return <div className="mx-4">ID</div>;
-		},
-		cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
-	},
-	
-]
+  {
+    accessorKey: "id",
+    header: () => {
+      return <div className="mx-4">ID</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
+  },
+  {
+    accessorKey: "product_uid",
+    header: () => {
+      return <div className="mx-4">Property Name</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">{row.getValue("product_uid")}</div>
+    ),
+  },
+];
 
 const CreateInterestSchema = z.object({
   customer_id: z.number(),
@@ -106,6 +113,10 @@ export function CreateInterest({
   const [minPrice, setMinPrice] = useState("");
   const [maxSize, setMaxSize] = useState("");
   const [minSize, setMinSize] = useState("");
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
 
   //api calls
   const user = useUser();
@@ -114,7 +125,7 @@ export function CreateInterest({
     useGetPropertyUnits();
   const { data: propertyTypeData, isLoading: isPropertyTypeDataLoading } =
     useGetPropertyTypes();
-  const { data: propertyfilteredData, isLoading: propertyFilteredLoading } =
+  const { data: propertyfilteredData, isLoading: ispropertyFilteredLoading } =
     useGetProductsFilter({
       area: area,
       product_type: propertyType,
@@ -178,23 +189,26 @@ export function CreateInterest({
     }
   }
   const table = useReactTable({
-		data: useMemo(() => data?.data?.results || [], [data]),
-		columns,
-		onSortingChange: setSorting,
-		onColumnFiltersChange: setColumnFilters,
-		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		getFilteredRowModel: getFilteredRowModel(),
-		onColumnVisibilityChange: setColumnVisibility,
-		onRowSelectionChange: setRowSelection,
-		state: {
-			sorting,
-			columnFilters,
-			columnVisibility,
-			rowSelection,
-		},
-	});
+    data: useMemo(
+      () => propertyfilteredData?.data || [],
+      [propertyfilteredData]
+    ),
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  });
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
@@ -203,7 +217,7 @@ export function CreateInterest({
       </DialogTrigger>
       <DialogContent className="max-w-[425px] sm:max-w-[525px] rounded-lg">
         <DialogHeader>
-          <DialogTitle>Add Property</DialogTitle>
+          <DialogTitle>Add Interested Property</DialogTitle>
           <DialogDescription>
             Select and add a new property that this customer is interested in.
           </DialogDescription>
@@ -214,7 +228,7 @@ export function CreateInterest({
             <TabsTrigger value="property">Properties</TabsTrigger>
             <TabsTrigger value="details">Details</TabsTrigger>
           </TabsList>
-          <TabsContent value="filter">
+          <TabsContent value="filter" className="min-h-80">
             <div className="flex flex-col py-2">
               <Label className="pb-2">Area</Label>
               <Selection
@@ -330,7 +344,7 @@ export function CreateInterest({
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="property">
+          <TabsContent value="property" className="min-h-80">
             {/* <Select
               name={field.name}
               onValueChange={(v) => v && field.onChange(v)}
@@ -355,69 +369,69 @@ export function CreateInterest({
                 )}
               </SelectContent>
             </Select> */}
-              <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
-        <Table className="w-full">
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  <TableLoading />
-                </TableCell>
-                /
-              </TableRow>
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
+            <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
+              <Table className="w-full">
+                <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <TableHead key={header.id}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                          </TableHead>
+                        );
+                      })}
+                    </TableRow>
                   ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea
+                </TableHeader>
+                <TableBody>
+                  {ispropertyFilteredLoading ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        <TableLoading />
+                      </TableCell>
+                      /
+                    </TableRow>
+                  ) : table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        data-state={row.getIsSelected() && "selected"}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
           </TabsContent>
-          <TabsContent value="details">
+          <TabsContent value="details" className="min-h-80">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -434,7 +448,7 @@ export function CreateInterest({
                           name={field.name}
                           onValueChange={(v) => v && field.onChange(v)}
                           value={field.value?.toString()}
-                          disabled={propertyFilteredLoading}
+                          disabled={ispropertyFilteredLoading}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Select a property" />
