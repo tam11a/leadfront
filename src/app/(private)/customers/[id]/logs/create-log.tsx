@@ -106,89 +106,7 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
   };
   return (
     <>
-      {/* <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
-      <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)}>Create Log</Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-[425px] sm:max-w-[525px] rounded-lg">
-        <DialogHeader>
-          <DialogTitle>Add Log</DialogTitle>
-          <DialogDescription>Create a custtomer log.</DialogDescription>
-        </DialogHeader> */}
       <Form {...form}>
-        {/* <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <Select
-                  onValueChange={(v) => v && field.onChange(v)}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Raw">Raw</SelectItem>
-                    <SelectItem value="Prospect">Prospect</SelectItem>
-                    <SelectItem value="High Prospect">High Prospect</SelectItem>
-                    <SelectItem value="Priority">Priority</SelectItem>
-                    <SelectItem value="Booked">Booked</SelectItem>
-                    <SelectItem value="Sold">Sold</SelectItem>
-                    <SelectItem value="Closed">Closed</SelectItem>
-                    <SelectItem value="Junk">Junk</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-        {/* <FormField
-            control={form.control}
-            name="followup"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Follow Up</FormLabel>
-                <FormControl>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        fromDate={new Date()}
-                        selected={new Date(field.value)}
-                        onSelect={(e: any) =>
-                          field.onChange(format(e as Date, "yyyy-MM-dd"))
-                        }
-                        initialFocus={false}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormControl>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           onReset={() => {
@@ -220,8 +138,6 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
           </div>
         </form>
       </Form>
-      {/* </DialogContent>
-    </Dialog> */}
     </>
   );
 }

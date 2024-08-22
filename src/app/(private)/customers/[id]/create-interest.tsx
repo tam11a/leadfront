@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useCreateProductsInterest } from "@/lib/actions/interests/post-products-interest";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -33,17 +33,56 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useQueryState } from "nuqs";
+import {
+	ColumnDef,
+	ColumnFiltersState,
+	SortingState,
+	VisibilityState,
+	flexRender,
+	getCoreRowModel,
+	getFilteredRowModel,
+	getPaginationRowModel,
+	getSortedRowModel,
+	useReactTable,
+} from "@tanstack/react-table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableLoading,
+  TableRow,
+} from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import useUser from "@/hooks/useUser";
 import { useGetProductsFilter } from "@/lib/actions/interests/get-products-filter";
 import { useGetAreas } from "@/lib/actions/configuration/areas/get-areas";
 import { useGetPropertyTypes } from "@/lib/actions/configuration/property-types/get-property-types";
-import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useGetPropertyUnits } from "@/lib/actions/configuration/property-units/get-property-units";
 import Selection from "@/components/ui/selection";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+
+export interface property {
+  id: number;
+	first_name: string;
+	last_name: string;
+}
+
+const columns: ColumnDef<property>[] = [
+	{
+		accessorKey: "id",
+		header: () => {
+			return <div className="mx-4">ID</div>;
+		},
+		cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
+	},
+	
+]
 
 const CreateInterestSchema = z.object({
   customer_id: z.number(),
@@ -138,6 +177,24 @@ export function CreateInterest({
       }
     }
   }
+  const table = useReactTable({
+		data: useMemo(() => data?.data?.results || [], [data]),
+		columns,
+		onSortingChange: setSorting,
+		onColumnFiltersChange: setColumnFilters,
+		getCoreRowModel: getCoreRowModel(),
+		getPaginationRowModel: getPaginationRowModel(),
+		getSortedRowModel: getSortedRowModel(),
+		getFilteredRowModel: getFilteredRowModel(),
+		onColumnVisibilityChange: setColumnVisibility,
+		onRowSelectionChange: setRowSelection,
+		state: {
+			sorting,
+			columnFilters,
+			columnVisibility,
+			rowSelection,
+		},
+	});
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
@@ -151,14 +208,15 @@ export function CreateInterest({
             Select and add a new property that this customer is interested in.
           </DialogDescription>
         </DialogHeader>
-
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-3  px-1"
-          >
-            <FormItem className="flex-1">
-              <FormLabel className="pb-2">Area</FormLabel>
+        <Tabs defaultValue="filter" className="w-auto">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="filter">Filter</TabsTrigger>
+            <TabsTrigger value="property">Properties</TabsTrigger>
+            <TabsTrigger value="details">Details</TabsTrigger>
+          </TabsList>
+          <TabsContent value="filter">
+            <div className="flex flex-col py-2">
+              <Label className="pb-2">Area</Label>
               <Selection
                 options={areaData?.data?.flatMap((d: any) => ({
                   label: d?.area_name,
@@ -168,117 +226,88 @@ export function CreateInterest({
                 onChange={(v) => setArea(v)}
                 allowClear
               />
-              {/* <Select
-                value={area}
-                onValueChange={(v) => setArea(v)}
-                disabled={isAreaDataLoading}
-                // disabled={true}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select an Area" />
-                </SelectTrigger>
-                <SelectContent>
-                  {areaData?.data?.map((d: any) => (
-                    <SelectItem value={d?.id?.toString()} key={d?.id}>
-                      {d?.area_name}
-                    </SelectItem>
-                  ))}
-                  <Separator />
-                  <Button
-                    variant="ghost"
-                    className="w-full mt-1 font-normal"
-                    onClick={() => setArea("")}
-                  >
-                    Clear filters
-                  </Button>
-                </SelectContent>
-              </Select> */}
-            </FormItem>
-            <div className="flex flex-row items-start gap-3">
-              <FormItem className="flex-1">
-                <FormLabel>Property type</FormLabel>
-                <FormControl>
-                  <Select
-                    value={propertyType}
-                    onValueChange={(v) => setPropertyType(v)}
-                    disabled={isPropertyTypeDataLoading}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a property type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {propertyTypeData?.data?.map((d: any) => (
-                        <SelectItem value={d?.id?.toString()} key={d?.id}>
-                          {d?.product_type_name}
-                        </SelectItem>
-                      ))}
-                      <Button
-                        variant="ghost"
-                        className="w-full mt-1 font-normal"
-                        onClick={() => setPropertyType("")}
-                      >
-                        Clear filters
-                      </Button>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </FormItem>
-              <FormItem className="flex-1">
-                <FormLabel>Unit</FormLabel>
-                <FormControl>
-                  <Select
-                    value={unit}
-                    onValueChange={(v) => setUnit(v)}
-                    disabled={isUnitDataLoading}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a unit" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {unitData?.data?.map((d: any) => (
-                        <SelectItem value={d?.id?.toString()} key={d?.id}>
-                          {d?.unit_name}
-                        </SelectItem>
-                      ))}
-                      <Button
-                        variant="ghost"
-                        className="w-full mt-1 font-normal"
-                        onClick={() => setUnit("")}
-                      >
-                        Clear filters
-                      </Button>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </FormItem>
             </div>
-            <div className="flex flex-row items-start gap-3">
-              <div className="flex-1">
-                <Label>Highest Price</Label>
+            <div className="flex flex-row items-start gap-3 pb-2">
+              <div className="flex flex-col flex-1">
+                <Label className="py-2">Property type</Label>
+                <Select
+                  value={propertyType}
+                  onValueChange={(v) => setPropertyType(v)}
+                  disabled={isPropertyTypeDataLoading}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a property type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {propertyTypeData?.data?.map((d: any) => (
+                      <SelectItem value={d?.id?.toString()} key={d?.id}>
+                        {d?.product_type_name}
+                      </SelectItem>
+                    ))}
+                    <Button
+                      variant="ghost"
+                      className="w-full mt-1 font-normal"
+                      onClick={() => setPropertyType("")}
+                    >
+                      Clear filters
+                    </Button>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col flex-1">
+                <Label className="py-2">Unit</Label>
+                <Select
+                  value={unit}
+                  onValueChange={(v) => setUnit(v)}
+                  disabled={isUnitDataLoading}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a unit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {unitData?.data?.map((d: any) => (
+                      <SelectItem value={d?.id?.toString()} key={d?.id}>
+                        {d?.unit_name}
+                      </SelectItem>
+                    ))}
+                    <Button
+                      variant="ghost"
+                      className="w-full mt-1 font-normal"
+                      onClick={() => setUnit("")}
+                    >
+                      Clear filters
+                    </Button>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex flex-row items-start gap-3 pb-2">
+              <div className="flex flex-col flex-1">
+                <Label className="py-2">Highest Price</Label>
                 <Input
                   placeholder="Enter an amount in bdt"
                   value={maxPrice}
                   onChange={(event) => {
                     setMaxPrice(event.target.value);
                   }}
-                  className="max-w-sm mt-2"
+                  className="max-w-sm mt-1"
                 />
               </div>
-              <div className="flex-1">
-                <Label>Lowest Price</Label>
+              <div className="flex flex-col flex-1">
+                <Label className="py-2">Lowest Price</Label>
                 <Input
                   placeholder="Enter an amount in bdt"
                   value={minPrice}
                   onChange={(event) => {
                     setMinPrice(event.target.value);
                   }}
-                  className="max-w-sm mt-2"
+                  className="max-w-sm mt-1"
                 />
               </div>
             </div>
-            <div className="flex flex-row items-start gap-3">
-              <div className="flex-1">
-                <Label>Maximum Size</Label>
+            <div className="flex flex-row items-start gap-3 pb-2">
+              <div className="flex flex-col flex-1">
+                <Label className="py-2">Maximum Size</Label>
                 <Input
                   placeholder="Enter maximum size of the property"
                   value={maxSize}
@@ -288,8 +317,8 @@ export function CreateInterest({
                   className="max-w-sm mt-2"
                 />
               </div>
-              <div className="flex-1">
-                <Label>Minimum Size</Label>
+              <div className="flex flex-col flex-1">
+                <Label className="py-2">Minimum Size</Label>
                 <Input
                   placeholder="Enter minimum size of the property"
                   value={minSize}
@@ -300,74 +329,170 @@ export function CreateInterest({
                 />
               </div>
             </div>
-            <FormField
-              control={form.control}
-              name="product_id"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Property Name*</FormLabel>
-                  <FormControl>
-                    <Select
-                      name={field.name}
-                      onValueChange={(v) => v && field.onChange(v)}
-                      value={field.value?.toString()}
-                      disabled={propertyFilteredLoading}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a property" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {propertyfilteredData?.data.length === 0 ? (
-                          <p className="text-center p-1 text-sm">
-                            No Properties Found
-                          </p>
-                        ) : (
-                          propertyfilteredData?.data?.map(
-                            (d: any) =>
-                              !ignoreProperties?.includes(d?.id) && (
-                                <SelectItem
-                                  value={d?.id?.toString()}
-                                  key={d?.id}
-                                >
-                                  {d?.product_uid}
-                                </SelectItem>
+          </TabsContent>
+          <TabsContent value="property">
+            {/* <Select
+              name={field.name}
+              onValueChange={(v) => v && field.onChange(v)}
+              value={field.value?.toString()}
+              disabled={propertyFilteredLoading}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a property" />
+              </SelectTrigger>
+              <SelectContent>
+                {propertyfilteredData?.data.length === 0 ? (
+                  <p className="text-center p-1 text-sm">No Properties Found</p>
+                ) : (
+                  propertyfilteredData?.data?.map(
+                    (d: any) =>
+                      !ignoreProperties?.includes(d?.id) && (
+                        <SelectItem value={d?.id?.toString()} key={d?.id}>
+                          {d?.product_uid}
+                        </SelectItem>
+                      )
+                  )
+                )}
+              </SelectContent>
+            </Select> */}
+              <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
+        <Table className="w-full">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  <TableLoading />
+                </TableCell>
+                /
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea
+          </TabsContent>
+          <TabsContent value="details">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-3  px-1"
+              >
+                <FormField
+                  control={form.control}
+                  name="product_id"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Property Name*</FormLabel>
+                      <FormControl>
+                        <Select
+                          name={field.name}
+                          onValueChange={(v) => v && field.onChange(v)}
+                          value={field.value?.toString()}
+                          disabled={propertyFilteredLoading}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a property" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {propertyfilteredData?.data.length === 0 ? (
+                              <p className="text-center p-1 text-sm">
+                                No Properties Found
+                              </p>
+                            ) : (
+                              propertyfilteredData?.data?.map(
+                                (d: any) =>
+                                  !ignoreProperties?.includes(d?.id) && (
+                                    <SelectItem
+                                      value={d?.id?.toString()}
+                                      key={d?.id}
+                                    >
+                                      {d?.product_uid}
+                                    </SelectItem>
+                                  )
                               )
-                          )
-                        )}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormDescription></FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="note"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Remarks</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      rows={5}
-                      placeholder="Input note or remarks.."
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription></FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <DialogFooter>
-              <Button type="submit" disabled={isPending}>
-                Save
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormDescription></FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="note"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Remarks</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          rows={5}
+                          placeholder="Input note or remarks.."
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription></FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <DialogFooter>
+                  <Button type="submit" disabled={isPending}>
+                    Save
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );
