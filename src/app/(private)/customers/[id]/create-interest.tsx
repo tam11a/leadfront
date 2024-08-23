@@ -65,6 +65,8 @@ import { useGetPropertyUnits } from "@/lib/actions/configuration/property-units/
 import Selection from "@/components/ui/selection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { TbHomePlus, TbUserEdit } from "react-icons/tb";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export interface property {
   id: number;
@@ -73,6 +75,26 @@ export interface property {
 }
 
 const columns: ColumnDef<property>[] = [
+  {
+    id: "select",
+    cell: ({ row }) => {
+      const property = row.original.id;
+      return (
+        <>
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => {
+              row.toggleSelected(!!value), console.log(property);
+            }}
+            aria-label="Select row"
+          />
+        </>
+      );
+    },
+
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "id",
     header: () => {
@@ -147,6 +169,7 @@ export function CreateInterest({
     },
     mode: "onChange",
   });
+
   async function onSubmit(data: InterestFormValues) {
     form.clearErrors();
     const res = await handleResponse(() => create({ ...data }), [201]);
@@ -188,6 +211,7 @@ export function CreateInterest({
       }
     }
   }
+
   const table = useReactTable({
     data: useMemo(
       () => propertyfilteredData?.data || [],
