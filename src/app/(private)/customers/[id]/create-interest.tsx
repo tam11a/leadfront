@@ -75,26 +75,26 @@ export interface property {
 }
 
 const columns: ColumnDef<property>[] = [
-  {
-    id: "select",
-    cell: ({ row }) => {
-      const property = row.original.id;
-      return (
-        <>
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => {
-              row.toggleSelected(!!value), console.log(property);
-            }}
-            aria-label="Select row"
-          />
-        </>
-      );
-    },
+  // {
+  //   id: "select",
+  //   cell: ({ row }) => {
+  //     const property = row.original.id;
+  //     return (
+  //       <>
+  //         <Checkbox
+  //           checked={row.getIsSelected()}
+  //           onCheckedChange={(value) => {
+  //             row.toggleSelected(!!value), console.log(property);
+  //           }}
+  //           aria-label="Select row"
+  //         />
+  //       </>
+  //     );
+  //   },
 
-    enableSorting: false,
-    enableHiding: false,
-  },
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
   {
     accessorKey: "id",
     header: () => {
