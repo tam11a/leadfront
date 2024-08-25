@@ -33,27 +33,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableLoading,
-  TableRow,
-} from "@/components/ui/table";
+// import {
+//   ColumnDef,
+//   ColumnFiltersState,
+//   SortingState,
+//   VisibilityState,
+//   flexRender,
+//   getCoreRowModel,
+//   getFilteredRowModel,
+//   getPaginationRowModel,
+//   getSortedRowModel,
+//   useReactTable,
+// } from "@tanstack/react-table";
+// import {
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableHead,
+//   TableHeader,
+//   TableLoading,
+//   TableRow,
+// } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import useUser from "@/hooks/useUser";
 import { useGetProductsFilter } from "@/lib/actions/interests/get-products-filter";
@@ -64,60 +64,61 @@ import { Label } from "@/components/ui/label";
 import { useGetPropertyUnits } from "@/lib/actions/configuration/property-units/get-property-units";
 import Selection from "@/components/ui/selection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { TbHomePlus, TbUserEdit } from "react-icons/tb";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+// import { TbHomePlus, TbUserEdit } from "react-icons/tb";
+// import { Checkbox } from "@/components/ui/checkbox";
 
-export interface property {
-  id: number;
-  first_name: string;
-  last_name: string;
-}
+// export interface property {
+//   id: number;
+//   first_name: string;
+//   last_name: string;
+// }
 
-const columns: ColumnDef<property>[] = [
-  // {
-  //   id: "select",
-  //   cell: ({ row }) => {
-  //     const property = row.original.id;
-  //     return (
-  //       <>
-  //         <Checkbox
-  //           checked={row.getIsSelected()}
-  //           onCheckedChange={(value) => {
-  //             row.toggleSelected(!!value), console.log(property);
-  //           }}
-  //           aria-label="Select row"
-  //         />
-  //       </>
-  //     );
-  //   },
+// const columns: ColumnDef<property>[] = [
+//   {
+//     id: "select",
+//     cell: ({ row }) => {
+//       const property = row.original.id;
+//       return (
+//         <>
+//           <Checkbox
+//             checked={row.getIsSelected()}
+//             onCheckedChange={(value) => {
+//               row.toggleSelected(!!value), console.log(property);
+//             }}
+//             aria-label="Select row"
+//           />
+//         </>
+//       );
+//     },
 
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
-  {
-    accessorKey: "id",
-    header: () => {
-      return <div className="mx-4">ID</div>;
-    },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
-  },
-  {
-    accessorKey: "product_uid",
-    header: () => {
-      return <div className="mx-4">Property Name</div>;
-    },
-    cell: ({ row }) => (
-      <div className="mx-4">{row.getValue("product_uid")}</div>
-    ),
-  },
-];
+//     enableSorting: false,
+//     enableHiding: false,
+//   },
+//   {
+//     accessorKey: "id",
+//     header: () => {
+//       return <div className="mx-4">ID</div>;
+//     },
+//     cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
+//   },
+//   {
+//     accessorKey: "product_uid",
+//     header: () => {
+//       return <div className="mx-4">Property Name</div>;
+//     },
+//     cell: ({ row }) => (
+//       <div className="mx-4">{row.getValue("product_uid")}</div>
+//     ),
+//   },
+// ];
 
 const CreateInterestSchema = z.object({
   customer_id: z.number(),
   note: z.any().optional(),
   product_id: z.string(),
   employee_id: z.number(),
+  price: z.string().optional(),
 });
 
 type InterestFormValues = z.infer<typeof CreateInterestSchema>;
@@ -135,14 +136,14 @@ export function CreateInterest({
   const [minPrice, setMinPrice] = useState("");
   const [maxSize, setMaxSize] = useState("");
   const [minSize, setMinSize] = useState("");
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
+  // const [sorting, setSorting] = useState<SortingState>([]);
+  // const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  // const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  // const [rowSelection, setRowSelection] = useState({});
 
   //api calls
   const user = useUser();
-  const { data: areaData, isLoading: isAreaDataLoading } = useGetAreas();
+  const { data: areaData } = useGetAreas();
   const { data: unitData, isLoading: isUnitDataLoading } =
     useGetPropertyUnits();
   const { data: propertyTypeData, isLoading: isPropertyTypeDataLoading } =
@@ -212,27 +213,27 @@ export function CreateInterest({
     }
   }
 
-  const table = useReactTable({
-    data: useMemo(
-      () => propertyfilteredData?.data || [],
-      [propertyfilteredData]
-    ),
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-  });
+  // const table = useReactTable({
+  //   data: useMemo(
+  //     () => propertyfilteredData?.data || [],
+  //     [propertyfilteredData]
+  //   ),
+  //   columns,
+  //   onSortingChange: setSorting,
+  //   onColumnFiltersChange: setColumnFilters,
+  //   getCoreRowModel: getCoreRowModel(),
+  //   getPaginationRowModel: getPaginationRowModel(),
+  //   getSortedRowModel: getSortedRowModel(),
+  //   getFilteredRowModel: getFilteredRowModel(),
+  //   onColumnVisibilityChange: setColumnVisibility,
+  //   onRowSelectionChange: setRowSelection,
+  //   state: {
+  //     sorting,
+  //     columnFilters,
+  //     columnVisibility,
+  //     rowSelection,
+  //   },
+  // });
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
@@ -368,32 +369,55 @@ export function CreateInterest({
               </div>
             </div>
           </TabsContent>
-          <TabsContent value="property" className="min-h-80">
-            {/* <Select
-              name={field.name}
-              onValueChange={(v) => v && field.onChange(v)}
-              value={field.value?.toString()}
-              disabled={propertyFilteredLoading}
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-3  px-1"
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a property" />
-              </SelectTrigger>
-              <SelectContent>
-                {propertyfilteredData?.data.length === 0 ? (
-                  <p className="text-center p-1 text-sm">No Properties Found</p>
-                ) : (
-                  propertyfilteredData?.data?.map(
-                    (d: any) =>
-                      !ignoreProperties?.includes(d?.id) && (
-                        <SelectItem value={d?.id?.toString()} key={d?.id}>
-                          {d?.product_uid}
-                        </SelectItem>
-                      )
-                  )
-                )}
-              </SelectContent>
-            </Select> */}
-            <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
+              <TabsContent value="property" className="min-h-80">
+                <FormField
+                  control={form.control}
+                  name="product_id"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Property Name*</FormLabel>
+                      <FormControl>
+                        <Select
+                          name={field.name}
+                          onValueChange={(v) => v && field.onChange(v)}
+                          value={field.value?.toString()}
+                          disabled={ispropertyFilteredLoading}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a property" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {propertyfilteredData?.data.length === 0 ? (
+                              <p className="text-center p-1 text-sm">
+                                No Properties Found
+                              </p>
+                            ) : (
+                              propertyfilteredData?.data?.map(
+                                (d: any) =>
+                                  !ignoreProperties?.includes(d?.id) && (
+                                    <SelectItem
+                                      value={d?.id?.toString()}
+                                      key={d?.id}
+                                    >
+                                      {d?.product_uid}
+                                    </SelectItem>
+                                  )
+                              )
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormDescription></FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
               <Table className="w-full">
                 <TableHeader>
                   {table.getHeaderGroups().map((headerGroup) => (
@@ -453,50 +477,21 @@ export function CreateInterest({
                 </TableBody>
               </Table>
               <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          </TabsContent>
-          <TabsContent value="details" className="min-h-80">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-3  px-1"
-              >
+            </ScrollArea> */}
+              </TabsContent>
+              <TabsContent value="details" className="min-h-80">
                 <FormField
                   control={form.control}
-                  name="product_id"
+                  name="price"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel>Property Name*</FormLabel>
+                      <FormLabel>Price</FormLabel>
                       <FormControl>
-                        <Select
-                          name={field.name}
-                          onValueChange={(v) => v && field.onChange(v)}
-                          value={field.value?.toString()}
-                          disabled={ispropertyFilteredLoading}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a property" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {propertyfilteredData?.data.length === 0 ? (
-                              <p className="text-center p-1 text-sm">
-                                No Properties Found
-                              </p>
-                            ) : (
-                              propertyfilteredData?.data?.map(
-                                (d: any) =>
-                                  !ignoreProperties?.includes(d?.id) && (
-                                    <SelectItem
-                                      value={d?.id?.toString()}
-                                      key={d?.id}
-                                    >
-                                      {d?.product_uid}
-                                    </SelectItem>
-                                  )
-                              )
-                            )}
-                          </SelectContent>
-                        </Select>
+                        <Input
+                          placeholder="Input property price.."
+                          className="resize-none"
+                          {...field}
+                        />
                       </FormControl>
                       <FormDescription></FormDescription>
                       <FormMessage />
@@ -527,9 +522,9 @@ export function CreateInterest({
                     Save
                   </Button>
                 </DialogFooter>
-              </form>
-            </Form>
-          </TabsContent>
+              </TabsContent>
+            </form>
+          </Form>
         </Tabs>
       </DialogContent>
     </Dialog>
