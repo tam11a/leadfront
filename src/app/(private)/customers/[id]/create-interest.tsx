@@ -33,27 +33,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import {
-//   ColumnDef,
-//   ColumnFiltersState,
-//   SortingState,
-//   VisibilityState,
-//   flexRender,
-//   getCoreRowModel,
-//   getFilteredRowModel,
-//   getPaginationRowModel,
-//   getSortedRowModel,
-//   useReactTable,
-// } from "@tanstack/react-table";
-// import {
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableHead,
-//   TableHeader,
-//   TableLoading,
-//   TableRow,
-// } from "@/components/ui/table";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableLoading,
+  TableRow,
+} from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import useUser from "@/hooks/useUser";
 import { useGetProductsFilter } from "@/lib/actions/interests/get-products-filter";
@@ -64,61 +64,21 @@ import { Label } from "@/components/ui/label";
 import { useGetPropertyUnits } from "@/lib/actions/configuration/property-units/get-property-units";
 import Selection from "@/components/ui/selection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-// import { TbHomePlus, TbUserEdit } from "react-icons/tb";
-// import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { TbHomePlus, TbUserEdit } from "react-icons/tb";
+import { Checkbox } from "@/components/ui/checkbox";
 
-// export interface property {
-//   id: number;
-//   first_name: string;
-//   last_name: string;
-// }
-
-// const columns: ColumnDef<property>[] = [
-//   {
-//     id: "select",
-//     cell: ({ row }) => {
-//       const property = row.original.id;
-//       return (
-//         <>
-//           <Checkbox
-//             checked={row.getIsSelected()}
-//             onCheckedChange={(value) => {
-//               row.toggleSelected(!!value), console.log(property);
-//             }}
-//             aria-label="Select row"
-//           />
-//         </>
-//       );
-//     },
-
-//     enableSorting: false,
-//     enableHiding: false,
-//   },
-//   {
-//     accessorKey: "id",
-//     header: () => {
-//       return <div className="mx-4">ID</div>;
-//     },
-//     cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
-//   },
-//   {
-//     accessorKey: "product_uid",
-//     header: () => {
-//       return <div className="mx-4">Property Name</div>;
-//     },
-//     cell: ({ row }) => (
-//       <div className="mx-4">{row.getValue("product_uid")}</div>
-//     ),
-//   },
-// ];
+export interface property {
+  id: number;
+  first_name: string;
+  last_name: string;
+}
 
 const CreateInterestSchema = z.object({
   customer_id: z.number(),
   note: z.any().optional(),
-  product_id: z.string(),
+  product_id: z.number(),
   employee_id: z.number(),
-  price: z.string().optional(),
 });
 
 type InterestFormValues = z.infer<typeof CreateInterestSchema>;
@@ -127,20 +87,62 @@ export function CreateInterest({
   id,
   ignoreProperties = [],
 }: Readonly<{ id: number; ignoreProperties?: number[] }>) {
+  //data
+  const columns: ColumnDef<property>[] = [
+    {
+      id: "select",
+      cell: ({ row }) => {
+        const property = row.original.id;
+        return (
+          <>
+            <Checkbox
+              checked={row.getIsSelected()}
+              onCheckedChange={(value) => {
+                row.toggleSelected(!!value), setPropertyId(property);
+              }}
+              aria-label="Select row"
+            />
+          </>
+        );
+      },
+
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "id",
+      header: () => {
+        return <div className="mx-4">ID</div>;
+      },
+      cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
+    },
+    {
+      accessorKey: "product_uid",
+      header: () => {
+        return <div className="mx-4">Property Name</div>;
+      },
+      cell: ({ row }) => (
+        <div className="mx-4">{row.getValue("product_uid")}</div>
+      ),
+    },
+  ];
+
   //states
   const [open, setOpen] = useState(false);
   const [area, setArea] = useState<string | null>("");
-  const [property, setProperty] = useState<string | null>("");
+  const [propertyId, setPropertyId] = useState<number | null>();
   const [propertyType, setPropertyType] = useState("");
   const [unit, setUnit] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxSize, setMaxSize] = useState("");
   const [minSize, setMinSize] = useState("");
-  // const [sorting, setSorting] = useState<SortingState>([]);
-  // const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  // const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  // const [rowSelection, setRowSelection] = useState({});
+  const [tabValue, setTabValue] = useState("filter");
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+  console.log(propertyId);
 
   //api calls
   const user = useUser();
@@ -174,7 +176,10 @@ export function CreateInterest({
 
   async function onSubmit(data: InterestFormValues) {
     form.clearErrors();
-    const res = await handleResponse(() => create({ ...data }), [201]);
+    const res = await handleResponse(
+      () => create({ ...data, product_id: propertyId }),
+      [201]
+    );
     if (res.status) {
       toast("Added!", {
         description: `Interested customer has been created successfully.`,
@@ -183,6 +188,7 @@ export function CreateInterest({
       form.reset();
       setArea("");
       setPropertyType("");
+      setPropertyId(null);
       setUnit("");
       setOpen(false);
     } else {
@@ -214,27 +220,28 @@ export function CreateInterest({
     }
   }
 
-  // const table = useReactTable({
-  //   data: useMemo(
-  //     () => propertyfilteredData?.data || [],
-  //     [propertyfilteredData]
-  //   ),
-  //   columns,
-  //   onSortingChange: setSorting,
-  //   onColumnFiltersChange: setColumnFilters,
-  //   getCoreRowModel: getCoreRowModel(),
-  //   getPaginationRowModel: getPaginationRowModel(),
-  //   getSortedRowModel: getSortedRowModel(),
-  //   getFilteredRowModel: getFilteredRowModel(),
-  //   onColumnVisibilityChange: setColumnVisibility,
-  //   onRowSelectionChange: setRowSelection,
-  //   state: {
-  //     sorting,
-  //     columnFilters,
-  //     columnVisibility,
-  //     rowSelection,
-  //   },
-  // });
+  const table = useReactTable({
+    data: useMemo(
+      () => propertyfilteredData?.data || [],
+      [propertyfilteredData]
+    ),
+    columns,
+    onSortingChange: setSorting,
+    enableMultiRowSelection: false,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  });
 
   return (
     <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
@@ -248,7 +255,11 @@ export function CreateInterest({
             Select and add a new property that this customer is interested in.
           </DialogDescription>
         </DialogHeader>
-        <Tabs defaultValue="filter" className="w-auto">
+        <Tabs
+          value={tabValue}
+          className="w-auto"
+          onValueChange={(v) => setTabValue(v)}
+        >
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="filter">Filter</TabsTrigger>
             <TabsTrigger value="property">Properties</TabsTrigger>
@@ -369,6 +380,14 @@ export function CreateInterest({
                 />
               </div>
             </div>
+            <DialogFooter className="mt-3">
+              <Button
+                disabled={isPending}
+                onClick={() => setTabValue("property")}
+              >
+                Find Property
+              </Button>
+            </DialogFooter>
           </TabsContent>
           <Form {...form}>
             <form
@@ -376,124 +395,70 @@ export function CreateInterest({
               className="space-y-3  px-1"
             >
               <TabsContent value="property" className="min-h-80">
-                <FormField
-                  control={form.control}
-                  name="product_id"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Property Name*</FormLabel>
-                      <FormControl>
-                        <Selection
-                          options={propertyfilteredData?.data?.map(
-                            (d: any) =>
-                              !ignoreProperties?.includes(d?.id) && {
-                                label: d?.product_uid,
-                                value: d?.id?.toString(),
-                              }
-                          )}
-                          value={field.value?.toString()}
-                          onChange={(v) => v && field.onChange(v)}
-                          allowClear
-                        />
-                        {/* <Select
-                          name={field.name}
-                          onValueChange={(v) => v && field.onChange(v)}
-                          value={field.value?.toString()}
-                          disabled={ispropertyFilteredLoading}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a property" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {propertyfilteredData?.data.length === 0 ? (
-                              <p className="text-center p-1 text-sm">
-                                No Properties Found
-                              </p>
-                            ) : (
-                              propertyfilteredData?.data?.map(
-                                (d: any) =>
-                                  !ignoreProperties?.includes(d?.id) && (
-                                    <SelectItem
-                                      value={d?.id?.toString()}
-                                      key={d?.id}
-                                    >
-                                      {d?.product_uid}
-                                    </SelectItem>
-                                  )
-                              )
-                            )}
-                          </SelectContent>
-                        </Select> */}
-                      </FormControl>
-                      <FormDescription></FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
-              <Table className="w-full">
-                <TableHeader>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => {
-                        return (
-                          <TableHead key={header.id}>
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                          </TableHead>
-                        );
-                      })}
-                    </TableRow>
-                  ))}
-                </TableHeader>
-                <TableBody>
-                  {ispropertyFilteredLoading ? (
-                    <TableRow>
-                      <TableCell
-                        colSpan={columns.length}
-                        className="h-24 text-center"
-                      >
-                        <TableLoading />
-                      </TableCell>
-                      /
-                    </TableRow>
-                  ) : table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        data-state={row.getIsSelected() && "selected"}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
+                <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
+                  <Table className="w-full">
+                    <TableHeader>
+                      {table.getHeaderGroups().map((headerGroup) => (
+                        <TableRow key={headerGroup.id}>
+                          {headerGroup.headers.map((header) => {
+                            return (
+                              <TableHead key={header.id}>
+                                {header.isPlaceholder
+                                  ? null
+                                  : flexRender(
+                                      header.column.columnDef.header,
+                                      header.getContext()
+                                    )}
+                              </TableHead>
+                            );
+                          })}
+                        </TableRow>
+                      ))}
+                    </TableHeader>
+                    <TableBody>
+                      {ispropertyFilteredLoading ? (
+                        <TableRow>
+                          <TableCell
+                            colSpan={columns.length}
+                            className="h-24 text-center"
+                          >
+                            <TableLoading />
                           </TableCell>
-                        ))}
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell
-                        colSpan={columns.length}
-                        className="h-24 text-center"
-                      >
-                        No results.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea> */}
+                          /
+                        </TableRow>
+                      ) : table.getRowModel().rows?.length ? (
+                        table.getRowModel().rows.map((row) => (
+                          <TableRow
+                            key={row.id}
+                            data-state={row.getIsSelected() && "selected"}
+                          >
+                            {row.getVisibleCells().map((cell) => (
+                              <TableCell key={cell.id}>
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext()
+                                )}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell
+                            colSpan={columns.length}
+                            className="h-24 text-center"
+                          >
+                            No results.
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
               </TabsContent>
-              <TabsContent value="details" className="min-h-80">
-                <FormField
+              <TabsContent value="details">
+                {/* <FormField
                   control={form.control}
                   name="price"
                   render={({ field }) => (
@@ -510,7 +475,7 @@ export function CreateInterest({
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
                 <FormField
                   control={form.control}
                   name="note"
@@ -530,7 +495,7 @@ export function CreateInterest({
                     </FormItem>
                   )}
                 />
-                <DialogFooter>
+                <DialogFooter className="mt-4">
                   <Button type="submit" disabled={isPending}>
                     Save
                   </Button>
