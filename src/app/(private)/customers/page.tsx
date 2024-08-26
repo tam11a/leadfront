@@ -16,7 +16,7 @@ export default function Customers() {
       </div>
       <Separator />
 
-      <div className="px-9">
+      <div>
         <CustomerTable />
       </div>
     </div>

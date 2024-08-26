@@ -96,7 +96,9 @@ const Selection: React.FC<SelectionInterface> = ({
                 onChange(null);
               }}
             >
-              <PopoverClose className="w-full text-center">Clear</PopoverClose>
+              <PopoverClose className="w-full h-full text-center">
+                Clear
+              </PopoverClose>
             </CommandItem>
           </CommandGroup>
         </Command>
