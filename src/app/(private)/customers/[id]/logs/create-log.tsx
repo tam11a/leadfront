@@ -132,7 +132,7 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
 		if (res.status) {
 			toast("Updated!", {
 				description: `Customer
-        ${customer.data.name} has been updated successfully.`,
+        #${customer.data.id} has been updated successfully.`,
 				important: true,
 			});
 		}
