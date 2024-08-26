@@ -59,7 +59,7 @@ export default function CustomerInterestsPage({
   }
 
   return !data?.data?.length ? (
-    <div className="flex flex-col w-full items-center justify-center min-h-[400px] gap-5">
+    <div className="flex flex-col items-center justify-center min-w-[300px] w-full min-h-[400px] gap-5">
       <FiActivity className="text-5xl mx-auto text-gray-400" />
       <CardDescription>No interest added yet.</CardDescription>
       <CreateInterest

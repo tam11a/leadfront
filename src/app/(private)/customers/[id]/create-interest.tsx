@@ -65,7 +65,6 @@ import { useGetPropertyUnits } from "@/lib/actions/configuration/property-units/
 import Selection from "@/components/ui/selection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { TbHomePlus, TbUserEdit } from "react-icons/tb";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export interface property {
