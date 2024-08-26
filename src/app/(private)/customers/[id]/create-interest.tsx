@@ -130,6 +130,7 @@ export function CreateInterest({
   //states
   const [open, setOpen] = useState(false);
   const [area, setArea] = useState<string | null>("");
+  const [property, setProperty] = useState<string | null>("");
   const [propertyType, setPropertyType] = useState("");
   const [unit, setUnit] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -382,7 +383,19 @@ export function CreateInterest({
                     <FormItem className="flex-1">
                       <FormLabel>Property Name*</FormLabel>
                       <FormControl>
-                        <Select
+                        <Selection
+                          options={propertyfilteredData?.data?.map(
+                            (d: any) =>
+                              !ignoreProperties?.includes(d?.id) && {
+                                label: d?.product_uid,
+                                value: d?.id?.toString(),
+                              }
+                          )}
+                          value={field.value?.toString()}
+                          onChange={(v) => v && field.onChange(v)}
+                          allowClear
+                        />
+                        {/* <Select
                           name={field.name}
                           onValueChange={(v) => v && field.onChange(v)}
                           value={field.value?.toString()}
@@ -410,7 +423,7 @@ export function CreateInterest({
                               )
                             )}
                           </SelectContent>
-                        </Select>
+                        </Select> */}
                       </FormControl>
                       <FormDescription></FormDescription>
                       <FormMessage />

@@ -79,9 +79,12 @@ const UpdateCustomerSchema = z.object({
   }),
   address2: z.any().optional(),
   zip_code: z.any().optional(),
-  nid: z.any({
-    description: "NID must be a number.",
-  }),
+  nid: z
+    .string({
+      description: "NID must be a number.",
+    })
+    .max(15, { message: "Ensure NID has no more than 15 numbers." })
+    .optional(),
   is_active: z.boolean(),
   status: z.any(),
   priority: z.any(),
