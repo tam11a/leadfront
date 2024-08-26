@@ -139,7 +139,7 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
 	}
 
 	React.useEffect(() => {
-		if (!customer) return;
+		if (!customer || !status) return;
 
 		if (
 			status !== customer.data.status ||
@@ -203,7 +203,7 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
 							</FormItem>
 						)}
 					/>
-					<div className="flex flex-row flex-wrap gap-2 mt-2">
+					<div className="flex flex-row flex-wrap gap-2 my-3">
 						<Button type="submit">Create Log</Button>
 						<Button
 							type="reset"
