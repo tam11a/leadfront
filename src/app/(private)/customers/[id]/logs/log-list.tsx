@@ -78,87 +78,33 @@ export default function CustomerLogsPage({ id }: Readonly<{ id: number }>) {
             ?.map((item: any) => {
               return (
                 <div key={item.id} className="my-4 flex flex-col gap-2">
-                  {item?.type === 1 ? (
+                  {item?.type === 5 ? (
                     <>
-                      <div className="flex items-center gap-3">
-                        <p className="underline text-sm font-bold">
-                          {item?.description.substring(
-                            0,
-                            item?.description.indexOf(" ")
-                          )}
-                        </p>
-                        <p className="text-sm text-text-light ">
-                          {item?.description.substring(
-                            item?.description.indexOf(" ") + 1
-                          )}
-                        </p>
-                      </div>
-                    </>
-                  ) : item?.type === 2 ? (
-                    <>
-                      <div className="flex items-start gap-3">
-                        <p className="underline text-sm font-bold">
-                          {item?.description.substring(
-                            0,
-                            item?.description.indexOf(" ")
-                          )}
-                        </p>
-                        <p className="text-sm text-text-light">
-                          {item?.description.substring(
-                            item?.description.indexOf(" ") + 1
-                          )}
-                        </p>
-                      </div>
-                    </>
-                  ) : item?.type === 3 ? (
-                    <>
-                      <div className="flex items-center gap-3">
-                        <p className="underline text-sm font-bold">
-                          {item?.description.substring(
-                            0,
-                            item?.description.indexOf(" ")
-                          )}
-                        </p>
-                        <p className="text-sm text-text-light">
-                          {item?.description.substring(
-                            item?.description.indexOf(" ") + 1
-                          )}
-                        </p>
-                      </div>
-                    </>
-                  ) : item?.type === 4 ? (
-                    <>
-                      <div className="flex items-center gap-3">
-                        <p className="underline text-sm font-bold">
-                          {item?.description.substring(
-                            0,
-                            item?.description.indexOf(" ")
-                          )}
-                        </p>
-                        <p className="text-sm text-text-light">
-                          {item?.description.substring(
-                            item?.description.indexOf(" ") + 1
-                          )}
-                        </p>
-                      </div>
-                    </>
-                  ) : item?.type === 5 ? (
-                    <>
-                      <div className="flex items-center gap-3">
-                        <p className="underline text-sm font-bold">
+                      <p className="text-sm text-text-light ">
+                        <span className="underline text-sm font-bold">
                           {item?.name}
-                        </p>
-                        <p className="text-sm text-text-light ">
-                          {item?.description}.
-                        </p>
-                      </div>
+                        </span>{" "}
+                        {item?.description}
+                      </p>
 
                       <p className="font-medium text-sm bg-slate-100 dark:bg-slate-900 text-text p-3 my-1 max-w-xs whitespace-pre-wrap rounded">
                         {item?.note}
                       </p>
                     </>
                   ) : (
-                    <></>
+                    <>
+                      <p className="text-sm text-text-light">
+                        <span className="underline text-sm font-bold">
+                          {item?.description.substring(
+                            0,
+                            item?.description.indexOf(" ")
+                          )}
+                        </span>{" "}
+                        {item?.description.substring(
+                          item?.description.indexOf(" ") + 1
+                        )}
+                      </p>
+                    </>
                   )}
                   <p className="font-semibold text-xs text-text-light">
                     {moment(item.created_at).format("ddd, MMM D, YYYY")}
