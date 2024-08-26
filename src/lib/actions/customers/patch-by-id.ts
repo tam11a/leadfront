@@ -18,6 +18,9 @@ export const useUpdateCustomer = () => {
 			queryClient.invalidateQueries({
 				queryKey: ["get-customer-by-id"],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ["get-customer-logs"],
+			});
 			// revalidatePath("/app/customers/[id]", "layout");
 		},
 	});

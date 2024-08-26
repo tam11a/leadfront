@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+	Form,
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
 } from "@/components/ui/form";
 
 import { Textarea } from "@/components/ui/textarea";
@@ -18,210 +18,204 @@ import handleResponse from "@/lib/handle-response";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { DateTimePicker } from "@/components/ui/datetime-picker";
+import { Label } from "@/components/ui/label";
+import Selection from "@/components/ui/selection";
+import { CustomerStatusList } from "../../create-customer";
+import { useUpdateCustomer } from "@/lib/actions/customers/patch-by-id";
 
 const CreateCustomerMessageSchema = z.object({
-  note: z
-    .string()
-    .min(1, { message: "Note must contain at least 1 character(s)" }),
-  name: z.string(),
-  type: z.number(),
-  customer_id: z.number().optional(),
-  employee_id: z.number().optional(),
-  description: z.string().optional(),
+	note: z
+		.string()
+		.min(1, { message: "Note must contain at least 1 character(s)" }),
+	name: z.string(),
+	type: z.number(),
+	customer_id: z.number().optional(),
+	employee_id: z.number().optional(),
+	description: z.string().optional(),
 });
 
 type CreateCustomerMessageFormValues = z.infer<
-  typeof CreateCustomerMessageSchema
+	typeof CreateCustomerMessageSchema
 >;
 
 export function CreateLog({ id }: Readonly<{ id: number }>) {
-  const { access, user } = useUser();
-  const { data: customer, isLoading } = useGetCustomerById(id);
-  const { mutateAsync: create } = useCreateCustomerComment();
+	const { access, user } = useUser();
+	const { data: customer, isLoading } = useGetCustomerById(id);
+	const { mutateAsync: update, isPending } = useUpdateCustomer();
+	const { mutateAsync: create } = useCreateCustomerComment();
+	const [followup, setFollowup] = useState<Date | undefined>(undefined);
+	const [status, setStatus] = useState<string | null>(null);
 
-  const form = useForm<CreateCustomerMessageFormValues>({
-    resolver: zodResolver(CreateCustomerMessageSchema),
-    defaultValues: {
-      note: "",
-      type: 5,
-      customer_id: customer?.data?.id,
-      employee_id: access?.data?.user_id,
-      description: "added a note.",
-    },
-    mode: "onChange",
-  });
+	const form = useForm<CreateCustomerMessageFormValues>({
+		resolver: zodResolver(CreateCustomerMessageSchema),
+		defaultValues: {
+			note: "",
+			type: 5,
+			customer_id: customer?.data?.id,
+			employee_id: access?.data?.user_id,
+			description: "added a note.",
+		},
+		mode: "onChange",
+	});
 
-  useEffect(() => {
-    if (isLoading || !customer) return;
-    form.reset({
-      name: access?.data?.username,
-      note: "",
-      type: 5,
-      description: "added a note.",
-      customer_id: customer?.data?.id,
-      employee_id: user?.id,
-    });
-  }, [customer]);
+	useEffect(() => {
+		if (isLoading || !customer) return;
+		form.reset({
+			name: access?.data?.username,
+			note: "",
+			type: 5,
+			description: "added a note.",
+			customer_id: customer?.data?.id,
+			employee_id: user?.id,
+		});
 
-  const onSubmit = async (data: CreateCustomerMessageFormValues) => {
-    form.clearErrors();
-    const res = await handleResponse(() => create(data), [201]);
-    if (res.status) {
-      toast("Added!", {
-        description: `Note has been Added successfully.`,
-        important: true,
-      });
-      form.reset();
-    } else {
-      if (typeof res.data === "object") {
-        Object.entries(res.data).forEach(([key, value]) => {
-          form.setError(key as keyof CreateCustomerMessageFormValues, {
-            type: "validate",
-            message: value as string,
-          });
-        });
-        toast("Error!", {
-          description: `There was an error adding note. Please try again.`,
-          important: true,
-          action: {
-            label: "Retry",
-            onClick: () => onSubmit(data),
-          },
-        });
-      } else {
-        toast("Error!", {
-          description: res.message,
-          important: true,
-          action: {
-            label: "Retry",
-            onClick: () => onSubmit(data),
-          },
-        });
-      }
-    }
-  };
-  return (
-    <>
-      {/* <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
-      <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)}>Create Log</Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-[425px] sm:max-w-[525px] rounded-lg">
-        <DialogHeader>
-          <DialogTitle>Add Log</DialogTitle>
-          <DialogDescription>Create a custtomer log.</DialogDescription>
-        </DialogHeader> */}
-      <Form {...form}>
-        {/* <FormField
-            control={form.control}
-            name="status"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <Select
-                  onValueChange={(v) => v && field.onChange(v)}
-                  value={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Raw">Raw</SelectItem>
-                    <SelectItem value="Prospect">Prospect</SelectItem>
-                    <SelectItem value="High Prospect">High Prospect</SelectItem>
-                    <SelectItem value="Priority">Priority</SelectItem>
-                    <SelectItem value="Booked">Booked</SelectItem>
-                    <SelectItem value="Sold">Sold</SelectItem>
-                    <SelectItem value="Closed">Closed</SelectItem>
-                    <SelectItem value="Junk">Junk</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-        {/* <FormField
-            control={form.control}
-            name="followup"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Follow Up</FormLabel>
-                <FormControl>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        fromDate={new Date()}
-                        selected={new Date(field.value)}
-                        onSelect={(e: any) =>
-                          field.onChange(format(e as Date, "yyyy-MM-dd"))
-                        }
-                        initialFocus={false}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormControl>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          onReset={() => {
-            if (isLoading || !customer) return;
-            form.reset({
-              note: "",
-            });
-          }}
-        >
-          <FormField
-            control={form.control}
-            name="note"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Note</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="Aa.." {...field} />
-                </FormControl>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="flex flex-row flex-wrap gap-2 mt-2">
-            <Button type="submit">Create Log</Button>
-            <Button type="reset" variant={"secondary"}>
-              Reset
-            </Button>
-          </div>
-        </form>
-      </Form>
-      {/* </DialogContent>
+		setFollowup(customer?.data?.followup);
+		setStatus(customer?.data?.status);
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [customer]);
+
+	const onSubmit = async (data: CreateCustomerMessageFormValues) => {
+		form.clearErrors();
+		const res = await handleResponse(() => create(data), [201]);
+		if (res.status) {
+			toast("Added!", {
+				description: `Note has been Added successfully.`,
+				important: true,
+			});
+			form.reset();
+		} else {
+			if (typeof res.data === "object") {
+				Object.entries(res.data).forEach(([key, value]) => {
+					form.setError(key as keyof CreateCustomerMessageFormValues, {
+						type: "validate",
+						message: value as string,
+					});
+				});
+				toast("Error!", {
+					description: `There was an error adding note. Please try again.`,
+					important: true,
+					action: {
+						label: "Retry",
+						onClick: () => onSubmit(data),
+					},
+				});
+			} else {
+				toast("Error!", {
+					description: res.message,
+					important: true,
+					action: {
+						label: "Retry",
+						onClick: () => onSubmit(data),
+					},
+				});
+			}
+		}
+	};
+
+	async function handleUpdateCustomer() {
+		if (!customer) return;
+		const res = await handleResponse(() =>
+			update({
+				id: customer.data.id,
+				data: {
+					status: status,
+					followup: followup,
+				},
+			})
+		);
+		if (res.status) {
+			toast("Updated!", {
+				description: `Customer
+        ${customer.data.name} has been updated successfully.`,
+				important: true,
+			});
+		}
+	}
+
+	React.useEffect(() => {
+		if (!customer) return;
+
+		if (
+			status !== customer.data.status ||
+			followup !== customer.data.followup
+		) {
+			handleUpdateCustomer();
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [status]);
+
+	return (
+		<>
+			<Label>Status</Label>
+			<Selection
+				options={CustomerStatusList}
+				value={status}
+				onChange={(v) => v && setStatus(v)}
+				placeholder="Select a status"
+			/>
+
+			<div className="h-1" />
+
+			<Label>Followup</Label>
+			<DateTimePicker
+				value={followup ? new Date(followup) : followup}
+				onChange={setFollowup}
+				placeholder="Followup Date"
+				granularity="minute"
+				hourCycle={12}
+				weekStartsOn={6}
+				onPopperClose={() => {
+					if (!customer) return;
+					if (followup !== customer?.data.followup) handleUpdateCustomer();
+				}}
+			/>
+
+			<Form {...form}>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					onReset={() => {
+						if (isLoading || !customer) return;
+						form.reset({
+							note: "",
+						});
+					}}
+				>
+					<FormField
+						control={form.control}
+						name="note"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Note</FormLabel>
+								<FormControl>
+									<Textarea
+										placeholder="Aa.."
+										{...field}
+									/>
+								</FormControl>
+								<FormDescription></FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<div className="flex flex-row flex-wrap gap-2 mt-2">
+						<Button type="submit">Create Log</Button>
+						<Button
+							type="reset"
+							variant={"secondary"}
+						>
+							Reset
+						</Button>
+					</div>
+				</form>
+			</Form>
+			{/* </DialogContent>
     </Dialog> */}
-    </>
-  );
+		</>
+	);
 }
