@@ -280,7 +280,7 @@ export default function PropertyTable() {
 
   return (
     <div className="w-full max-w-[85vw] lg:max-w-[70vw] mx-auto relatives">
-      <div className="flex items-center flex-row gap-2 py-4">
+      <div className="flex items-center flex-col md:flex-row gap-2 py-4">
         <Input
           placeholder="Search..."
           value={search}
@@ -289,7 +289,7 @@ export default function PropertyTable() {
           }}
           className="max-w-sm"
         />
-        <span className="flex flex-row items-center gap-2">
+        <span className="flex flex-row w-full md:w-auto items-center gap-2 ml-auto">
           <Select
             onValueChange={async (v) =>
               await setFilters((f) => {
@@ -367,39 +367,40 @@ export default function PropertyTable() {
               <Cross2Icon className="ml-2 h-4 w-4" />
             </Button>
           )}
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                View <MixerHorizontalIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {table
+                .getAllColumns()
+                .filter(
+                  (column) =>
+                    typeof column.accessorFn !== "undefined" &&
+                    column.getCanHide()
+                )
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </span>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              View <MixerHorizontalIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {table
-              .getAllColumns()
-              .filter(
-                (column) =>
-                  typeof column.accessorFn !== "undefined" &&
-                  column.getCanHide()
-              )
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
 
       <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
