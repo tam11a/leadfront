@@ -38,6 +38,10 @@ import { useMemo, useState } from "react";
 import { useGetInterests } from "@/lib/actions/interests/get-interests";
 import { CreateInterest } from "./create-interest";
 import moment from "moment";
+import { useDeleteProperty } from "@/lib/actions/properties/delete-properties";
+import { useDeleteInterest } from "@/lib/actions/interests/delete-interests";
+import handleResponse from "@/lib/handle-response";
+import { toast } from "sonner";
 
 interface Customer {
   id: number;
@@ -46,6 +50,7 @@ interface Customer {
   email: string;
   phone: string;
   followup: string;
+  interest: number;
 }
 
 const columns: ColumnDef<Customer>[] = [
@@ -146,6 +151,8 @@ const columns: ColumnDef<Customer>[] = [
               <Link href={`/customers/${customer.id}`}>
                 <DropdownMenuItem>View profile</DropdownMenuItem>
               </Link>
+              {/* <DropdownMenuSeparator />
+              <DeleteInterestedCustomer id={customer.interest} /> */}
             </DropdownMenuContent>
           </DropdownMenu>
         </>
@@ -153,6 +160,42 @@ const columns: ColumnDef<Customer>[] = [
     },
   },
 ];
+
+// const DeleteInterestedCustomer: React.FC<{ id: number }> = ({ id }) => {
+//   const { mutateAsync: Delete, isPending: isDeleting } = useDeleteInterest();
+
+//   async function onDelete(id: number) {
+//     const res = await handleResponse(() => Delete(id), 204);
+
+//     if (res.status) {
+//       toast("Deleted!", {
+//         description: `Interest has been deleted successfully.`,
+//         closeButton: true,
+//         important: true,
+//       });
+//     } else {
+//       toast("Error!", {
+//         description: res.message,
+//         important: true,
+//         action: {
+//           label: "Retry",
+//           onClick: () => onDelete(id),
+//         },
+//       });
+//     }
+//   }
+//   return (
+//     <>
+//       <DropdownMenuItem
+//         className="bg-red-500 focus:bg-red-400 text-white focus:text-white"
+//         onClick={() => onDelete(id)}
+//         disabled={isDeleting}
+//       >
+//         Remove Interest
+//       </DropdownMenuItem>
+//     </>
+//   );
+// };
 
 export default function InterestedCustomersTable({
   params,
