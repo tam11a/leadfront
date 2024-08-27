@@ -86,6 +86,22 @@ export function CreateInterest({
   id,
   ignoreProperties = [],
 }: Readonly<{ id: number; ignoreProperties?: number[] }>) {
+  //states
+  const [open, setOpen] = useState(false);
+  const [area, setArea] = useState<string | null>("");
+  const [propertyId, setPropertyId] = useState<number | null>();
+  const [propertyType, setPropertyType] = useState("");
+  const [unit, setUnit] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxSize, setMaxSize] = useState("");
+  const [minSize, setMinSize] = useState("");
+  const [tabValue, setTabValue] = useState("filter");
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+
   //data
   const columns: ColumnDef<property>[] = [
     {
@@ -97,7 +113,9 @@ export function CreateInterest({
             <Checkbox
               checked={row.getIsSelected()}
               onCheckedChange={(value) => {
-                row.toggleSelected(!!value), setPropertyId(property);
+                row.toggleSelected(!!value),
+                  setPropertyId(property),
+                  setTabValue("details");
               }}
               aria-label="Select row"
             />
@@ -124,22 +142,6 @@ export function CreateInterest({
       ),
     },
   ];
-
-  //states
-  const [open, setOpen] = useState(false);
-  const [area, setArea] = useState<string | null>("");
-  const [propertyId, setPropertyId] = useState<number | null>();
-  const [propertyType, setPropertyType] = useState("");
-  const [unit, setUnit] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxSize, setMaxSize] = useState("");
-  const [minSize, setMinSize] = useState("");
-  const [tabValue, setTabValue] = useState("filter");
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
 
   //api calls
   const user = useUser();
@@ -219,7 +221,10 @@ export function CreateInterest({
 
   const table = useReactTable({
     data: useMemo(
-      () => propertyfilteredData?.data || [],
+      () =>
+        propertyfilteredData?.data?.filter(
+          (x: any) => !ignoreProperties.includes(x.id)
+        ) || [],
       [propertyfilteredData]
     ),
     columns,
