@@ -347,7 +347,6 @@ export default function MediaTable() {
                 >
                   <TableLoading />
                 </TableCell>
-                /
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (

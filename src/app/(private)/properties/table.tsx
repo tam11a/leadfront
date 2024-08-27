@@ -431,7 +431,6 @@ export default function PropertyTable() {
                 >
                   <TableLoading />
                 </TableCell>
-                /
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
