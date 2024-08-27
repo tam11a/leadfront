@@ -355,16 +355,16 @@ export default function CustomerTable() {
 
   return (
     <div className="w-full max-w-[85vw] lg:max-w-[70vw] mx-auto relative">
-      <div className="flex items-center flex-col md:flex-row gap-2 py-4">
+      <div className="flex items-center justify-between w-full md:w-auto flex-col md:flex-row gap-2 py-4">
         <Input
           placeholder="Search..."
           value={search}
           onChange={(event) => {
             setSearch(event.target.value);
           }}
-          className="max-w-sm"
+          className="md:max-w-sm"
         />
-        <span className="flex flex-row w-full justify-between items-center gap-2">
+        <span className="flex flex-row w-full md:w-auto justify-between items-center gap-2">
           <Select
             onValueChange={async (v) =>
               await setFilters((f) => {
