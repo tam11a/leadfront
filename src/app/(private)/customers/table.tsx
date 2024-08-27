@@ -232,7 +232,7 @@ const columns: ColumnDef<Customer>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
+              {/* <DropdownMenuItem
                 onClick={() =>
                   navigator.clipboard.writeText(
                     `ID: ${customer.id?.toString()}\nFirst Name: ${
@@ -244,7 +244,7 @@ const columns: ColumnDef<Customer>[] = [
                 }
               >
                 Copy Information
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
 
               <Link href={`/customers/${customer.id}`}>
                 <DropdownMenuItem>View profile</DropdownMenuItem>
