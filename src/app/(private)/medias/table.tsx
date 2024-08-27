@@ -169,7 +169,7 @@ export const columns: ColumnDef<Media>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
+              {/* <DropdownMenuItem
                 onClick={() =>
                   navigator.clipboard.writeText(
                     `ID: ${media.id?.toString()}\nFirst Name: ${
@@ -181,7 +181,7 @@ export const columns: ColumnDef<Media>[] = [
                 }
               >
                 Copy Information
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
 
               <Link href={`/medias/${media.id}`}>
                 <DropdownMenuItem>View profile</DropdownMenuItem>
