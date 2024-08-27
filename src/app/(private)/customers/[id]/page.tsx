@@ -2,16 +2,16 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  CardTitle,
-  CardDescription,
-  Card,
-  CardHeader,
-  CardContent,
+	CardTitle,
+	CardDescription,
+	Card,
+	CardHeader,
+	CardContent,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
-  useGetInterests,
-  useGetInterestsList,
+	useGetInterests,
+	useGetInterestsList,
 } from "@/lib/actions/interests/get-interests";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -28,39 +28,19 @@ import { LuCheckCheck } from "react-icons/lu";
 import SellProcess from "./sell-process";
 
 export default function CustomerInterestsPage({
-  params,
+	params,
 }: {
-  params: {
-    id: number;
-  };
+	params: {
+		id: number;
+	};
 }) {
-  const [search, setSearch] = useState("");
-  const { data, isLoading } = useGetInterestsList({
-    customer_id: params.id,
-  });
-  const { mutateAsync: Delete, isPending: isDeleting } = useDeleteInterest();
+	const [search, setSearch] = useState("");
+	const { data, isLoading } = useGetInterestsList({
+		customer_id: params.id,
+	});
+	const { mutateAsync: Delete, isPending: isDeleting } = useDeleteInterest();
 
-  if (isLoading) return <Loading />;
-
-  async function onDelete(Iid: number) {
-    const res = await handleResponse(() => Delete(Iid), 204);
-    if (res.status) {
-      toast("Deleted!", {
-        description: `Interest has been deleted successfully.`,
-        closeButton: true,
-        important: true,
-      });
-    } else {
-      toast("Error!", {
-        description: res.message,
-        important: true,
-        action: {
-          label: "Retry",
-          onClick: () => onDelete(Iid),
-        },
-      });
-    }
-  }
+	if (isLoading) return <Loading />;
 
 	async function onDelete(Iid: number) {
 		const res = await handleResponse(() => Delete(Iid), 204);
