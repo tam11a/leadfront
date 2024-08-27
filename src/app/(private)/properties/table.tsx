@@ -89,7 +89,7 @@ export const columns: ColumnDef<Property>[] = [
       return <div className="mx-4">Title</div>;
     },
     cell: ({ row }) => (
-      <Link href={`/properties/${row.original.id}`} className="mx-4">
+      <Link href={`/properties/${row.original.id}`}>
         <Button variant={"link"} className="capitalize">
           {row.original.product_uid}
         </Button>

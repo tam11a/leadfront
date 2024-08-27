@@ -93,7 +93,7 @@ export const columns: ColumnDef<Media>[] = [
       return <div className="mx-4">Full Name</div>;
     },
     cell: ({ row }) => (
-      <Link href={`/medias/${row.original.id}`} className="mx-4">
+      <Link href={`/medias/${row.original.id}`}>
         <Button variant={"link"}>
           {row.original.first_name} {row.original.last_name}
         </Button>

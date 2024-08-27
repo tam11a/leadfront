@@ -116,7 +116,7 @@ const columns: ColumnDef<Customer>[] = [
       return <div className="mx-4">Full Name</div>;
     },
     cell: ({ row }) => (
-      <Link href={`/customers/${row.original.id}`} className="mx-4">
+      <Link href={`/customers/${row.original.id}`}>
         <Button variant={"link"}>
           {row.original.first_name} {row.original.last_name}
         </Button>

@@ -103,7 +103,7 @@ export const columns: ColumnDef<Employee>[] = [
       return <div className="mx-4">Full Name</div>;
     },
     cell: ({ row }) => (
-      <div className="mx-4">
+      <div>
         {row.original.first_name} {row.original.last_name}{" "}
         {!row.original.user_id && (
           <>
