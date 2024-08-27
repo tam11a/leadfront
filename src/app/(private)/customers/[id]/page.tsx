@@ -23,6 +23,9 @@ import { CreateInterest } from "./create-interest";
 import { useDeleteInterest } from "@/lib/actions/interests/delete-interests";
 import handleResponse from "@/lib/handle-response";
 import { toast } from "sonner";
+import { CheckCheckIcon } from "lucide-react";
+import { LuCheckCheck } from "react-icons/lu";
+import SellProcess from "./sell-process";
 
 export default function CustomerInterestsPage({
 	params,
@@ -122,7 +125,20 @@ export default function CustomerInterestsPage({
 							</Badge>
 						</CardContent>
 					</CardHeader>
-					<CardHeader>
+					<CardHeader className="flex flex-row items-center justify-center gap-2 space-y-0">
+						<SellProcess
+							TriggerComponent={() => (
+								<Button
+									variant={"outline"}
+									size={"icon"}
+									className="text-lime-500"
+								>
+									<LuCheckCheck />
+								</Button>
+							)}
+							propertyId={interest.product_id.id}
+							customerId={params.id}
+						/>
 						<Button
 							variant={"outline"}
 							size={"icon"}
