@@ -161,7 +161,7 @@ export const columns: ColumnDef<Property>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
+              {/* <DropdownMenuItem
                 onClick={() =>
                   navigator.clipboard.writeText(
                     `ID: ${property.id?.toString()}\nTitle: ${
@@ -175,7 +175,7 @@ export const columns: ColumnDef<Property>[] = [
                 }
               >
                 Copy Information
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
 
               <Link href={`/properties/${property.id}`}>
                 <DropdownMenuItem>View profile</DropdownMenuItem>

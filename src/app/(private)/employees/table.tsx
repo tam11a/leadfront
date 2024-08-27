@@ -195,7 +195,7 @@ export const columns: ColumnDef<Employee>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
+              {/* <DropdownMenuItem
                 onClick={() =>
                   navigator.clipboard.writeText(
                     `ID: ${employee.id?.toString()}\nFirst Name: ${
@@ -207,7 +207,7 @@ export const columns: ColumnDef<Employee>[] = [
                 }
               >
                 Copy Information
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
 
               <DropdownMenuItem>View profile</DropdownMenuItem>
               <DropdownMenuSeparator />
