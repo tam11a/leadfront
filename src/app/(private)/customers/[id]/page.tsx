@@ -135,8 +135,8 @@ export default function CustomerInterestsPage({
 									<LuCheckCheck />
 								</Button>
 							)}
-							propertyId={interest.product_id.id}
-							customerId={params.id}
+							propertyId={+interest.product_id.id}
+							customerId={+params.id}
 						/>
 						<Button
 							variant={"outline"}
