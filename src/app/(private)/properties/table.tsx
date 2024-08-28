@@ -133,6 +133,13 @@ export const columns: ColumnDef<Property>[] = [
     ),
   },
   {
+    accessorKey: "status",
+    header: () => {
+      return <div className="mx-4">Status</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("status")}</div>,
+  },
+  {
     accessorKey: "created_at",
     header: () => {
       return <div className="mx-4">Created At</div>;

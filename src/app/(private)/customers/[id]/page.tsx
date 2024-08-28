@@ -26,6 +26,12 @@ import { toast } from "sonner";
 import { CheckCheckIcon } from "lucide-react";
 import { LuCheckCheck } from "react-icons/lu";
 import SellProcess from "./sell-process";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function CustomerInterestsPage({
   params,
@@ -120,9 +126,18 @@ export default function CustomerInterestsPage({
                   {interest.product_id.product_type?.product_type_name}
                 </Badge>
               </span>
-              <CardDescription className="line-clamp-2">
-                {interest.note}
-              </CardDescription>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <CardDescription className="line-clamp-2">
+                      {interest.note}
+                    </CardDescription>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-slate-200 text-muted-foreground max-w-sm font-medium">
+                    <p> {interest.note}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </CardContent>
           </CardHeader>
           <CardHeader className="flex flex-row items-center justify-center gap-2 space-y-0">
