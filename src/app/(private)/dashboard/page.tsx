@@ -1,189 +1,193 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
-import { CalendarDateRangePicker } from "@/components/ui/date-range-picker";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { CalendarDateRangePicker } from "@/components/ui/date-range-picker";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Overview } from "./overview";
 import { RecentSales } from "./recent-sales";
+import { useGetStats } from "@/lib/actions/dashboard/get-dashboard-stats";
+
+//Icons
+import {
+  BsPersonAdd,
+  BsPerson,
+  BsPersonCheck,
+  BsPersonGear,
+  BsPersonLock,
+  BsPersonUp,
+} from "react-icons/bs";
 import { MdMoreVert } from "react-icons/md";
+import { TbHome } from "react-icons/tb";
 
 export default function Dashboard() {
-	return (
-		<main>
-			<div className="flex-1 space-y-4 p-8 pt-6">
-				<div className="flex items-center justify-between space-y-2">
-					<h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-					<Button
-						size={"icon"}
-						variant={"outline"}
-						className="flex md:hidden"
-					>
-						<MdMoreVert />
-					</Button>
-					<div className="hidden md:flex items-center space-x-2">
-						<CalendarDateRangePicker />
-						<Button>Download</Button>
-					</div>
-				</div>
-				<Tabs
-					defaultValue="overview"
-					className="space-y-4"
-				>
-					<TabsList>
-						<TabsTrigger value="overview">Overview</TabsTrigger>
-						<TabsTrigger
-							value="analytics"
-							disabled
-						>
-							Analytics
-						</TabsTrigger>
-					</TabsList>
-					<TabsContent
-						value="overview"
-						className="space-y-4"
-					>
-						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-									<CardTitle className="text-sm font-medium">
-										Total Revenue
-									</CardTitle>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth="2"
-										className="h-4 w-4 text-muted-foreground"
-									>
-										<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-									</svg>
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">$45,231.89</div>
-									<p className="text-xs text-muted-foreground">
-										+20.1% from last month
-									</p>
-								</CardContent>
-							</Card>
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-									<CardTitle className="text-sm font-medium">
-										Subscriptions
-									</CardTitle>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth="2"
-										className="h-4 w-4 text-muted-foreground"
-									>
-										<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-										<circle
-											cx="9"
-											cy="7"
-											r="4"
-										/>
-										<path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-									</svg>
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">+2350</div>
-									<p className="text-xs text-muted-foreground">
-										+180.1% from last month
-									</p>
-								</CardContent>
-							</Card>
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-									<CardTitle className="text-sm font-medium">Sales</CardTitle>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth="2"
-										className="h-4 w-4 text-muted-foreground"
-									>
-										<rect
-											width="20"
-											height="14"
-											x="2"
-											y="5"
-											rx="2"
-										/>
-										<path d="M2 10h20" />
-									</svg>
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">+12,234</div>
-									<p className="text-xs text-muted-foreground">
-										+19% from last month
-									</p>
-								</CardContent>
-							</Card>
-							<Card>
-								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-									<CardTitle className="text-sm font-medium">
-										Active Now
-									</CardTitle>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth="2"
-										className="h-4 w-4 text-muted-foreground"
-									>
-										<path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-									</svg>
-								</CardHeader>
-								<CardContent>
-									<div className="text-2xl font-bold">+573</div>
-									<p className="text-xs text-muted-foreground">
-										+201 since last hour
-									</p>
-								</CardContent>
-							</Card>
-						</div>
-						<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-							<Card className="lg:col-span-4">
-								<CardHeader>
-									<CardTitle>Overview</CardTitle>
-								</CardHeader>
-								<CardContent className="pl-2">
-									<Overview />
-								</CardContent>
-							</Card>
-							<Card className="lg:col-span-3">
-								<CardHeader>
-									<CardTitle>Recent Sales</CardTitle>
-									<CardDescription>
-										You made 265 sales this month.
-									</CardDescription>
-								</CardHeader>
-								<CardContent>
-									<RecentSales />
-								</CardContent>
-							</Card>
-						</div>
-					</TabsContent>
-				</Tabs>
-			</div>
-		</main>
-	);
+  const { data: statsData, isLoading: statsDataLoading } = useGetStats();
+  console.log(statsData);
+  return (
+    <main>
+      <div className="flex-1 space-y-4 p-8 pt-6">
+        <div className="flex items-center justify-between space-y-2">
+          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+          <Button size={"icon"} variant={"outline"} className="flex md:hidden">
+            <MdMoreVert />
+          </Button>
+          <div className="hidden md:flex items-center space-x-2">
+            {/* <CalendarDateRangePicker /> */}
+            <Button>Download</Button>
+          </div>
+        </div>
+        <Tabs defaultValue="overview" className="space-y-4">
+          {/* <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="analytics" disabled>
+              Analytics
+            </TabsTrigger>
+          </TabsList> */}
+          <TabsContent value="overview" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    New Customers
+                  </CardTitle>
+                  <BsPersonAdd className="h-4 w-4  " />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-2xl font-bold gap-1">
+                    {statsData?.data?.raw_customers}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Total new customers
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Active Customers
+                  </CardTitle>
+                  <BsPersonCheck className="h-4 w-4  " />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-2xl font-bold gap-1">
+                    {statsData?.data?.active_customers}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Total active customers
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Booked Customers
+                  </CardTitle>
+                  <BsPersonGear className="h-4 w-4  " />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-2xl font-bold gap-1">
+                    {statsData?.data?.booked_customers}
+                  </div>
+                  <p className="text-xs  text-muted-foreground">
+                    Total customers booked
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Prospect Customers
+                  </CardTitle>
+                  <BsPerson className="h-4 w-4  " />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-2xl font-bold gap-1">
+                    {statsData?.data?.prospect_customers}
+                  </div>
+                  <p className="text-xs  text-muted-foreground">
+                    Total prospect customers
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Booked Customers
+                  </CardTitle>
+                  <BsPersonUp className="h-4 w-4  " />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-2xl font-bold gap-1">
+                    {statsData?.data?.booked_customers}
+                  </div>
+                  <p className="text-xs  text-muted-foreground">
+                    Total customers booked
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Colosed Customers
+                  </CardTitle>
+                  <BsPersonLock className="h-4 w-4  " />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-2xl font-bold gap-1">
+                    {statsData?.data?.closed_customers}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Total closed customers
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Properties
+                  </CardTitle>
+                  <TbHome className="h-4 w-4  " />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-2xl font-bold gap-1">
+                    {statsData?.data?.properties}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Total Properties
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+              <Card className="lg:col-span-4">
+                <CardHeader>
+                  <CardTitle>Overview</CardTitle>
+                </CardHeader>
+                <CardContent className="pl-2">
+                  <Overview />
+                </CardContent>
+              </Card>
+              <Card className="lg:col-span-3">
+                <CardHeader>
+                  <CardTitle>Recent Sales</CardTitle>
+                  <CardDescription>
+                    You made 265 sales this month.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RecentSales />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </main>
+  );
 }
