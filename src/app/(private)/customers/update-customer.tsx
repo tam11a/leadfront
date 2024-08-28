@@ -54,6 +54,7 @@ import { useMedia } from "@/lib/actions/media/use-media";
 import moment from "moment";
 import Selection from "@/components/ui/selection";
 import { CustomerStatusList } from "./create-customer";
+import { useEmployees } from "@/lib/actions/employees/users";
 
 const UpdateCustomerSchema = z.object({
   first_name: z.string().min(1, {
@@ -91,7 +92,7 @@ const UpdateCustomerSchema = z.object({
   source: z.any().optional(),
   media_id: z.any().optional(),
   media_commision: z.any().optional(),
-  assigned_employee_id: z.number().optional(),
+  assigned_employee_id: z.any().optional(),
   project_id: z.number().optional(),
 });
 
@@ -111,6 +112,7 @@ export function UpdateCustomer({
     open ? customerId : undefined
   );
   const { data: mediaData, isLoading: mediaLoading } = useMedia(search);
+  const { data: employeeData } = useEmployees(search);
 
   const form = useForm<CustomerFormValues>({
     resolver: zodResolver(UpdateCustomerSchema),
@@ -160,6 +162,7 @@ export function UpdateCustomer({
         status: customer.data.status || "",
         priority: customer.data.priority || "",
         source: customer.data.source || "",
+        assigned_employee_id: customer?.data?.assigned_employee_id,
         media_id: customer.data.media_id,
         media_commision: customer.data.media_commision,
       });
@@ -607,6 +610,30 @@ export function UpdateCustomer({
                         />
                       </FormControl>
                       <FormDescription></FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="assigned_employee_id"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Assign Employee</FormLabel>
+                      <FormControl>
+                        <Selection
+                          options={employeeData?.data?.map((employee: any) => ({
+                            label: `${employee?.first_name} ${employee?.last_name}`,
+                            value: employee?.id,
+                          }))}
+                          value={field.value}
+                          onChange={(v) => field.onChange(v)}
+                          placeholder="Select an employee"
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Assign an employee from the list above.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
