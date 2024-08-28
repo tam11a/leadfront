@@ -21,9 +21,10 @@ import {
   BsPersonGear,
   BsPersonLock,
   BsPersonUp,
+  BsPersonExclamation,
 } from "react-icons/bs";
-import { MdMoreVert } from "react-icons/md";
-import { TbHome } from "react-icons/tb";
+import { MdMoreVert, MdOutlinePerson2 } from "react-icons/md";
+import { TbHome, TbHomeCheck, TbHomeDollar, TbHomeDot } from "react-icons/tb";
 
 export default function Dashboard() {
   const { data: statsData, isLoading: statsDataLoading } = useGetStats();
@@ -71,7 +72,7 @@ export default function Dashboard() {
                   <CardTitle className="text-sm font-medium">
                     Active Customers
                   </CardTitle>
-                  <BsPersonCheck className="h-4 w-4  " />
+                  <MdOutlinePerson2 className="h-4 w-4  " />
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center text-2xl font-bold gap-1">
@@ -101,6 +102,22 @@ export default function Dashboard() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
+                    Priority Customers
+                  </CardTitle>
+                  <BsPersonExclamation className="h-4 w-4  " />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-2xl font-bold gap-1">
+                    {statsData?.data?.priority_customers}
+                  </div>
+                  <p className="text-xs  text-muted-foreground">
+                    Total priority customers
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
                     Prospect Customers
                   </CardTitle>
                   <BsPerson className="h-4 w-4  " />
@@ -117,7 +134,7 @@ export default function Dashboard() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Booked Customers
+                    High Prospect Customers
                   </CardTitle>
                   <BsPersonUp className="h-4 w-4  " />
                 </CardHeader>
@@ -130,11 +147,26 @@ export default function Dashboard() {
                   </p>
                 </CardContent>
               </Card>
-
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Colosed Customers
+                    Complete
+                  </CardTitle>
+                  <BsPersonCheck className="h-4 w-4  " />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-2xl font-bold gap-1">
+                    {statsData?.data?.sold_customers}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Total completed
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Closed Customers
                   </CardTitle>
                   <BsPersonLock className="h-4 w-4  " />
                 </CardHeader>
@@ -159,7 +191,55 @@ export default function Dashboard() {
                     {statsData?.data?.properties}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Total Properties
+                    Total properties
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    New Properties
+                  </CardTitle>
+                  <TbHomeDot className="h-4 w-4  " />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-2xl font-bold gap-1">
+                    {statsData?.data?.raw_properties}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Total new properties
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Available Properties
+                  </CardTitle>
+                  <TbHomeCheck className="h-4 w-4  " />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-2xl font-bold gap-1">
+                    {statsData?.data?.available_properties}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Total available properties
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Properties Sold
+                  </CardTitle>
+                  <TbHomeDollar className="h-4 w-4  " />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-2xl font-bold gap-1">
+                    {statsData?.data?.sold_properties}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Total properties sold
                   </p>
                 </CardContent>
               </Card>
