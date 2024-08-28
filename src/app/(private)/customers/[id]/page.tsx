@@ -39,7 +39,6 @@ export default function CustomerInterestsPage({
     customer_id: params.id,
   });
   const { mutateAsync: Delete, isPending: isDeleting } = useDeleteInterest();
-  console.log(data);
   if (isLoading) return <Loading />;
 
   async function onDelete(Iid: number) {
