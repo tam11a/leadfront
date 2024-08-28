@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 
 import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 
 import { Textarea } from "@/components/ui/textarea";
@@ -27,195 +27,211 @@ import { Label } from "@/components/ui/label";
 import Selection from "@/components/ui/selection";
 import { CustomerStatusList } from "../../create-customer";
 import { useUpdateCustomer } from "@/lib/actions/customers/patch-by-id";
+import { useEmployees } from "@/lib/actions/employees/users";
 
 const CreateCustomerMessageSchema = z.object({
-	note: z
-		.string()
-		.min(1, { message: "Note must contain at least 1 character(s)" }),
-	name: z.string(),
-	type: z.number(),
-	customer_id: z.number().optional(),
-	employee_id: z.number().optional(),
-	description: z.string().optional(),
+  note: z
+    .string()
+    .min(1, { message: "Note must contain at least 1 character(s)" }),
+  name: z.string(),
+  type: z.number(),
+  customer_id: z.number().optional(),
+  employee_id: z.number().optional(),
+  description: z.string().optional(),
 });
 
 type CreateCustomerMessageFormValues = z.infer<
-	typeof CreateCustomerMessageSchema
+  typeof CreateCustomerMessageSchema
 >;
 
 export function CreateLog({ id }: Readonly<{ id: number }>) {
-	const { access, user } = useUser();
-	const { data: customer, isLoading } = useGetCustomerById(id);
-	const { mutateAsync: update, isPending } = useUpdateCustomer();
-	const { mutateAsync: create } = useCreateCustomerComment();
-	const [followup, setFollowup] = useState<Date | undefined>(undefined);
-	const [status, setStatus] = useState<string | null>(null);
+  const [followup, setFollowup] = useState<Date | undefined>(undefined);
+  const [status, setStatus] = useState<string | null>(null);
+  const [search, _setSearch] = useState("");
 
-	const form = useForm<CreateCustomerMessageFormValues>({
-		resolver: zodResolver(CreateCustomerMessageSchema),
-		defaultValues: {
-			note: "",
-			type: 5,
-			customer_id: customer?.data?.id,
-			employee_id: access?.data?.user_id,
-			description: "added a note.",
-		},
-		mode: "onChange",
-	});
+  const { access, user } = useUser();
+  const { data: employeeData } = useEmployees(search);
+  const { data: customer, isLoading } = useGetCustomerById(id);
+  console.log(customer);
+  const { mutateAsync: update, isPending } = useUpdateCustomer();
+  const { mutateAsync: create } = useCreateCustomerComment();
+  const [assign, setAssign] = useState<string | null>(null);
 
-	useEffect(() => {
-		if (isLoading || !customer) return;
-		form.reset({
-			name: access?.data?.username,
-			note: "",
-			type: 5,
-			description: "added a note.",
-			customer_id: customer?.data?.id,
-			employee_id: user?.id,
-		});
+  const form = useForm<CreateCustomerMessageFormValues>({
+    resolver: zodResolver(CreateCustomerMessageSchema),
+    defaultValues: {
+      note: "",
+      type: 5,
+      customer_id: customer?.data?.id,
+      employee_id: access?.data?.user_id,
+      description: "added a note.",
+    },
+    mode: "onChange",
+  });
 
-		setFollowup(customer?.data?.followup);
-		setStatus(customer?.data?.status);
+  useEffect(() => {
+    if (isLoading || !customer) return;
+    form.reset({
+      name: access?.data?.username,
+      note: "",
+      type: 5,
+      description: "added a note.",
+      customer_id: customer?.data?.id,
+      employee_id: user?.id,
+    });
 
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [customer]);
+    setFollowup(customer?.data?.followup);
+    setStatus(customer?.data?.status);
+    setAssign(customer?.data?.assigned_employee_id);
 
-	const onSubmit = async (data: CreateCustomerMessageFormValues) => {
-		form.clearErrors();
-		const res = await handleResponse(() => create(data), [201]);
-		if (res.status) {
-			toast("Added!", {
-				description: `Note has been Added successfully.`,
-				important: true,
-			});
-			form.reset();
-		} else {
-			if (typeof res.data === "object") {
-				Object.entries(res.data).forEach(([key, value]) => {
-					form.setError(key as keyof CreateCustomerMessageFormValues, {
-						type: "validate",
-						message: value as string,
-					});
-				});
-				toast("Error!", {
-					description: `There was an error adding note. Please try again.`,
-					important: true,
-					action: {
-						label: "Retry",
-						onClick: () => onSubmit(data),
-					},
-				});
-			} else {
-				toast("Error!", {
-					description: res.message,
-					important: true,
-					action: {
-						label: "Retry",
-						onClick: () => onSubmit(data),
-					},
-				});
-			}
-		}
-	};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customer]);
 
-	async function handleUpdateCustomer() {
-		if (!customer) return;
-		const res = await handleResponse(() =>
-			update({
-				id: customer.data.id,
-				data: {
-					status: status,
-					followup: followup,
-				},
-			})
-		);
-		if (res.status) {
-			toast("Updated!", {
-				description: `Customer
+  const onSubmit = async (data: CreateCustomerMessageFormValues) => {
+    form.clearErrors();
+    const res = await handleResponse(() => create(data), [201]);
+    if (res.status) {
+      toast("Added!", {
+        description: `Note has been Added successfully.`,
+        important: true,
+      });
+      form.reset();
+    } else {
+      if (typeof res.data === "object") {
+        Object.entries(res.data).forEach(([key, value]) => {
+          form.setError(key as keyof CreateCustomerMessageFormValues, {
+            type: "validate",
+            message: value as string,
+          });
+        });
+        toast("Error!", {
+          description: `There was an error adding note. Please try again.`,
+          important: true,
+          action: {
+            label: "Retry",
+            onClick: () => onSubmit(data),
+          },
+        });
+      } else {
+        toast("Error!", {
+          description: res.message,
+          important: true,
+          action: {
+            label: "Retry",
+            onClick: () => onSubmit(data),
+          },
+        });
+      }
+    }
+  };
+
+  async function handleUpdateCustomer() {
+    if (!customer) return;
+    const res = await handleResponse(() =>
+      update({
+        id: customer.data.id,
+        data: {
+          status: status,
+          followup: followup,
+          assigned_employee_id: assign,
+        },
+      })
+    );
+    if (res.status) {
+      toast("Updated!", {
+        description: `Customer
         #${customer.data.id} has been updated successfully.`,
-				important: true,
-			});
-		}
-	}
+        important: true,
+      });
+    }
+  }
 
-	React.useEffect(() => {
-		if (!customer || !status) return;
+  React.useEffect(() => {
+    if (!customer || !status) return;
 
-		if (
-			status !== customer.data.status ||
-			followup !== customer.data.followup
-		) {
-			handleUpdateCustomer();
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [status]);
+    if (
+      status !== customer.data.status ||
+      followup !== customer.data.followup ||
+      assign !== customer.data.assigned_employee_id
+    ) {
+      handleUpdateCustomer();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, assign]);
 
-	return (
-		<>
-			<Label>Status</Label>
-			<Selection
-				options={CustomerStatusList}
-				value={status}
-				onChange={(v) => v && setStatus(v)}
-				placeholder="Select a status"
-			/>
+  return (
+    <>
+      <Label>Assign Employee</Label>
+      <Selection
+        options={
+          employeeData?.data?.map((employee: any) => ({
+            label: `${employee?.first_name} ${employee?.last_name}`,
+            value: employee?.id,
+          })) || []
+        }
+        value={assign}
+        onChange={(v) => setAssign(v)}
+        placeholder="Select an employee"
+      />
+      <div className="h-1" />
+      <Label>Status</Label>
+      <Selection
+        options={CustomerStatusList}
+        value={status}
+        onChange={(v) => v && setStatus(v)}
+        placeholder="Select a status"
+      />
 
-			<div className="h-1" />
+      <div className="h-1" />
 
-			<Label>Followup</Label>
-			<DateTimePicker
-				value={followup ? new Date(followup) : followup}
-				onChange={setFollowup}
-				placeholder="Followup Date"
-				granularity="minute"
-				hourCycle={12}
-				weekStartsOn={6}
-				onPopperClose={() => {
-					if (!customer) return;
-					if (followup !== customer?.data.followup) handleUpdateCustomer();
-				}}
-			/>
+      <Label>Followup</Label>
+      <DateTimePicker
+        value={followup ? new Date(followup) : followup}
+        onChange={setFollowup}
+        placeholder="Followup Date"
+        granularity="minute"
+        hourCycle={12}
+        weekStartsOn={6}
+        onPopperClose={() => {
+          if (!customer) return;
+          if (followup !== customer?.data.followup) handleUpdateCustomer();
+        }}
+      />
 
-			<Form {...form}>
-				<form
-					onSubmit={form.handleSubmit(onSubmit)}
-					onReset={() => {
-						if (isLoading || !customer) return;
-						form.reset({
-							note: "",
-						});
-					}}
-				>
-					<FormField
-						control={form.control}
-						name="note"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Note</FormLabel>
-								<FormControl>
-									<Textarea
-										placeholder="Aa.."
-										{...field}
-									/>
-								</FormControl>
-								<FormDescription></FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<div className="flex flex-row flex-wrap gap-2 my-3">
-						<Button type="submit">Create Log</Button>
-						<Button
-							type="reset"
-							variant={"secondary"}
-						>
-							Reset
-						</Button>
-					</div>
-				</form>
-			</Form>
-			{/* </DialogContent>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          onReset={() => {
+            if (isLoading || !customer) return;
+            form.reset({
+              note: "",
+            });
+          }}
+        >
+          <FormField
+            control={form.control}
+            name="note"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Note</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Aa.." {...field} />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex flex-row flex-wrap gap-2 my-3">
+            <Button type="submit">Create Log</Button>
+            <Button type="reset" variant={"secondary"}>
+              Reset
+            </Button>
+          </div>
+        </form>
+      </Form>
+      {/* </DialogContent>
     </Dialog> */}
-		</>
-	);
+    </>
+  );
 }
