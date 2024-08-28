@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Selection from "@/components/ui/selection";
 import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
@@ -557,26 +558,15 @@ export function CreateProperty() {
                       <FormItem className="flex-1">
                         <FormLabel>Media</FormLabel>
                         <FormControl>
-                          <Select
-                            name={field.name}
-                            onValueChange={(v) => v && field.onChange(v)}
-                            value={field.value?.toString()}
-                            disabled={mediaLoading}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a media" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {mediaData?.data?.map((media: any) => (
-                                <SelectItem
-                                  value={media?.id.toString()}
-                                  key={media?.id}
-                                >
-                                  {`${media?.first_name} ${media?.last_name}`}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                          <Selection
+                            options={mediaData?.data?.map((media: any) => ({
+                              label: `${media?.first_name} ${media?.last_name}`,
+                              value: media?.id,
+                            }))}
+                            value={field.value}
+                            onChange={(v) => field.onChange(v)}
+                            placeholder="Select a media"
+                          />
                         </FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
