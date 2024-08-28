@@ -46,6 +46,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateCustomers } from "@/lib/actions/customers/post-customers";
+import { useEmployees } from "@/lib/actions/employees/users";
 import { useMedia } from "@/lib/actions/media/use-media";
 import handleResponse from "@/lib/handle-response";
 import { cn } from "@/lib/utils";
@@ -70,9 +71,12 @@ const CreateCustomerSchema = z.object({
   email: z.string().email({
     message: "Email must be a valid email address.",
   }),
-  phone: z.string().min(11, {
-    message: "Phone number must be at least 11 characters.",
-  }),
+  phone: z
+    .string()
+    .min(11, {
+      message: "Phone number must be at least 11 characters.",
+    })
+    .max(11, { message: "Phone number cannot exceed 11 characters." }),
   dob: z.any().optional(),
   bank_name: z.any().optional(),
   bank_branch: z.any().optional(),
@@ -95,7 +99,7 @@ const CreateCustomerSchema = z.object({
   source: z.any().optional(),
   media_id: z.any().optional(),
   media_commision: z.any().optional(),
-  assigned_employee_id: z.number().optional(),
+  assigned_employee_id: z.any().optional(),
   project_id: z.number().optional(),
 });
 
@@ -141,8 +145,8 @@ export function CreateCustomer() {
   const [search, _setSearch] = useState("");
 
   const { mutateAsync: create, isPending } = useCreateCustomers();
-  const { data: mediaData, isLoading: mediaLoading } = useMedia(search);
-
+  const { data: mediaData } = useMedia(search);
+  const { data: employeeData } = useEmployees(search);
   const form = useForm<CustomerFormValues>({
     resolver: zodResolver(CreateCustomerSchema),
     defaultValues: {
@@ -568,6 +572,30 @@ export function CreateCustomer() {
                       />
                     </FormControl>
                     <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="assigned_employee_id"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Assign Employee</FormLabel>
+                    <FormControl>
+                      <Selection
+                        options={employeeData?.data?.map((employee: any) => ({
+                          label: `${employee?.first_name} ${employee?.last_name}`,
+                          value: employee?.id,
+                        }))}
+                        value={field.value}
+                        onChange={(v) => field.onChange(v)}
+                        placeholder="Select an employee"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Assign an employee from the list above.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

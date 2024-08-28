@@ -61,9 +61,12 @@ const CreateEmployeeSchema = z.object({
   email: z.string().email({
     message: "Email must be a valid email address.",
   }),
-  phone: z.string().min(11, {
-    message: "Phone number must be at least 11 characters.",
-  }),
+  phone: z
+    .string()
+    .min(11, {
+      message: "Phone number must be at least 11 characters.",
+    })
+    .max(11, { message: "Phone number cannot exceed 11 characters." }),
   dob: z.any().optional(),
   work_hour: z.any().optional(),
   salary: z.any().optional(),
