@@ -10,7 +10,6 @@ import {
 // import { CalendarDateRangePicker } from "@/components/ui/date-range-picker";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { Overview } from "./overview";
-import { RecentSales } from "./recent-sales";
 import { useGetStats } from "@/lib/actions/dashboard/get-dashboard-stats";
 
 //Icons
@@ -25,10 +24,10 @@ import {
 } from "react-icons/bs";
 import { MdMoreVert, MdOutlinePerson2 } from "react-icons/md";
 import { TbHome, TbHomeCheck, TbHomeDollar, TbHomeDot } from "react-icons/tb";
+import FollowupsToday from "./followups-today";
 
 export default function Dashboard() {
   const { data: statsData, isLoading: statsDataLoading } = useGetStats();
-  console.log(statsData);
   return (
     <main>
       <div className="flex-1 space-y-4 p-8 pt-6">
@@ -150,7 +149,7 @@ export default function Dashboard() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Complete
+                    Completed Customers
                   </CardTitle>
                   <BsPersonCheck className="h-4 w-4  " />
                 </CardHeader>
@@ -159,7 +158,7 @@ export default function Dashboard() {
                     {statsData?.data?.sold_customers}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Total completed
+                    Total completed customers
                   </p>
                 </CardContent>
               </Card>
@@ -255,13 +254,16 @@ export default function Dashboard() {
               </Card>
               <Card className="lg:col-span-3">
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
+                  <CardTitle>Today&apos;s Followup</CardTitle>
                   <CardDescription>
-                    You made 265 sales this month.
+                    You have {statsData?.data?.followups_today?.length}{" "}
+                    followups today.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <RecentSales />
+                  <FollowupsToday
+                    data={statsData?.data?.followups_today || []}
+                  />
                 </CardContent>
               </Card>
             </div>
