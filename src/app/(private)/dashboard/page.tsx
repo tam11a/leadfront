@@ -246,10 +246,10 @@ export default function Dashboard() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
               <Card className="lg:col-span-4">
                 <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                  <CardTitle>Customer&apos;s Overview</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  <Overview />
+                  <Overview data={statsData?.data || []} />
                 </CardContent>
               </Card>
               <Card className="lg:col-span-3">

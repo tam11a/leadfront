@@ -17,11 +17,9 @@ export default function FollowupsToday({ data }: { data: any }) {
             <p className="text-sm font-medium leading-none">
               {[d.first_name, d.last_name].join(" ")}
             </p>
-            <Link href={`/customers/${d.id}`}>
-              <p className="text-xs text-primary underline font-medium">
-                View Details
-              </p>
-            </Link>
+            <p className="text-xs text-primary underline font-medium">
+              <Link href={`/customers/${d.id}`}>View Details</Link>
+            </p>
           </div>
           <div className="ml-auto font-medium">#{d.id}</div>
         </div>
