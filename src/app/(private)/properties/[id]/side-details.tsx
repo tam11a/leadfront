@@ -22,6 +22,7 @@ export default function PropertiesSideBar(details: {
   publicPrice: number;
   privatePrice: number;
   media_id: number;
+  media_commision: number;
   remarks: string;
 }) {
   const { data: mediaData, isLoading: mediaLoading } = useGetMediaById(
@@ -87,6 +88,19 @@ export default function PropertiesSideBar(details: {
           </>
         ) : (
           <p className="mx-4">No media assigned</p>
+        )}
+      </CardDescription>
+      <CardTitle>Media commission</CardTitle>
+      <CardDescription className="flex space-x-2 text-wrap max-w-xs items-center">
+        <IoPersonOutline className="text-primary text-base" />
+        {details?.media_commision ? (
+          <>
+            <p className="mx-4">
+              {details?.media_commision || "No media commission added"}
+            </p>
+          </>
+        ) : (
+          <p className="mx-4">No media commission added</p>
         )}
       </CardDescription>
       {details.remarks && (

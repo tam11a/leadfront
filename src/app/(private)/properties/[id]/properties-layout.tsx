@@ -83,6 +83,7 @@ export default function PropertyLayout({
         return "destructive";
     }
   }
+  console.log(data);
   return !data ? (
     <Loading />
   ) : (
@@ -162,6 +163,7 @@ export default function PropertyLayout({
               size: data?.data?.size,
               unitName: data?.data?.unitName,
               media_id: data?.data?.media_id,
+              media_commision: data?.data?.media_commision,
               remarks: data?.data?.remarks,
             }}
           />
