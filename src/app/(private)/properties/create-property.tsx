@@ -345,7 +345,6 @@ export function CreateProperty() {
                                 Available
                               </SelectItem>
                               <SelectItem value="booked">Booked</SelectItem>
-                              <SelectItem value="sold">Sold</SelectItem>
                               <SelectItem value="junk">Junk</SelectItem>
                             </SelectContent>
                           </Select>
