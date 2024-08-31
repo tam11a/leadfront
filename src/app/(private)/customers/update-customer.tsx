@@ -132,7 +132,7 @@ export function UpdateCustomer({
       address: "",
       address2: "",
       zip_code: "",
-      nid: undefined,
+      nid: "undefined",
       is_active: true,
       status: "",
       priority: "",

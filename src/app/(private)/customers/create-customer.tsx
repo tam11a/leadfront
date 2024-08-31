@@ -127,10 +127,6 @@ export const CustomerStatusList = [
     value: "Booked",
   },
   {
-    label: "Sold",
-    value: "Sold",
-  },
-  {
     label: "Closed",
     value: "Closed",
   },

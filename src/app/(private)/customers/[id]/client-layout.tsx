@@ -50,7 +50,12 @@ export default function ClientLayout({
           <div className="md:flex flex-row items-start gap-3">
             {/* <TabNav /> */}
             <UpdateCustomer customerId={params.id}>
-              <Button variant={"outline"}>Update</Button>
+              <Button
+                variant={"outline"}
+                disabled={data?.data?.status === "sold"}
+              >
+                Update
+              </Button>
             </UpdateCustomer>
           </div>
         </div>
