@@ -93,7 +93,7 @@ export default function PropertiesSideBar(details: {
         <>
           <CardTitle>Remarks</CardTitle>
           <CardDescription className="flex space-x-2 text-wrap max-w-xs items-center">
-            <PiNoteLight className="text-primary text-base w-7 h-auto" />
+            <PiNoteLight className="text-primary text-base" />
             <span>{details?.remarks}</span>
           </CardDescription>
         </>
