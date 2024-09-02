@@ -53,9 +53,9 @@ export default function EmployeeSideDetails(details: {
       <CardTitle>Email</CardTitle>
       <CardDescription className="flex items-center space-x-2 ">
         <MdOutlineMailOutline className="text-primary text-base " />
-        {/* <span className="break-words max-w-48"> */}
-        {details.email || "No email added"}
-        {/* </span> */}
+        <span className="break-words max-w-48">
+          {details.email || "No email added"}
+        </span>
       </CardDescription>
       <CardTitle>Phone</CardTitle>
       <CardDescription className="flex items-center space-x-2">
