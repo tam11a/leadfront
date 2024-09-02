@@ -153,11 +153,37 @@ const columns: ColumnDef<Customer>[] = [
     ),
   },
   {
+    accessorKey: "address",
+    header: () => {
+      return (
+        // <Button
+        //   variant="ghost"
+        //   onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        // >
+        <div className="mx-4">Address</div>
+        //   <CaretSortIcon className="ml-2 h-4 w-4" />
+        // </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <>
+        <div className="lowercase">{row.getValue("address")}</div>
+      </>
+    ),
+  },
+  {
     accessorKey: "gender",
     header: () => {
       return <div className="mx-4">Gender</div>;
     },
     cell: ({ row }) => <div className="mx-4">{row.getValue("gender")}</div>,
+  },
+  {
+    accessorKey: "dob",
+    header: () => {
+      return <div className="mx-4">Date Of Birth</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("dob")}</div>,
   },
   {
     accessorKey: "priority",
