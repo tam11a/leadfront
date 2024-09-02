@@ -153,7 +153,7 @@ export default function CustomerInterestsPage({
                   variant={"outline"}
                   size={"icon"}
                   className="text-lime-500"
-                  disabled={!isLoading}
+                  disabled={interest?.product_id?.status === "sold"}
                 >
                   <LuCheckCheck />
                 </Button>
