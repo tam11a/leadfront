@@ -71,6 +71,8 @@ import { useDeleteCustomer } from "@/lib/actions/customers/delete-customers";
 import handleResponse from "@/lib/handle-response";
 import { toast } from "sonner";
 import moment from "moment";
+import Selection from "@/components/ui/selection";
+import { useEmployees } from "@/lib/actions/employees/users";
 
 export interface Customer {
   id: number;
@@ -97,6 +99,7 @@ export interface Customer {
   updated_at: string;
   deleted_at: string;
   assigned_employee_id?: number;
+  assigned_employee_name?: string;
   media_id?: number;
   project_id?: number;
 }
@@ -132,15 +135,15 @@ const columns: ColumnDef<Customer>[] = [
   },
   {
     accessorKey: "email",
-    header: ({ column }) => {
+    header: () => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
+        // <Button
+        //   variant="ghost"
+        //   onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        // >
+        <div className="mx-4">Email</div>
+        //   <CaretSortIcon className="ml-2 h-4 w-4" />
+        // </Button>
       );
     },
     cell: ({ row }) => (
@@ -186,6 +189,17 @@ const columns: ColumnDef<Customer>[] = [
       <div className="mx-4">
         {moment(row.getValue("followup")).format("llll")}
       </div>
+    ),
+  },
+  {
+    accessorKey: "assigned_employee_name",
+    header: () => {
+      return <div className="mx-4">Assigned to</div>;
+    },
+    cell: ({ row }) => (
+      // <Link href={`/employees/${row.original.assigned_employee_id}`}>
+      <Button variant={"link"}>{row.getValue("assigned_employee_name")}</Button>
+      // </Link>
     ),
   },
   {
@@ -301,6 +315,8 @@ export default function CustomerTable() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
+  const { data: employeeData } = useEmployees();
+
   // Search
   const [search, setSearch] = useQueryState("search", {
     defaultValue: "",
@@ -333,7 +349,6 @@ export default function CustomerTable() {
     ...filters,
   });
   const { data: mediaData } = useMedia(search);
-
   const table = useReactTable({
     data: useMemo(() => data?.data?.results || [], [data]),
     columns,
@@ -365,6 +380,22 @@ export default function CustomerTable() {
           className="md:max-w-sm"
         />
         <span className="flex flex-row w-full md:w-auto justify-between items-center gap-2">
+          <Selection
+            allowClear
+            options={
+              employeeData?.data?.map((d: any) => ({
+                label: `${d?.first_name} ${d?.last_name}`,
+                value: d?.id?.toString(),
+              })) || []
+            }
+            value={filters?.assigned_employee_id}
+            onChange={async (v) =>
+              await setFilters((f) => {
+                return { ...f, assigned_employee_id: v };
+              })
+            }
+            placeholder="Assignee"
+          />
           <Select
             onValueChange={async (v) =>
               await setFilters((f) => {
