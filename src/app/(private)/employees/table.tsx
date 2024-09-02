@@ -148,6 +148,44 @@ export const columns: ColumnDef<Employee>[] = [
     ),
   },
   {
+    accessorKey: "gender",
+    header: () => {
+      return <div className="mx-4">Gender</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("gender")}</div>,
+  },
+  {
+    accessorKey: "dob",
+    header: () => {
+      return <div className="mx-4">Daet Of Birth</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("dob")}</div>,
+  },
+  {
+    accessorKey: "nid",
+    header: () => {
+      return <div className="mx-4">NID</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("nid") || "-"}</div>,
+  },
+
+  {
+    accessorKey: "tin",
+    header: () => {
+      return <div className="mx-4">TIN</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("tin") || "-"}</div>,
+  },
+  {
+    accessorKey: "salary",
+    header: () => {
+      return <div className="mx-4">Salary</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">{row.getValue("salary") || "-"}</div>
+    ),
+  },
+  {
     accessorKey: "created_at",
     header: () => {
       return <div className="mx-4">Created At</div>;
