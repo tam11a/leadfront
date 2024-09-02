@@ -83,7 +83,6 @@ export default function PropertyLayout({
         return "destructive";
     }
   }
-  console.log(data);
   return !data ? (
     <Loading />
   ) : (

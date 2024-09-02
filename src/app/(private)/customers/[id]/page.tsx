@@ -151,7 +151,8 @@ export default function CustomerInterestsPage({
                   <LuCheckCheck />
                 </Button>
               )}
-              propertyId={+interest.id}
+              propertyId={+interest.product_id.id}
+              interestId={+interest.id}
               customerId={+params.id}
             />
             <Button
