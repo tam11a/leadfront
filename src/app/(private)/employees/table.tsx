@@ -163,7 +163,7 @@ export const columns: ColumnDef<Employee>[] = [
       const isActive = row.getValue("is_active");
       return (
         <div className="mx-4">
-          <Badge variant={isActive ? "secondary" : "destructive"}>
+          <Badge variant={isActive ? "success" : "destructive"}>
             {isActive ? "Active" : "Inactive"}
           </Badge>
         </div>
