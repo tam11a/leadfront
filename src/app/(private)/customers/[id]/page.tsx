@@ -67,6 +67,7 @@ export default function CustomerInterestsPage({
     }
   }
 
+  console.log(data);
   return !data?.data?.length ? (
     <div className="flex flex-col items-center justify-center min-w-[300px] w-full min-h-[400px] gap-5">
       <FiActivity className="text-5xl mx-auto text-gray-400" />
@@ -116,6 +117,11 @@ export default function CustomerInterestsPage({
               >
                 {interest.product_id.product_uid}
               </Link>
+              {interest.product_id.status === "sold" && (
+                <Badge className="ml-2" variant={"destructive"}>
+                  {interest.product_id.status}
+                </Badge>
+              )}
             </CardTitle>
             <CardContent className="flex p-0 flex-col items-start flex-wrap">
               <span className="flex flex-row">
@@ -147,6 +153,7 @@ export default function CustomerInterestsPage({
                   variant={"outline"}
                   size={"icon"}
                   className="text-lime-500"
+                  disabled={!isLoading}
                 >
                   <LuCheckCheck />
                 </Button>
@@ -159,6 +166,7 @@ export default function CustomerInterestsPage({
               variant={"outline"}
               size={"icon"}
               onClick={() => onDelete(interest?.id)}
+              disabled={interest?.product_id?.status === "sold"}
               className="text-destructive"
             >
               <MdOutlineDelete />

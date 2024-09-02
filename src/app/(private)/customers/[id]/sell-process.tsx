@@ -96,9 +96,7 @@ export default function SellProcess({
           () => update({ id: customerId, data: { status: "Sold" } }),
           [200]
         );
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
       setOpen(false);
     } else {
       if (typeof res.data === "object") {
