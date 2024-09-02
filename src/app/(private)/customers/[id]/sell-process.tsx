@@ -67,7 +67,6 @@ export default function SellProcess({
   const [open, setOpen] = useState(false);
   const { user } = useUser();
   const { data: propertyData } = useGetProductById(propertyId);
-  console.log(propertyData);
   const { mutateAsync: create, isPending } = useCreateSoldProperty();
   const { mutateAsync: update, isPending: isCustomerUpdatePending } =
     useUpdateCustomer();

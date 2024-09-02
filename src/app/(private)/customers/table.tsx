@@ -180,6 +180,20 @@ const columns: ColumnDef<Customer>[] = [
     },
     cell: ({ row }) => <div className="mx-4">{row.getValue("status")}</div>,
   },
+  // {
+  //   id: "media",
+  //   accessorKey: "full_name",
+  //   header: () => {
+  //     return <div className="mx-4">Media</div>;
+  //   },
+  //   cell: ({ row }) => (
+  //     <Link href={`/customers/${row.original.id}`}>
+  //       <Button variant={"link"}>
+  //         {row.original.first_name} {row.original.last_name}
+  //       </Button>
+  //     </Link>
+  //   ),
+  // },
   {
     accessorKey: "followup",
     header: () => {
@@ -197,9 +211,11 @@ const columns: ColumnDef<Customer>[] = [
       return <div className="mx-4">Assigned to</div>;
     },
     cell: ({ row }) => (
-      // <Link href={`/employees/${row.original.assigned_employee_id}`}>
-      <Button variant={"link"}>{row.getValue("assigned_employee_name")}</Button>
-      // </Link>
+      <Link href={`/employees/${row.original.assigned_employee_id}`}>
+        <Button variant={"link"}>
+          {row.getValue("assigned_employee_name")}
+        </Button>
+      </Link>
     ),
   },
   {

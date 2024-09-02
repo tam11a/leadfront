@@ -223,8 +223,12 @@ export function CreateInterest({
     data: useMemo(
       () =>
         propertyfilteredData?.data?.filter(
-          (x: any) => !ignoreProperties.includes(x.id)
+          (v: any) =>
+            v?.status !== "sold" &&
+            v?.status !== "junk" &&
+            !ignoreProperties.includes(v.id)
         ) || [],
+
       [propertyfilteredData]
     ),
     columns,
@@ -262,10 +266,10 @@ export function CreateInterest({
           className="w-auto"
           onValueChange={(v) => setTabValue(v)}
         >
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="filter">Filter</TabsTrigger>
             <TabsTrigger value="property">Properties</TabsTrigger>
-            <TabsTrigger value="details">Details</TabsTrigger>
+            {/* <TabsTrigger value="details">Details</TabsTrigger> */}
           </TabsList>
           <TabsContent value="filter" className="min-h-80">
             <div className="flex flex-col py-2">

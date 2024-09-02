@@ -51,6 +51,7 @@ import { parseAsInteger, useQueryState } from "nuqs";
 import handleResponse from "@/lib/handle-response";
 import { toast } from "sonner";
 import { useDeleteEmployee } from "@/lib/actions/employees/delete-employees";
+import Link from "next/link";
 
 export interface Employee {
   id: number;
@@ -104,7 +105,11 @@ export const columns: ColumnDef<Employee>[] = [
     },
     cell: ({ row }) => (
       <div>
-        {row.original.first_name} {row.original.last_name}{" "}
+        <Link href={`/employees/${row.original.id}`}>
+          <Button variant={"link"}>
+            {row.original.first_name} {row.original.last_name}{" "}
+          </Button>
+        </Link>
         {!row.original.user_id && (
           <>
             <CreateAccessDialog
@@ -158,7 +163,7 @@ export const columns: ColumnDef<Employee>[] = [
       const isActive = row.getValue("is_active");
       return (
         <div className="mx-4">
-          <Badge variant={isActive ? "secondary" : "destructive"}>
+          <Badge variant={isActive ? "success" : "destructive"}>
             {isActive ? "Active" : "Inactive"}
           </Badge>
         </div>

@@ -1,10 +1,16 @@
 "use client";
-
+import { CardTitle, CardDescription, CardHeader } from "@/components/ui/card";
+import { useGetProductById } from "@/lib/actions/properties/get-by-id";
+import { Loading } from "../../token-validation-checker";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
-  CaretSortIcon,
-  DotsHorizontalIcon,
-  MixerHorizontalIcon,
-} from "@radix-ui/react-icons";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -17,43 +23,50 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
+import React, { useMemo, useState } from "react";
+import Link from "next/link";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useGetCustomers } from "@/lib/actions/customers/get-customers";
-import Link from "next/link";
-import { useMemo, useState } from "react";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import moment from "moment";
+import { useGetCustomers } from "@/lib/actions/customers/get-customers";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 
-interface Customer {
+export interface Customer {
   id: number;
   first_name: string;
   last_name: string;
+  gender: string;
   status: string;
+  priority: string;
+  source: string;
   email: string;
   phone: string;
+  dob: string;
+  bank_name?: string;
+  bank_branch?: string;
+  bank_account_number?: number;
+  bank_routing_number?: number;
+  address: string;
+  address2?: string;
+  zip_code: number;
+  nid: number;
+  is_active: boolean;
   followup: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
+  media_id?: number;
+  project_id?: number;
 }
-
 const columns: ColumnDef<Customer>[] = [
   {
     accessorKey: "id",
@@ -178,49 +191,49 @@ const columns: ColumnDef<Customer>[] = [
       );
     },
   },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const customer = row.original;
-      return (
-        <>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <DotsHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigator.clipboard.writeText(
-                    `ID: ${customer.id?.toString()}\nFirst Name: ${
-                      customer?.first_name
-                    }\nLast Name: ${customer?.last_name}\nPhone: ${
-                      customer.phone
-                    }\nEmail: ${customer.email}`
-                  )
-                }
-              >
-                Copy Information
-              </DropdownMenuItem>
+  // {
+  //   id: "actions",
+  //   enableHiding: false,
+  //   cell: ({ row }) => {
+  //     const customer = row.original;
+  //     return (
+  //       <>
+  //         <DropdownMenu>
+  //           <DropdownMenuTrigger asChild>
+  //             <Button variant="ghost" className="h-8 w-8 p-0">
+  //               <span className="sr-only">Open menu</span>
+  //               <DotsHorizontalIcon className="h-4 w-4" />
+  //             </Button>
+  //           </DropdownMenuTrigger>
+  //           <DropdownMenuContent align="end">
+  //             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+  //             {/* <DropdownMenuItem
+  //               onClick={() =>
+  //                 navigator.clipboard.writeText(
+  //                   `ID: ${customer.id?.toString()}\nFirst Name: ${
+  //                     customer?.first_name
+  //                   }\nLast Name: ${customer?.last_name}\nPhone: ${
+  //                     customer.phone
+  //                   }\nEmail: ${customer.email}`
+  //                 )
+  //               }
+  //             >
+  //               Copy Information
+  //             </DropdownMenuItem> */}
 
-              <DropdownMenuSeparator />
-              <Link href={`/customers/${customer.id}`}>
-                <DropdownMenuItem>View profile</DropdownMenuItem>
-              </Link>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </>
-      );
-    },
-  },
+  //             <Link href={`/customers/${customer.id}`}>
+  //               <DropdownMenuItem>View profile</DropdownMenuItem>
+  //             </Link>
+  //             <DropdownMenuSeparator />
+  //           </DropdownMenuContent>
+  //         </DropdownMenu>
+  //       </>
+  //     );
+  //   },
+  // },
 ];
 
-export default function MediaCustomersTable({
+export default function PropertyInfoPage({
   params,
 }: {
   params: {
@@ -231,16 +244,15 @@ export default function MediaCustomersTable({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-
   const [search, setSearch] = useState<string>("");
 
   const { data } = useGetCustomers({
     search,
-    media_id: params?.id,
+    assigned_employee_id: params.id,
   });
   console.log(data);
   const table = useReactTable({
-    data: useMemo(() => data?.data?.results || [], [data]),
+    data: useMemo(() => data?.data.results || [], [data]),
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -257,7 +269,6 @@ export default function MediaCustomersTable({
       rowSelection,
     },
   });
-
   return (
     <div className="w-full max-w-[80vw] md:max-w-[60vw] lg:max-w-[70vw] mx-auto relatives">
       <div className="flex items-center flex-row gap-2 py-4">
@@ -269,40 +280,7 @@ export default function MediaCustomersTable({
           }}
           className="max-w-sm"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              View <MixerHorizontalIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {table
-              .getAllColumns()
-              .filter(
-                (column) =>
-                  typeof column.accessorFn !== "undefined" &&
-                  column.getCanHide()
-              )
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
-
       <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
         <Table className="w-full">
           <TableHeader>

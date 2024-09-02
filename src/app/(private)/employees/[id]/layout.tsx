@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import PropertyLayout from "./properties-layout";
-import { getProductById } from "@/lib/actions/properties/get-by-id";
+import EmployeeLayout from "./employee-layout";
+import { getEmployeeById } from "@/lib/actions/employees/get-by-id";
 
-export default async function PropertyDetailLayout({
+export default async function CustomerDetailLayout({
   children,
   params,
 }: Readonly<{
@@ -13,7 +13,7 @@ export default async function PropertyDetailLayout({
 }>) {
   async function getData() {
     try {
-      const res = await getProductById(params.id);
+      const res = await getEmployeeById(params.id);
       return res.data;
     } catch (error: any) {
       if (error.response?.status === 404) return null;
@@ -27,7 +27,7 @@ export default async function PropertyDetailLayout({
 
   return (
     <>
-      <PropertyLayout params={params}>{children}</PropertyLayout>
+      <EmployeeLayout params={params}>{children}</EmployeeLayout>
     </>
   );
 }
