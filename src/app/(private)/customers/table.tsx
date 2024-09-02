@@ -197,9 +197,11 @@ const columns: ColumnDef<Customer>[] = [
       return <div className="mx-4">Assigned to</div>;
     },
     cell: ({ row }) => (
-      // <Link href={`/employees/${row.original.assigned_employee_id}`}>
-      <Button variant={"link"}>{row.getValue("assigned_employee_name")}</Button>
-      // </Link>
+      <Link href={`/employees/${row.original.assigned_employee_id}`}>
+        <Button variant={"link"}>
+          {row.getValue("assigned_employee_name")}
+        </Button>
+      </Link>
     ),
   },
   {

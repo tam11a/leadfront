@@ -37,7 +37,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { useEmployeeById } from "@/lib/actions/employees/get-by-id";
+import { useGetEmployeeById } from "@/lib/actions/employees/get-by-id";
 import { useUpdateEmployee } from "@/lib/actions/employees/patch-by-id";
 import handleResponse from "@/lib/handle-response";
 import { cn } from "@/lib/utils";
@@ -101,7 +101,7 @@ export function UpdateEmployee({
 }>) {
   const [open, setOpen] = useState(false);
 
-  const { data: employee, isLoading } = useEmployeeById(
+  const { data: employee, isLoading } = useGetEmployeeById(
     open ? employeeId : undefined
   );
 
@@ -352,7 +352,7 @@ export function UpdateEmployee({
                             <Calendar
                               mode="single"
                               selected={new Date(field.value)}
-                              defaultMonth={new Date(field.value)}
+                              // defaultMonth={new Date(field.value)}
                               onSelect={(e: any) =>
                                 field.onChange(format(e as Date, "yyyy-MM-dd"))
                               }

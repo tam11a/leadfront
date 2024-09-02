@@ -2,113 +2,129 @@ import { CardDescription, CardTitle } from "@/components/ui/card";
 
 // Icons
 import {
+  IoCalendarClearOutline,
+  IoCardOutline,
   IoLocationOutline,
   IoPersonOutline,
   IoPricetagOutline,
   IoPricetagsOutline,
 } from "react-icons/io5";
+import { CiCalendarDate } from "react-icons/ci";
 
 //api call
 import { useGetMediaById } from "@/lib/actions/media/get-by-id";
 import Link from "next/link";
-import { PiNoteLight } from "react-icons/pi";
+import { PiMoneyLight, PiNoteLight } from "react-icons/pi";
+import { BsGenderAmbiguous, BsTelephone } from "react-icons/bs";
+import { MdOutlineMailOutline } from "react-icons/md";
 
 export default function EmployeeSideDetails(details: {
   id?: number;
+  employee_uid?: number;
+  gender?: string;
+  dob?: string;
   address?: string;
-  areaName?: string;
   address2?: string;
-  unitName?: string;
-  publicPrice: number;
-  privatePrice: number;
-  media_id: number;
-  media_commision: number;
-  remarks: string;
+  email?: string;
+  nid?: number;
+  phone?: string;
+  salary?: string;
+  tin?: string;
+  bank_account_number?: number;
 }) {
-  const { data: mediaData, isLoading: mediaLoading } = useGetMediaById(
-    details.media_id
-  );
   return (
     <div className="space-y-3 px-8 py-6 border-l h-full md:min-w-[300px]">
       <h1 className="text-sm font-semibold text-muted-foreground">
         Basic Information
       </h1>
 
-      <CardTitle>Public Price</CardTitle>
+      <CardTitle>Employee UID</CardTitle>
       <CardDescription className="flex items-center space-x-2">
         <IoPricetagOutline className="text-primary text-base" />
         <span className="lowercase">
-          {details.publicPrice ? (
-            <>{details.publicPrice} ৳ </>
+          {details.employee_uid ? (
+            <>{details.employee_uid}</>
           ) : (
-            <>{"No public price added"}</>
+            <>{"No Employee UID added"}</>
           )}
         </span>
       </CardDescription>
 
-      <CardTitle>Private Price</CardTitle>
+      <CardTitle>Email</CardTitle>
+      <CardDescription className="flex items-center space-x-2 ">
+        <MdOutlineMailOutline className="text-primary text-base " />
+        {/* <span className="break-words max-w-48"> */}
+        {details.email || "No email added"}
+        {/* </span> */}
+      </CardDescription>
+      <CardTitle>Phone</CardTitle>
       <CardDescription className="flex items-center space-x-2">
-        <IoPricetagsOutline className="text-primary text-base" />
+        <BsTelephone className="text-primary text-base" />
         <span className="lowercase">
-          {details.privatePrice ? (
-            <>{details.privatePrice} ৳ </>
-          ) : (
-            <>{"No private price added"}</>
-          )}
+          {details.phone ? <>{details.phone}</> : <>{"No phone added"}</>}
         </span>
       </CardDescription>
-
+      <CardTitle>Gender</CardTitle>
+      <CardDescription className="flex space-x-2 text-wrap max-w-[300px] items-center">
+        <BsGenderAmbiguous className="text-primary text-base" />
+        {details?.gender ? (
+          <span className="mx-4">
+            {details?.gender || "No gender assigned"}
+          </span>
+        ) : (
+          <span className="mx-4">No gender assigned</span>
+        )}
+      </CardDescription>
+      <CardTitle>Date of Birth</CardTitle>
+      <CardDescription className="flex space-x-2 text-wrap max-w-xs items-center">
+        <IoCalendarClearOutline className="text-primary text-base" />
+        {details?.dob ? (
+          <>
+            <span className="mx-4">
+              {details?.dob || "No Date of Birth added"}
+            </span>
+          </>
+        ) : (
+          <span className="mx-4">No Date of Birth added</span>
+        )}
+      </CardDescription>
       <CardTitle>Address</CardTitle>
-      <CardDescription className="flex items-center space-x-2 text-wrap max-w-xs">
+      <CardDescription className="flex items-center space-x-2 ">
         <IoLocationOutline className="text-primary text-base " />
-        <span>
-          {[details.address, details.areaName].join(", ") || "No address added"}
-        </span>
+        <span>{details.address || "No address added"}</span>
       </CardDescription>
 
       {details.address2 && (
-        <CardDescription className="flex space-x-2 text-wrap max-w-xs items-center">
+        <CardDescription className="flex space-x-2 text-wrap max-w-[300px] items-center">
           <IoLocationOutline className="text-primary text-base" />
           <span>{details.address2 || "No address added"}</span>
         </CardDescription>
       )}
-      <CardTitle>Media</CardTitle>
-      <CardDescription className="flex space-x-2 text-wrap max-w-xs items-center">
-        <IoPersonOutline className="text-primary text-base" />
-        {details?.media_id ? (
-          <>
-            <Link
-              href={`/medias/${details?.media_id}`}
-              className="mx-4 text-primary underline-offset-4 hover:underline"
-            >
-              {[mediaData?.data?.first_name, mediaData?.data?.last_name].join(
-                " "
-              ) || "No media assigned"}
-            </Link>
-          </>
-        ) : (
-          <p className="mx-4">No media assigned</p>
-        )}
-      </CardDescription>
-      <CardTitle>Media commission</CardTitle>
-      <CardDescription className="flex space-x-2 text-wrap max-w-xs items-center">
-        <IoPersonOutline className="text-primary text-base" />
-        {details?.media_commision ? (
-          <>
-            <p className="mx-4">
-              {details?.media_commision || "No media commission added"}
-            </p>
-          </>
-        ) : (
-          <p className="mx-4">No media commission added</p>
-        )}
-      </CardDescription>
-      {details.remarks && (
+
+      {details.salary && (
         <>
-          <CardTitle>Remarks</CardTitle>
+          <CardTitle>Salary</CardTitle>
+          <CardDescription className="flex space-x-2 text-wrap max-w-xs items-center">
+            <PiMoneyLight className="text-primary text-base" />
+            <span>{details?.salary} ৳</span>
+          </CardDescription>
+        </>
+      )}
+      {details.nid && (
+        <>
+          <CardTitle>NID</CardTitle>
+          <CardDescription className="flex space-x-2 text-wrap max-w-xs items-center">
+            <IoCardOutline className="text-primary text-base" />
+            <span>{details?.nid}</span>
+          </CardDescription>
+        </>
+      )}
+      {details.tin && (
+        <>
+          <CardTitle>TIN</CardTitle>
           <CardDescription className="flex space-x-2 text-wrap max-w-xs items-center">
             <PiNoteLight className="text-primary text-base" />
-            <span>{details?.remarks}</span>
+            <span>{details?.tin}</span>
           </CardDescription>
         </>
       )}

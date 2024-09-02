@@ -1,7 +1,6 @@
-// import { getCustomerById } from "@/lib/actions/customers/get-by-id";
-// import { notFound } from "next/navigation";
-
+import { notFound } from "next/navigation";
 import EmployeeLayout from "./employee-layout";
+import { getEmployeeById } from "@/lib/actions/employees/get-by-id";
 
 export default async function CustomerDetailLayout({
   children,
@@ -12,19 +11,19 @@ export default async function CustomerDetailLayout({
     id: number;
   };
 }>) {
-  // async function getData() {
-  // 	try {
-  // 		const res = await getCustomerById(params.id);
-  // 		return res.data;
-  // 	} catch (error: any) {
-  // 		if (error.response?.status === 404) return null;
-  // 		else throw new Error(error);
-  // 	}
-  // }
+  async function getData() {
+    try {
+      const res = await getEmployeeById(params.id);
+      return res.data;
+    } catch (error: any) {
+      if (error.response?.status === 404) return null;
+      else throw new Error(error);
+    }
+  }
 
-  // const data = await getData();
+  const data = await getData();
 
-  // if (!data || data === null) return notFound();
+  if (!data || data === null) return notFound();
 
   return (
     <>

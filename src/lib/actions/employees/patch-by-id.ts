@@ -14,6 +14,9 @@ export const useUpdateEmployee = () => {
       queryClient.invalidateQueries({
         queryKey: ["get-employees"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["get-employee-by-id"],
+      });
     },
   });
 };
