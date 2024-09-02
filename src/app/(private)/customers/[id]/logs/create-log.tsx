@@ -52,7 +52,7 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
   const { access, user } = useUser();
   const { data: employeeData } = useEmployees(search);
   const { data: customer, isLoading } = useGetCustomerById(id);
-  const { mutateAsync: update, isPending } = useUpdateCustomer();
+  const { mutateAsync: update } = useUpdateCustomer();
   const { mutateAsync: create } = useCreateCustomerComment();
   const [assign, setAssign] = useState<string | null>(null);
 

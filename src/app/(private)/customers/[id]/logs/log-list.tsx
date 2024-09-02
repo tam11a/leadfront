@@ -1,53 +1,10 @@
 "use client";
 import { useGetCustomerLogs } from "@/lib/actions/customer-logs/get-logs";
-// import { Button } from "@/components/ui/button";
-// import { Calendar } from "@/components/ui/calendar";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import {
-// 	Form,
-// 	FormControl,
-// 	FormDescription,
-// 	FormField,
-// 	FormItem,
-// 	FormLabel,
-// 	FormMessage,
-// } from "@/components/ui/form";
-// import {
-// 	Popover,
-// 	PopoverContent,
-// 	PopoverTrigger,
-// } from "@/components/ui/popover";
-// import {
-// 	Select,
-// 	SelectContent,
-// 	SelectItem,
-// 	SelectTrigger,
-// 	SelectValue,
-// } from "@/components/ui/select";
-// import { Textarea } from "@/components/ui/textarea";
-// import useUser from "@/hooks/useUser";
-// import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
-// import { cn } from "@/lib/utils";
-// import { zodResolver } from "@hookform/resolvers/zod";
-// import { CalendarIcon } from "@radix-ui/react-icons";
-// import { format } from "date-fns";
-// import { useEffect } from "react";
-// import { useForm } from "react-hook-form";
-// import { z } from "zod";
+
 import { CreateLog } from "./create-log";
 import moment from "moment";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-
-// const CreateCustomerMessageSchema = z.object({
-//   note: z.string().optional(),
-//   followup: z.any().optional(),
-//   status: z.any().optional(),
-// });
-
-// type CreateCustomerMessageFormValues = z.infer<
-//   typeof CreateCustomerMessageSchema
-// >;
 
 export default function CustomerLogsPage({ id }: Readonly<{ id: number }>) {
   const { data: logData, isLoading: isLogLoading } = useGetCustomerLogs({
