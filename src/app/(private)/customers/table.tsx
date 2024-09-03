@@ -55,7 +55,6 @@ import {
   useQueryStates,
 } from "nuqs";
 
-import { CustomerStatusList } from "./create-customer";
 import {
   Select,
   SelectContent,
@@ -103,6 +102,40 @@ export interface Customer {
   media_id?: number;
   project_id?: number;
 }
+const CustomerStatusList = [
+  {
+    label: "Raw",
+    value: "Raw",
+  },
+  {
+    label: "Prospect",
+    value: "Prospect",
+  },
+  {
+    label: "High Prospect",
+    value: "HighProspect",
+  },
+  {
+    label: "Priority",
+    value: "Priority",
+  },
+  {
+    label: "Booked",
+    value: "Booked",
+  },
+  {
+    label: "Closed",
+    value: "Closed",
+  },
+  {
+    label: "Sold",
+    value: "Sold",
+  },
+  {
+    label: "Junk",
+    value: "Junk",
+  },
+];
 
 const columns: ColumnDef<Customer>[] = [
   {
@@ -204,7 +237,11 @@ const columns: ColumnDef<Customer>[] = [
     header: () => {
       return <div className="mx-4">Status</div>;
     },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("status")}</div>,
+    cell: ({ row }) => (
+      <div className="mx-4">
+        <Badge variant={row.getValue("status")}>{row.getValue("status")}</Badge>
+      </div>
+    ),
   },
   // {
   //   id: "media",
@@ -260,7 +297,7 @@ const columns: ColumnDef<Customer>[] = [
       const isActive = row.getValue("is_active");
       return (
         <div className="mx-4">
-          <Badge variant={isActive ? "secondary" : "destructive"}>
+          <Badge variant={isActive ? "success" : "destructive"}>
             {isActive ? "Active" : "Inactive"}
           </Badge>
         </div>
@@ -282,7 +319,7 @@ const columns: ColumnDef<Customer>[] = [
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
+                <span className="sr-only font">Open menu</span>
                 <DotsHorizontalIcon className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>

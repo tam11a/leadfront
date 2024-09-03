@@ -73,6 +73,24 @@ export interface Property {
   unitName: string;
   price_public: string;
 }
+const CustomerStatusList = [
+  {
+    label: "Available",
+    value: "available",
+  },
+  {
+    label: "Booked",
+    value: "booked",
+  },
+  {
+    label: "Sold",
+    value: "sold",
+  },
+  {
+    label: "Junk",
+    value: "junk",
+  },
+];
 
 export const columns: ColumnDef<Property>[] = [
   {
@@ -258,6 +276,7 @@ export default function PropertyTable() {
     {
       media_id: parseAsString.withDefault(""),
       product_type: parseAsString.withDefault(""),
+      status: parseAsString.withDefault(""),
     },
     {
       clearOnDefault: true,
@@ -331,6 +350,37 @@ export default function PropertyTable() {
           <Select
             onValueChange={async (v) =>
               await setFilters((f) => {
+                return { ...f, status: v };
+              })
+            }
+            value={filters.status}
+          >
+            <SelectTrigger className="border-dashed gap-1">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              {CustomerStatusList.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+              <Separator />
+              <Button
+                variant="ghost"
+                className="w-full mt-1 font-normal"
+                onClick={async () =>
+                  await setFilters((f) => {
+                    return { ...f, status: "" };
+                  })
+                }
+              >
+                Clear filters
+              </Button>
+            </SelectContent>
+          </Select>
+          <Select
+            onValueChange={async (v) =>
+              await setFilters((f) => {
                 return { ...f, product_type: v };
               })
             }
@@ -366,6 +416,7 @@ export default function PropertyTable() {
                 await setFilters({
                   media_id: "",
                   product_type: "",
+                  status: "",
                 });
               }}
               className="px-2 lg:px-3"

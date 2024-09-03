@@ -116,7 +116,7 @@ export const CustomerStatusList = [
   },
   {
     label: "High Prospect",
-    value: "High Prospect",
+    value: "HighProspect",
   },
   {
     label: "Priority",

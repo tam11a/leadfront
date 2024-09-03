@@ -9,12 +9,14 @@ import { Separator } from "@/components/ui/separator";
 import CustomerContactBar from "./contact";
 import { Loading } from "../../token-validation-checker";
 import CustomerLogsPage from "./logs/log-list";
+import { Badge } from "@/components/ui/badge";
 
 export default function ClientLayout({
   children,
   params,
 }: Readonly<{ children: React.ReactNode; params: { id: number } }>) {
   const { data } = useGetCustomerById(params.id);
+  console.log(data);
   return !data ? (
     <Loading />
   ) : (
@@ -22,9 +24,18 @@ export default function ClientLayout({
       <div className="min-h-screen flex flex-col">
         <div className="flex flex-row items-start md:items-center justify-between py-5 px-8">
           <div className="space-y-1">
-            <h1 className="text-sm font-semibold text-muted-foreground">
-              Customer Details #{params.id}
-            </h1>
+            <div className="flex gap-2">
+              <h1 className="text-sm font-semibold text-muted-foreground">
+                Customer Details #{params.id}
+              </h1>
+              <Badge
+                variant={data?.data?.is_active ? "success" : "destructive"}
+                className="text-[10px] font-bold"
+              >
+                {data?.data?.is_active ? "Active" : "Inactive"}
+              </Badge>
+            </div>
+
             <p className="text-xl font-bold">
               {[data?.data.first_name, data?.data.last_name].join(" ")}{" "}
               {data?.data.gender === "Male"
