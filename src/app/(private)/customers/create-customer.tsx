@@ -131,6 +131,11 @@ export const CustomerStatusList = [
     value: "closed",
   },
   {
+    label: "Sold",
+    value: "sold",
+    disabled: true,
+  },
+  {
     label: "Junk",
     value: "junk",
   },

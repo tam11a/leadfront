@@ -95,7 +95,7 @@ export default function SellProcess({
       form.reset();
       try {
         await handleResponse(
-          () => update({ id: customerId, data: { status: "Sold" } }),
+          () => update({ id: customerId, data: { status: "sold" } }),
           [200]
         );
       } catch (error) {}

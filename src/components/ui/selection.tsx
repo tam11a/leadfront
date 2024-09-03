@@ -21,7 +21,7 @@ import { PopoverClose } from "@radix-ui/react-popover";
 
 interface SelectionInterface {
   placeholder?: string;
-  options: { label: string; value: string }[];
+  options: { label: string; value: string; disabled?: boolean }[];
   value: string | null;
   onChange: (value: string | null) => void;
   allowClear?: boolean;
@@ -70,10 +70,11 @@ const Selection: React.FC<SelectionInterface> = ({
                 <CommandItem
                   value={option.label}
                   key={option.value}
-                  disabled={false}
+                  disabled={option.disabled}
                   onSelect={() => {
                     onChange(option.value);
                   }}
+                  className="aria-disabled:text-muted-foreground"
                 >
                   <PopoverClose className="w-full text-left">
                     {option.label}

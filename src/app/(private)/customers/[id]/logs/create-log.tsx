@@ -25,9 +25,9 @@ import { z } from "zod";
 import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { Label } from "@/components/ui/label";
 import Selection from "@/components/ui/selection";
-import { CustomerStatusList } from "../../create-customer";
 import { useUpdateCustomer } from "@/lib/actions/customers/patch-by-id";
 import { useEmployees } from "@/lib/actions/employees/users";
+import { CustomerStatusList } from "../../create-customer";
 
 const CreateCustomerMessageSchema = z.object({
   note: z

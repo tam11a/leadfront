@@ -23,7 +23,6 @@ import { CreateInterest } from "./create-interest";
 import { useDeleteInterest } from "@/lib/actions/interests/delete-interests";
 import handleResponse from "@/lib/handle-response";
 import { toast } from "sonner";
-import { CheckCheckIcon } from "lucide-react";
 import { LuCheckCheck } from "react-icons/lu";
 import SellProcess from "./sell-process";
 import {
@@ -33,6 +32,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function CustomerInterestsPage({
   params,
@@ -81,7 +81,30 @@ export default function CustomerInterestsPage({
     </div>
   ) : (
     <div className="space-y-3 max-w-lg">
-      {customerData?.data?.status === "sold" ? <></> : ""}
+      {customerData?.data?.status.toLowerCase() === "sold" ? (
+        <>
+          <Alert>
+            <AlertTitle>Customer Sold</AlertTitle>
+            <AlertDescription>
+              You can add components to your app using the cli.
+            </AlertDescription>
+          </Alert>
+        </>
+      ) : (
+        ""
+      )}
+      {customerData?.data?.status === "junk" ? (
+        <>
+          <Alert variant={"destructive"}>
+            <AlertTitle>Junk customer!</AlertTitle>
+            <AlertDescription>
+              This customer has been added to the junk customer list.
+            </AlertDescription>
+          </Alert>
+        </>
+      ) : (
+        ""
+      )}
       <div className="flex flex-row items-center gap-3">
         <Input
           placeholder="Search property name, area.."
@@ -122,7 +145,7 @@ export default function CustomerInterestsPage({
                 {interest.product_id.product_uid}
               </Link>
               {interest.product_id.status === "sold" && (
-                <Badge className="ml-2" variant={"destructive"}>
+                <Badge className="ml-2" variant={"success"}>
                   {interest.product_id.status}
                 </Badge>
               )}
