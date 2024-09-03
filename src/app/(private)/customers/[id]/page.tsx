@@ -148,12 +148,12 @@ export default function CustomerInterestsPage({
           </CardHeader>
           <CardHeader className="flex flex-row items-center justify-center gap-2 space-y-0">
             <SellProcess
-              TriggerComponent={() => (
+              TriggerComponent={(props) => (
                 <Button
                   variant={"outline"}
                   size={"icon"}
                   className="text-lime-500"
-                  disabled={interest?.product_id?.status === "sold"}
+                  {...props}
                 >
                   <LuCheckCheck />
                 </Button>
@@ -161,6 +161,7 @@ export default function CustomerInterestsPage({
               propertyId={+interest.product_id.id}
               interestId={+interest.id}
               customerId={+params.id}
+              disabled={interest?.product_id?.status === "sold"}
             />
             <Button
               variant={"outline"}

@@ -43,10 +43,11 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 interface SellProcessProps {
-  TriggerComponent: React.FC;
+  TriggerComponent: React.FC<{ disabled?: boolean }>;
   interestId: number;
   customerId: number;
   propertyId: number;
+  disabled: boolean;
 }
 
 const MarkAsSoldSchema = z.object({
@@ -63,6 +64,7 @@ export default function SellProcess({
   customerId,
   interestId,
   propertyId,
+  disabled = false,
 }: SellProcessProps) {
   const [open, setOpen] = useState(false);
   const { user } = useUser();
@@ -129,8 +131,8 @@ export default function SellProcess({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <TriggerComponent />
+      <DialogTrigger disabled={disabled}>
+        <TriggerComponent disabled={disabled} />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
