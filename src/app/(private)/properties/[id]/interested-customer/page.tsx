@@ -38,10 +38,6 @@ import { useMemo, useState } from "react";
 import { useGetInterests } from "@/lib/actions/interests/get-interests";
 import { CreateInterest } from "./create-interest";
 import moment from "moment";
-import { useDeleteProperty } from "@/lib/actions/properties/delete-properties";
-import { useDeleteInterest } from "@/lib/actions/interests/delete-interests";
-import handleResponse from "@/lib/handle-response";
-import { toast } from "sonner";
 
 interface Customer {
   id: number;

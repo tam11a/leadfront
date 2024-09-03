@@ -50,6 +50,7 @@ interface Customer {
   last_name: string;
   status: string;
   email: string;
+  assigned_employee_id: number;
   phone: string;
   followup: string;
 }
@@ -103,11 +104,29 @@ const columns: ColumnDef<Customer>[] = [
     ),
   },
   {
+    accessorKey: "address",
+    header: () => {
+      return <div className="mx-4">Address</div>;
+    },
+    cell: ({ row }) => (
+      <>
+        <div className="lowercase">{row.getValue("address")}</div>
+      </>
+    ),
+  },
+  {
     accessorKey: "gender",
     header: () => {
       return <div className="mx-4">Gender</div>;
     },
     cell: ({ row }) => <div className="mx-4">{row.getValue("gender")}</div>,
+  },
+  {
+    accessorKey: "dob",
+    header: () => {
+      return <div className="mx-4">Date Of Birth</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("dob")}</div>,
   },
   {
     accessorKey: "priority",
@@ -128,22 +147,12 @@ const columns: ColumnDef<Customer>[] = [
     header: () => {
       return <div className="mx-4">Status</div>;
     },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("status")}</div>,
+    cell: ({ row }) => (
+      <div className="mx-4">
+        <Badge variant={row.getValue("status")}>{row.getValue("status")}</Badge>
+      </div>
+    ),
   },
-  // {
-  //   id: "media",
-  //   accessorKey: "full_name",
-  //   header: () => {
-  //     return <div className="mx-4">Media</div>;
-  //   },
-  //   cell: ({ row }) => (
-  //     <Link href={`/customers/${row.original.id}`}>
-  //       <Button variant={"link"}>
-  //         {row.original.first_name} {row.original.last_name}
-  //       </Button>
-  //     </Link>
-  //   ),
-  // },
   {
     accessorKey: "followup",
     header: () => {
@@ -153,6 +162,19 @@ const columns: ColumnDef<Customer>[] = [
       <div className="mx-4">
         {moment(row.getValue("followup")).format("llll")}
       </div>
+    ),
+  },
+  {
+    accessorKey: "assigned_employee_name",
+    header: () => {
+      return <div className="mx-4">Assigned to</div>;
+    },
+    cell: ({ row }) => (
+      <Link href={`/employees/${row.original.assigned_employee_id}`}>
+        <Button variant={"link"}>
+          {row.getValue("assigned_employee_name")}
+        </Button>
+      </Link>
     ),
   },
   {
@@ -238,7 +260,6 @@ export default function MediaCustomersTable({
     search,
     media_id: params?.id,
   });
-  console.log(data);
   const table = useReactTable({
     data: useMemo(() => data?.data?.results || [], [data]),
     columns,

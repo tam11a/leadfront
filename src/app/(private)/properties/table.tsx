@@ -63,12 +63,14 @@ import { useGetPropertyTypes } from "@/lib/actions/configuration/property-types/
 import { useDeleteProperty } from "@/lib/actions/properties/delete-properties";
 import handleResponse from "@/lib/handle-response";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 
 export interface Property {
   id: number;
   product_uid: string;
   product_typeName: string;
   areaName: string;
+  adress: string;
   size: string;
   unitName: string;
   price_public: string;
@@ -131,6 +133,13 @@ export const columns: ColumnDef<Property>[] = [
     cell: ({ row }) => <div className="mx-4">{row.getValue("areaName")}</div>,
   },
   {
+    accessorKey: "adress",
+    header: () => {
+      return <div className="mx-4">Address</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("adress")}</div>,
+  },
+  {
     accessorKey: "size",
     header: () => {
       return <div className="mx-4">Size</div>;
@@ -155,7 +164,11 @@ export const columns: ColumnDef<Property>[] = [
     header: () => {
       return <div className="mx-4">Status</div>;
     },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("status")}</div>,
+    cell: ({ row }) => (
+      <div className="mx-4 capitalize">
+        <Badge variant={row.getValue("status")}>{row.getValue("status")}</Badge>
+      </div>
+    ),
   },
   {
     accessorKey: "created_at",

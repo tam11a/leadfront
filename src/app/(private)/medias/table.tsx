@@ -54,28 +54,13 @@ export interface Media {
   first_name: string;
   last_name: string;
   gender: string;
-  status: string;
-  priority: string;
-  source: string;
   email: string;
   phone: string;
   dob: string;
-  bank_name?: string;
-  bank_branch?: string;
-  bank_account_number?: number;
-  bank_routing_number?: number;
   address: string;
   address2?: string;
   zip_code: number;
   nid: number;
-  is_active: boolean;
-  followup: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string;
-  assigned_employee_id?: number;
-  media_id?: number;
-  project_id?: number;
 }
 
 export const columns: ColumnDef<Media>[] = [
@@ -132,6 +117,20 @@ export const columns: ColumnDef<Media>[] = [
       return <div className="mx-4">Gender</div>;
     },
     cell: ({ row }) => <div className="mx-4">{row.getValue("gender")}</div>,
+  },
+  {
+    accessorKey: "address",
+    header: () => {
+      return <div className="mx-4">Address</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("address")}</div>,
+  },
+  {
+    accessorKey: "zip_code",
+    header: () => {
+      return <div className="mx-4">Zip Code</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("zip_code")}</div>,
   },
   {
     accessorKey: "dob",

@@ -252,7 +252,9 @@ export const columns: ColumnDef<Employee>[] = [
                 Copy Information
               </DropdownMenuItem> */}
 
-              <DropdownMenuItem>View profile</DropdownMenuItem>
+              <Link href={`/employees/${employee.id}`}>
+                <DropdownMenuItem>View profile</DropdownMenuItem>
+              </Link>
               <DropdownMenuSeparator />
               <DeleteEmployee id={employee.id} />
             </DropdownMenuContent>

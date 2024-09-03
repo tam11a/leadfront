@@ -108,31 +108,31 @@ type CustomerFormValues = z.infer<typeof CreateCustomerSchema>;
 export const CustomerStatusList = [
   {
     label: "Raw",
-    value: "Raw",
+    value: "raw",
   },
   {
     label: "Prospect",
-    value: "Prospect",
+    value: "prospect",
   },
   {
     label: "High Prospect",
-    value: "HighProspect",
+    value: "highProspect",
   },
   {
     label: "Priority",
-    value: "Priority",
+    value: "priority",
   },
   {
     label: "Booked",
-    value: "Booked",
+    value: "booked",
   },
   {
     label: "Closed",
-    value: "Closed",
+    value: "closed",
   },
   {
     label: "Junk",
-    value: "Junk",
+    value: "junk",
   },
 ];
 

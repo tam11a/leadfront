@@ -74,11 +74,13 @@ export default function PropertyLayout({
   function getStatusColor(s: string) {
     switch (s) {
       case "available":
-        return "default";
+        return "available";
       case "booked":
-        return "outline";
+        return "booked";
       case "sold":
-        return "secondary";
+        return "success";
+      case "junk":
+        return "junk";
       default:
         return "destructive";
     }

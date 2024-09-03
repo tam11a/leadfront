@@ -105,35 +105,35 @@ export interface Customer {
 const CustomerStatusList = [
   {
     label: "Raw",
-    value: "Raw",
+    value: "raw",
   },
   {
     label: "Prospect",
-    value: "Prospect",
+    value: "prospect",
   },
   {
     label: "High Prospect",
-    value: "HighProspect",
+    value: "highProspect",
   },
   {
     label: "Priority",
-    value: "Priority",
+    value: "priority",
   },
   {
     label: "Booked",
-    value: "Booked",
+    value: "booked",
   },
   {
     label: "Closed",
-    value: "Closed",
+    value: "closed",
   },
   {
     label: "Sold",
-    value: "Sold",
+    value: "sold",
   },
   {
     label: "Junk",
-    value: "Junk",
+    value: "junk",
   },
 ];
 
@@ -181,7 +181,7 @@ const columns: ColumnDef<Customer>[] = [
     },
     cell: ({ row }) => (
       <>
-        <div className="lowercase">{row.getValue("email")}</div>
+        <div className="mx-4 lowercase">{row.getValue("email")}</div>
       </>
     ),
   },
@@ -200,7 +200,7 @@ const columns: ColumnDef<Customer>[] = [
     },
     cell: ({ row }) => (
       <>
-        <div className="lowercase">{row.getValue("address")}</div>
+        <div className="mx-4 capitalize">{row.getValue("address")}</div>
       </>
     ),
   },
@@ -238,7 +238,7 @@ const columns: ColumnDef<Customer>[] = [
       return <div className="mx-4">Status</div>;
     },
     cell: ({ row }) => (
-      <div className="mx-4">
+      <div className="mx-4 capitalize">
         <Badge variant={row.getValue("status")}>{row.getValue("status")}</Badge>
       </div>
     ),
@@ -264,7 +264,11 @@ const columns: ColumnDef<Customer>[] = [
     },
     cell: ({ row }) => (
       <div className="mx-4">
-        {moment(row.getValue("followup")).format("llll")}
+        {row.getValue("followup") ? (
+          <>{moment(row.getValue("followup")).format("llll")}</>
+        ) : (
+          "No date added yet"
+        )}
       </div>
     ),
   },
@@ -274,11 +278,19 @@ const columns: ColumnDef<Customer>[] = [
       return <div className="mx-4">Assigned to</div>;
     },
     cell: ({ row }) => (
-      <Link href={`/employees/${row.original.assigned_employee_id}`}>
-        <Button variant={"link"}>
-          {row.getValue("assigned_employee_name")}
-        </Button>
-      </Link>
+      <div className="mx-4">
+        {row.getValue("assigned_employee_name") ? (
+          <>
+            <Link href={`/employees/${row.original.assigned_employee_id}`}>
+              <Button variant={"link"}>
+                {row.getValue("assigned_employee_name")}
+              </Button>
+            </Link>
+          </>
+        ) : (
+          "Not Assigned"
+        )}
+      </div>
     ),
   },
   {

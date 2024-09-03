@@ -16,19 +16,21 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
         outline: "text-foreground",
-        Raw: "border-transparent bg-slate-200 text-success-foreground font-medium",
-        Prospect:
+        raw: "border-transparent bg-slate-200 text-success-foreground font-medium",
+        prospect:
           "border-transparent bg-cyan-200 text-success-foreground font-medium",
-        HighProspect:
+        highProspect:
           "border-transparent bg-teal-200 text-success-foreground font-medium",
-        Priority:
+        priority:
           "border-transparent bg-sky-200 text-success-foreground font-medium",
-        Booked:
+        available:
+          "border-transparent bg-blue-200 text-success-foreground font-medium",
+        booked:
           "border-transparent bg-indigo-200 text-success-foreground font-medium",
-        Closed:
+        closed:
           "border-transparent bg-amber-200 text-success-foreground font-medium",
-        Sold: "border-transparent bg-green-200 text-success-foreground font-medium",
-        Junk: "border-transparent bg-red-200 text-success-foreground font-medium",
+        sold: "border-transparent bg-green-200 text-success-foreground font-medium",
+        junk: "border-transparent bg-red-200 text-success-foreground font-medium",
       },
     },
     defaultVariants: {
