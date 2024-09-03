@@ -48,13 +48,13 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
   const [followup, setFollowup] = useState<Date | undefined>(undefined);
   const [status, setStatus] = useState<string | null>(null);
   const [search, _setSearch] = useState("");
+  const [assign, setAssign] = useState<string | null>(null);
 
   const { access, user } = useUser();
   const { data: employeeData } = useEmployees(search);
   const { data: customer, isLoading } = useGetCustomerById(id);
   const { mutateAsync: update } = useUpdateCustomer();
   const { mutateAsync: create } = useCreateCustomerComment();
-  const [assign, setAssign] = useState<string | null>(null);
 
   const form = useForm<CreateCustomerMessageFormValues>({
     resolver: zodResolver(CreateCustomerMessageSchema),
@@ -85,7 +85,6 @@ export function CreateLog({ id }: Readonly<{ id: number }>) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer]);
-
   const onSubmit = async (data: CreateCustomerMessageFormValues) => {
     form.clearErrors();
     const res = await handleResponse(() => create(data), [201]);

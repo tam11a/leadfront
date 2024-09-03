@@ -47,7 +47,7 @@ export default function CustomerLogsPage({ id }: Readonly<{ id: number }>) {
                         {item?.description}
                       </p>
 
-                      <p className="font-medium text-sm bg-slate-100 dark:bg-slate-900 text-text p-3 my-1 max-w-xs break-words rounded">
+                      <p className="font-medium text-sm bg-slate-100 dark:bg-slate-900 text-text p-3 my-1 max-w-xs break-words rounded whitespace-pre">
                         {item?.note}
                       </p>
                     </>

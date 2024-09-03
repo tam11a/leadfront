@@ -67,7 +67,6 @@ export default function CustomerInterestsPage({
     }
   }
 
-  console.log(data);
   return !data?.data?.length ? (
     <div className="flex flex-col items-center justify-center min-w-[300px] w-full min-h-[400px] gap-5">
       <FiActivity className="text-5xl mx-auto text-gray-400" />

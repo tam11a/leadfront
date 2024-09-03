@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCreateProductsInterest } from "@/lib/actions/interests/post-products-interest";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -66,6 +66,7 @@ import Selection from "@/components/ui/selection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useCreateCustomerComment } from "@/lib/actions/customer-logs/post-customer-comment";
 
 export interface property {
   id: number;
@@ -101,7 +102,30 @@ export function CreateInterest({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [saveFilterData, setSaveFilterData] = useState({});
+  const [areaName, setAreaName] = useState("");
+  const [unitName, setUnitName] = useState("");
+  const [propertyTypeName, setPropertyTypeName] = useState("");
 
+  //api calls
+  const { access, user } = useUser();
+  const { data: areaData } = useGetAreas();
+  const { data: unitData, isLoading: isUnitDataLoading } =
+    useGetPropertyUnits();
+  const { data: propertyTypeData, isLoading: isPropertyTypeDataLoading } =
+    useGetPropertyTypes();
+  const { data: propertyfilteredData, isLoading: ispropertyFilteredLoading } =
+    useGetProductsFilter({
+      area: area,
+      product_type: propertyType,
+      price_public__gte: maxPrice,
+      price_public__lte: minPrice,
+      size__gte: maxSize,
+      size__lte: minSize,
+      unit: unit,
+    });
+  const { mutateAsync: create, isPending } = useCreateProductsInterest();
+  const { mutateAsync: createSaveFilter } = useCreateCustomerComment();
   //data
   const columns: ColumnDef<property>[] = [
     {
@@ -143,26 +167,7 @@ export function CreateInterest({
     },
   ];
 
-  //api calls
-  const user = useUser();
-  const { data: areaData } = useGetAreas();
-  const { data: unitData, isLoading: isUnitDataLoading } =
-    useGetPropertyUnits();
-  const { data: propertyTypeData, isLoading: isPropertyTypeDataLoading } =
-    useGetPropertyTypes();
-  const { data: propertyfilteredData, isLoading: ispropertyFilteredLoading } =
-    useGetProductsFilter({
-      area: area,
-      product_type: propertyType,
-      price_public__gte: maxPrice,
-      price_public__lte: minPrice,
-      size__gte: maxSize,
-      size__lte: minSize,
-      unit: unit,
-    });
-  const { mutateAsync: create, isPending } = useCreateProductsInterest();
-
-  //submit form
+  //Interest submit
   const form = useForm<InterestFormValues>({
     resolver: zodResolver(CreateInterestSchema),
     defaultValues: {
@@ -216,6 +221,70 @@ export function CreateInterest({
           },
         });
       }
+    }
+  }
+
+  //Log Submit
+
+  //data decoration
+  useEffect(() => {
+    setAreaName(
+      areaData?.data
+        ?.filter((x: any) => area?.includes(x.id))
+        .map((d: any) => d.area_name)
+    ),
+      setUnitName(
+        unitData?.data
+          ?.filter((x: any) => unit?.includes(x.id))
+          .map((d: any) => d.unit_name)
+      ),
+      setPropertyTypeName(
+        propertyTypeData?.data
+          ?.filter((x: any) => propertyType?.includes(x.id))
+          .map((d: any) => d.product_type_name)
+      ),
+      setSaveFilterData(
+        `Area: ${area === "" || area === null ? "N/A" : areaName},
+Property type: ${
+          propertyType === "" || propertyType === null
+            ? "N/A"
+            : propertyTypeName
+        },
+Highest Price: ${maxPrice === "" || maxPrice === null ? "N/A" : maxPrice},
+Lowest Price: ${minPrice === "" || minPrice === null ? "N/A" : minPrice},
+Maximum Size: ${maxSize === "" || maxSize === null ? "N/A" : maxSize},
+Minimum Size: ${minSize === "" || minSize === null ? "N/A" : minSize},
+Unit: ${unit === "" || unit === null ? "N/A" : unitName}`
+      );
+  }, [propertyfilteredData]);
+
+  async function onSaveFilter() {
+    const res = await handleResponse(
+      () =>
+        createSaveFilter({
+          name: access?.data?.username,
+          note: saveFilterData,
+          type: 5,
+          customer_id: id,
+          employee_id: user?.user?.id,
+          description: "saved filter data",
+        }),
+      [201]
+    );
+    if (res.status) {
+      toast("Added!", {
+        description: `Filter Data has been Saved successfully.`,
+        important: true,
+      });
+    } else {
+      toast("Error!", {
+        description: res.message,
+        important: true,
+        action: {
+          label: "Retry",
+          onClick: () => onSaveFilter(),
+        },
+      });
     }
   }
 
@@ -387,6 +456,9 @@ export function CreateInterest({
               </div>
             </div>
             <DialogFooter className="mt-3">
+              <Button disabled={isPending} onClick={() => onSaveFilter()}>
+                Save
+              </Button>
               <Button
                 disabled={isPending}
                 onClick={() => setTabValue("property")}
