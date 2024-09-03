@@ -250,11 +250,11 @@ Property type: ${
             ? "N/A"
             : propertyTypeName
         },
+Unit: ${unit === "" || unit === null ? "N/A" : unitName},
 Highest Price: ${maxPrice === "" || maxPrice === null ? "N/A" : maxPrice},
 Lowest Price: ${minPrice === "" || minPrice === null ? "N/A" : minPrice},
 Maximum Size: ${maxSize === "" || maxSize === null ? "N/A" : maxSize},
-Minimum Size: ${minSize === "" || minSize === null ? "N/A" : minSize},
-Unit: ${unit === "" || unit === null ? "N/A" : unitName}`
+Minimum Size: ${minSize === "" || minSize === null ? "N/A" : minSize},`
       );
   }, [propertyfilteredData]);
 
