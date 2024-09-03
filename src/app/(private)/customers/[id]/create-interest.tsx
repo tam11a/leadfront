@@ -67,6 +67,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useCreateCustomerComment } from "@/lib/actions/customer-logs/post-customer-comment";
+import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
 
 export interface property {
   id: number;
@@ -78,7 +79,6 @@ const CreateInterestSchema = z.object({
   customer_id: z.number(),
   note: z.any().optional(),
   // product_id: z.number(),
-  employee_id: z.number(),
 });
 
 type InterestFormValues = z.infer<typeof CreateInterestSchema>;
@@ -86,7 +86,8 @@ type InterestFormValues = z.infer<typeof CreateInterestSchema>;
 export function CreateInterest({
   id,
   ignoreProperties = [],
-}: Readonly<{ id: number; ignoreProperties?: number[] }>) {
+  status,
+}: Readonly<{ id: number; ignoreProperties?: number[]; status?: string }>) {
   //states
   const [open, setOpen] = useState(false);
   const [area, setArea] = useState<string | null>("");
@@ -173,15 +174,18 @@ export function CreateInterest({
     defaultValues: {
       note: "",
       customer_id: id,
-      employee_id: user?.user?.id,
     },
     mode: "onChange",
   });
-
   async function onSubmit(data: InterestFormValues) {
     form.clearErrors();
     const res = await handleResponse(
-      () => create({ ...data, product_id: propertyId }),
+      () =>
+        create({
+          ...data,
+          employee_id: user?.user?.id,
+          product_id: propertyId,
+        }),
       [201]
     );
     if (res.status) {
@@ -321,7 +325,12 @@ Minimum Size: ${minSize === "" || minSize === null ? "N/A" : minSize},`
   return (
     <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
       <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)}>Add Interest</Button>
+        <Button
+          onClick={() => setOpen(true)}
+          disabled={status === "junk" || status === "sold"}
+        >
+          Add Interest
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[425px] sm:max-w-[525px] rounded-lg">
         <DialogHeader>

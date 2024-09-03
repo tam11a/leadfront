@@ -32,6 +32,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
 
 export default function CustomerInterestsPage({
   params,
@@ -41,12 +42,13 @@ export default function CustomerInterestsPage({
   };
 }) {
   const [search, setSearch] = useState("");
+  const { data: customerData } = useGetCustomerById(params.id);
+  console.log(customerData);
   const { data, isLoading } = useGetInterestsList({
     customer_id: params.id,
   });
   const { mutateAsync: Delete, isPending: isDeleting } = useDeleteInterest();
   if (isLoading) return <Loading />;
-
   async function onDelete(Iid: number) {
     const res = await handleResponse(() => Delete(Iid), 204);
     if (res.status) {
@@ -74,10 +76,12 @@ export default function CustomerInterestsPage({
       <CreateInterest
         id={+params.id}
         ignoreProperties={data?.data?.map((d: any) => d.id || [])}
+        status={customerData?.data.status}
       />
     </div>
   ) : (
     <div className="space-y-3 max-w-lg">
+      {customerData?.data?.status === "sold" ? <></> : ""}
       <div className="flex flex-row items-center gap-3">
         <Input
           placeholder="Search property name, area.."
@@ -88,6 +92,7 @@ export default function CustomerInterestsPage({
         <CreateInterest
           id={+params.id}
           ignoreProperties={data?.data?.map((d: any) => d.product_id.id) || []}
+          status={customerData?.data.status}
         />
       </div>
       {data?.data?.map((interest: any) => (
@@ -160,7 +165,11 @@ export default function CustomerInterestsPage({
               propertyId={+interest.product_id.id}
               interestId={+interest.id}
               customerId={+params.id}
-              disabled={interest?.product_id?.status === "sold"}
+              disabled={
+                interest?.product_id?.status === "sold" ||
+                customerData?.data?.status === "sold" ||
+                customerData?.data?.status === "junk"
+              }
             />
             <Button
               variant={"outline"}

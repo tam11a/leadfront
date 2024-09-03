@@ -100,7 +100,6 @@ export interface Customer {
   assigned_employee_id?: number;
   assigned_employee_name?: string;
   media_id?: number;
-  project_id?: number;
 }
 const CustomerStatusList = [
   {
@@ -169,15 +168,7 @@ const columns: ColumnDef<Customer>[] = [
   {
     accessorKey: "email",
     header: () => {
-      return (
-        // <Button
-        //   variant="ghost"
-        //   onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        // >
-        <div className="mx-4">Email</div>
-        //   <CaretSortIcon className="ml-2 h-4 w-4" />
-        // </Button>
-      );
+      return <div className="mx-4">Email</div>;
     },
     cell: ({ row }) => (
       <>
@@ -188,15 +179,7 @@ const columns: ColumnDef<Customer>[] = [
   {
     accessorKey: "address",
     header: () => {
-      return (
-        // <Button
-        //   variant="ghost"
-        //   onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        // >
-        <div className="mx-4">Address</div>
-        //   <CaretSortIcon className="ml-2 h-4 w-4" />
-        // </Button>
-      );
+      return <div className="mx-4">Address</div>;
     },
     cell: ({ row }) => (
       <>
@@ -240,6 +223,21 @@ const columns: ColumnDef<Customer>[] = [
     cell: ({ row }) => (
       <div className="mx-4 capitalize">
         <Badge variant={row.getValue("status")}>{row.getValue("status")}</Badge>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "media_commision",
+    header: () => {
+      return <div className="mx-4">Media Commision (৳)</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">
+        {row.getValue("media_commision") ? (
+          <>{row.getValue("media_commision")}</>
+        ) : (
+          "-"
+        )}{" "}
       </div>
     ),
   },

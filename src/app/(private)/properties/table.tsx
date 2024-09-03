@@ -74,6 +74,8 @@ export interface Property {
   size: string;
   unitName: string;
   price_public: string;
+  media_commision: string;
+  status: string;
 }
 const CustomerStatusList = [
   {
@@ -153,10 +155,25 @@ export const columns: ColumnDef<Property>[] = [
   {
     accessorKey: "price_public",
     header: () => {
-      return <div className="mx-4">Price</div>;
+      return <div className="mx-4">Price (৳)</div>;
     },
     cell: ({ row }) => (
       <div className="mx-4">{row.getValue("price_public")}</div>
+    ),
+  },
+  {
+    accessorKey: "media_commision",
+    header: () => {
+      return <div className="mx-4">Media Commision (৳)</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">
+        {row.getValue("media_commision") ? (
+          <>{row.getValue("media_commision")}</>
+        ) : (
+          "-"
+        )}{" "}
+      </div>
     ),
   },
   {
@@ -186,7 +203,13 @@ export const columns: ColumnDef<Property>[] = [
       return (
         <>
           <UpdateProperty propertyId={property.id}>
-            <Button size={"icon"} variant={"ghost"}>
+            <Button
+              disabled={
+                property?.status === "sold" || property?.status === "junk"
+              }
+              size={"icon"}
+              variant={"ghost"}
+            >
               <TbHomeEdit />
             </Button>
           </UpdateProperty>

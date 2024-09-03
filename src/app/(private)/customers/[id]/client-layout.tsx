@@ -16,7 +16,6 @@ export default function ClientLayout({
   params,
 }: Readonly<{ children: React.ReactNode; params: { id: number } }>) {
   const { data } = useGetCustomerById(params.id);
-  console.log(data);
   return !data ? (
     <Loading />
   ) : (
