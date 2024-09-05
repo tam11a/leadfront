@@ -34,6 +34,21 @@ import {
 import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
+//Dummy Test
+
+import { Calendar } from "./scheduler";
+
+import {
+  type CalendarDate,
+  getLocalTimeZone,
+  getWeeksInMonth,
+  today,
+} from "@internationalized/date";
+import type { DateValue } from "@react-aria/calendar";
+import { useLocale } from "@react-aria/i18n";
+import { useRouter, useSearchParams } from "next/navigation";
+import * as React from "react";
+
 export default function CustomerInterestsPage({
   params,
 }: {
@@ -69,8 +84,78 @@ export default function CustomerInterestsPage({
     }
   }
 
+  //Dummy Test
+  const router = useRouter();
+  const { locale } = useLocale();
+
+  const searchParams = useSearchParams();
+  const dateParam = searchParams.get("date");
+  const slotParam = searchParams.get("slot");
+
+  const [timeZone, setTimeZone] = React.useState("America/New_York");
+  const [date, setDate] = React.useState(today(getLocalTimeZone()));
+  const [focusedDate, setFocusedDate] = React.useState<CalendarDate | null>(
+    date
+  );
+
+  const weeksInMonth = getWeeksInMonth(focusedDate as DateValue, locale);
+
+  const handleChangeDate = (date: DateValue) => {
+    setDate(date as CalendarDate);
+    const url = new URL(window.location.href);
+    url.searchParams.set(
+      "date",
+      date.toDate(timeZone).toISOString().split("T")[0]
+    );
+    router.push(url.toString());
+  };
+
+  const handleChangeAvailableTime = (time: string) => {
+    const timeValue = time.split(":").join(" ");
+
+    const match = timeValue.match(/^(\d{1,2}) (\d{2})([ap]m)?$/i);
+    if (!match) {
+      console.error("Invalid time format");
+      return null;
+    }
+
+    let hours = Number.parseInt(match[1]);
+    const minutes = Number.parseInt(match[2]);
+    const isPM = match[3] && match[3].toLowerCase() === "pm";
+
+    if (isPM && (hours < 1 || hours > 12)) {
+      console.error("Time out of range (1-12) in 12-hour format");
+      return null;
+    }
+
+    if (isPM && hours !== 12) {
+      hours += 12;
+    } else if (!isPM && hours === 12) {
+      hours = 0;
+    }
+
+    const currentDate = date.toDate(timeZone);
+    currentDate.setHours(hours, minutes);
+
+    const url = new URL(window.location.href);
+    url.searchParams.set("slot", currentDate.toISOString());
+    router.push(url.toString());
+  };
+
+  const showForm = !!dateParam && !!slotParam;
+
   return !data?.data?.length ? (
     <div className="flex flex-col items-center justify-center min-w-[300px] w-full min-h-[400px] gap-5">
+      <div className="w-full bg-gray-1 px-8 py-6 rounded-md max-w-max mx-auto">
+        <Calendar
+          minValue={today(getLocalTimeZone())}
+          defaultValue={today(getLocalTimeZone())}
+          value={date}
+          onChange={handleChangeDate}
+          onFocusChange={(focused) => setFocusedDate(focused)}
+        />
+      </div>
+
       <FiActivity className="text-5xl mx-auto text-gray-400" />
       <CardDescription>No interest added yet.</CardDescription>
       <CreateInterest
