@@ -48,6 +48,9 @@ import type { DateValue } from "@react-aria/calendar";
 import { useLocale } from "@react-aria/i18n";
 import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
+import { RightPanel } from "./scheduler/right-panel";
+import { useCreateSchedule } from "@/lib/actions/schedule/post-schedule";
+import useUser from "@/hooks/useUser";
 
 export default function CustomerInterestsPage({
   params,
@@ -57,8 +60,8 @@ export default function CustomerInterestsPage({
   };
 }) {
   const [search, setSearch] = useState("");
+  const { user } = useUser();
   const { data: customerData } = useGetCustomerById(params.id);
-  console.log(customerData);
   const { data, isLoading } = useGetInterestsList({
     customer_id: params.id,
   });
@@ -85,29 +88,18 @@ export default function CustomerInterestsPage({
   }
 
   //Dummy Test
-  const router = useRouter();
   const { locale } = useLocale();
 
-  const searchParams = useSearchParams();
-  const dateParam = searchParams.get("date");
-  const slotParam = searchParams.get("slot");
-
-  const [timeZone, setTimeZone] = React.useState("America/New_York");
+  const [timeZone, _setTimeZone] = React.useState("America/New_York");
+  const [scheduleDate, setScheduleDate] = React.useState("");
   const [date, setDate] = React.useState(today(getLocalTimeZone()));
   const [focusedDate, setFocusedDate] = React.useState<CalendarDate | null>(
     date
   );
-
   const weeksInMonth = getWeeksInMonth(focusedDate as DateValue, locale);
-
+  console.log(scheduleDate);
   const handleChangeDate = (date: DateValue) => {
     setDate(date as CalendarDate);
-    const url = new URL(window.location.href);
-    url.searchParams.set(
-      "date",
-      date.toDate(timeZone).toISOString().split("T")[0]
-    );
-    router.push(url.toString());
   };
 
   const handleChangeAvailableTime = (time: string) => {
@@ -115,7 +107,6 @@ export default function CustomerInterestsPage({
 
     const match = timeValue.match(/^(\d{1,2}) (\d{2})([ap]m)?$/i);
     if (!match) {
-      console.error("Invalid time format");
       return null;
     }
 
@@ -124,7 +115,6 @@ export default function CustomerInterestsPage({
     const isPM = match[3] && match[3].toLowerCase() === "pm";
 
     if (isPM && (hours < 1 || hours > 12)) {
-      console.error("Time out of range (1-12) in 12-hour format");
       return null;
     }
 
@@ -136,24 +126,62 @@ export default function CustomerInterestsPage({
 
     const currentDate = date.toDate(timeZone);
     currentDate.setHours(hours, minutes);
-
-    const url = new URL(window.location.href);
-    url.searchParams.set("slot", currentDate.toISOString());
-    router.push(url.toString());
+    setScheduleDate(currentDate.toISOString());
   };
 
-  const showForm = !!dateParam && !!slotParam;
+  const { mutateAsync: createSchedule } = useCreateSchedule();
+
+  async function onScheduleSubmit() {
+    const res = await handleResponse(
+      () =>
+        createSchedule({
+          visit_schedule: scheduleDate,
+          customer_id: params?.id,
+          employee_id: user?.id,
+        }),
+      [201]
+    );
+    if (res.status) {
+      toast("Added!", {
+        description: `Filter Data has been Saved successfully.`,
+        important: true,
+      });
+    } else {
+      toast("Error!", {
+        description: res.message,
+        important: true,
+        action: {
+          label: "Retry",
+          onClick: () => onScheduleSubmit(),
+        },
+      });
+    }
+  }
 
   return !data?.data?.length ? (
     <div className="flex flex-col items-center justify-center min-w-[300px] w-full min-h-[400px] gap-5">
-      <div className="w-full bg-gray-1 px-8 py-6 rounded-md max-w-max mx-auto">
-        <Calendar
-          minValue={today(getLocalTimeZone())}
-          defaultValue={today(getLocalTimeZone())}
-          value={date}
-          onChange={handleChangeDate}
-          onFocusChange={(focused) => setFocusedDate(focused)}
-        />
+      <div className="border px-6 py-6 rounded-md max-w-max mx-auto">
+        <div className="flex flex-col h-full  gap-">
+          <div className="flex flex-1 gap-6">
+            <Calendar
+              minValue={today(getLocalTimeZone())}
+              defaultValue={today(getLocalTimeZone())}
+              value={date}
+              onChange={handleChangeDate}
+              onFocusChange={(focused) => setFocusedDate(focused)}
+            />
+            <RightPanel
+              {...{ date, timeZone, weeksInMonth, handleChangeAvailableTime }}
+            />
+          </div>
+          <Button
+            className="mt-6 self-end"
+            disabled={scheduleDate === ""}
+            onClick={() => onScheduleSubmit()}
+          >
+            Add Schedule
+          </Button>
+        </div>
       </div>
 
       <FiActivity className="text-5xl mx-auto text-gray-400" />

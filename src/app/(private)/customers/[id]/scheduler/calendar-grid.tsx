@@ -35,7 +35,7 @@ export function CalendarGrid({
       <thead {...headerProps}>
         <tr>
           {weekDays.map((day, index) => (
-            <th key={index} className="uppercase text-xs text-gray-11 pb-4">
+            <th key={index} className="uppercase text-xs text-slate-600 pb-4">
               {day}
             </th>
           ))}

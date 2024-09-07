@@ -39,22 +39,22 @@ export function CalendarCell({
         {...mergeProps(buttonProps, focusProps)}
         ref={ref}
         hidden={isOutsideMonth}
-        className="size-14 outline-none group rounded-md"
+        className="size-10 text-gray-700 group rounded-md"
       >
         <div
           className={cn(
             "size-full rounded-md flex items-center justify-center",
-            "text-gray-12 text-sm font-semibold",
+            "text-slate-700 text-sm font-semibold",
             isDisabled
               ? isDateToday
                 ? "cursor-defaut"
                 : "text-gray-8 cursor-defaut"
-              : "cursor-pointer bg-gray-3",
+              : "cursor-pointer bg-transparent",
             // Focus ring, visible while the cell has keyboard focus.
             isFocusVisible &&
-              "ring-1 group-focus:z-2 ring-gray-12 ring-offset-1",
+              "ring-1 group-focus:z-2 ring-primary ring-offset-1",
             // Darker selection background for the start and end.
-            isSelected && "bg-gray-12 text-gray-1",
+            isSelected && "border bg-primary text-slate-300",
             // Hover state for non-selected cells.
             !isSelected && !isDisabled && "hover:ring-2 hover:ring-gray-12"
             // isDateToday && "bg-gray-1 text-primary ring-0 ring-offset-0",
