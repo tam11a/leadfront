@@ -9,7 +9,7 @@ import {
 import { useLocale } from "@react-aria/i18n";
 import { useCalendarState } from "@react-stately/calendar";
 import { CalendarGrid } from "./calendar-grid";
-// import { CalendarHeader } from "./calendar-header";
+import { CalendarHeader } from "./calendar-header";
 
 export function Calendar(props: CalendarProps<DateValue>) {
   const { locale } = useLocale();
@@ -26,13 +26,13 @@ export function Calendar(props: CalendarProps<DateValue>) {
   );
 
   return (
-    <div {...calendarProps} className="inline-block">
-      {/* <CalendarHeader
-				state={state}
-				calendarProps={calendarProps}
-				prevButtonProps={prevButtonProps}
-				nextButtonProps={nextButtonProps}
-			/> */}
+    <div {...calendarProps} className="inline-block flex-1">
+      <CalendarHeader
+        state={state}
+        calendarProps={calendarProps}
+        prevButtonProps={prevButtonProps}
+        nextButtonProps={nextButtonProps}
+      />
       <div className="flex gap-8">
         <CalendarGrid state={state} />
       </div>

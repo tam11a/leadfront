@@ -1,68 +1,42 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-import type { DateValue } from "@react-aria/calendar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useLocale } from "@react-aria/i18n";
-import { availableTimes } from "./available-times";
-import { Label } from "@/components/ui/label";
+import { useSearchParams } from "next/navigation";
 
-export function RightPanel({
-  date,
-  timeZone,
-  weeksInMonth,
-  handleChangeAvailableTime,
-}: {
-  date: DateValue;
-  timeZone: string;
-  weeksInMonth: number;
-  handleChangeAvailableTime: (time: string) => void;
-}) {
+export function RightPanel({}: {}) {
   const { locale } = useLocale();
-  const [dayNumber, dayName] = date
-    .toDate(timeZone)
-    .toLocaleDateString(locale, {
-      weekday: "short",
-      day: "numeric",
-    })
-    .split(" ");
+
+  const searchParams = useSearchParams();
+  const slotParam = searchParams.get("slot");
+
   return (
-    <Tabs
-      defaultValue="12"
-      className="flex flex-col gap-4 w-[280px] border-l pl-8"
-    >
-      <Label>Select Customers Preffered Time</Label>
-      {["12", "24"].map((time) => (
-        <TabsContent key={time} value={time}>
-          <ScrollArea
-            type="always"
-            className="h-full "
-            style={{
-              maxHeight: weeksInMonth > 5 ? "380px" : "320px",
-            }}
-          >
-            <div className="flex flex-col h-56 pr-3">
-              <div className="grid gap-2 pr-3">
-                {availableTimes.map((availableTime) => (
-                  <Button
-                    variant="outline"
-                    onClick={() =>
-                      handleChangeAvailableTime(
-                        availableTime[time as "12" | "24"]
-                      )
-                    }
-                    key={availableTime[time as "12" | "24"]}
-                  >
-                    {availableTime[time as "12" | "24"]}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </ScrollArea>
-        </TabsContent>
-      ))}
-    </Tabs>
+    <div className="flex flex-col gap-4 w-[280px] border-l pl-6">
+      <div className="grid gap-1">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <img
+              alt="Shadcn Cal"
+              src="/avatar.jpeg"
+              className="rounded-full border"
+              width={24}
+              height={24}
+            />
+          </TooltipTrigger>
+          <TooltipContent>Shadcn Cal</TooltipContent>
+        </Tooltip>
+        <p className="text-gray-11 text-sm font-semibold">Shadcn Cal</p>
+      </div>
+      <div className="grid gap-3">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <p className="text-sm font-semibold">Cal video</p>
+          </TooltipTrigger>
+          <TooltipContent>Cal video</TooltipContent>
+        </Tooltip>
+      </div>
+    </div>
   );
 }

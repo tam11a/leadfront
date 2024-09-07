@@ -48,7 +48,7 @@ export function CalendarCell({
             isDisabled
               ? isDateToday
                 ? "cursor-defaut"
-                : "text-gray-8 cursor-defaut"
+                : "text-muted-foreground cursor-defaut"
               : "cursor-pointer bg-transparent",
             // Focus ring, visible while the cell has keyboard focus.
             isFocusVisible &&
