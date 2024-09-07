@@ -29,7 +29,6 @@ export function CalendarCell({
   const isDateToday = isToday(date, getLocalTimeZone());
 
   const { focusProps, isFocusVisible } = useFocusRing();
-  console.log(date, getLocalTimeZone());
   return (
     <td
       {...cellProps}

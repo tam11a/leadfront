@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { DateValue } from "@react-aria/calendar";
 import { useLocale } from "@react-aria/i18n";
 import { availableTimes } from "./available-times";
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
 export function LeftPanel({

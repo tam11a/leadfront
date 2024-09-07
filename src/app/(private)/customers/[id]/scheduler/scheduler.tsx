@@ -52,6 +52,7 @@ export function Scheduler({
     }
 
     let hours = Number.parseInt(match[1]);
+
     const minutes = Number.parseInt(match[2]);
     const isPM = match[3] && match[3].toLowerCase() === "pm";
 
@@ -66,6 +67,8 @@ export function Scheduler({
     }
 
     const currentDate = date.toDate(timeZone);
+    console.log(currentDate.toISOString());
+
     currentDate.setHours(hours, minutes);
     setScheduleDate(currentDate.toISOString());
   };
@@ -74,7 +77,6 @@ export function Scheduler({
   const { data: shceduleData } = useGetschedules({
     visit_schedule: scheduleDate,
   });
-
   async function onScheduleSubmit() {
     const res = await handleResponse(
       () =>
