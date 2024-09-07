@@ -29,7 +29,7 @@ export function CalendarCell({
   const isDateToday = isToday(date, getLocalTimeZone());
 
   const { focusProps, isFocusVisible } = useFocusRing();
-
+  console.log(date, getLocalTimeZone());
   return (
     <td
       {...cellProps}
@@ -51,21 +51,19 @@ export function CalendarCell({
                 : "text-muted-foreground cursor-defaut"
               : "cursor-pointer bg-transparent",
             // Focus ring, visible while the cell has keyboard focus.
-            isFocusVisible &&
-              "ring-1 group-focus:z-2 ring-primary ring-offset-1",
+            isFocusVisible && "",
             // Darker selection background for the start and end.
-            isSelected && "border bg-primary text-slate-300",
+            isSelected && "border-none bg-primary text-slate-300",
             // Hover state for non-selected cells.
             !isSelected && !isDisabled && "hover:ring-2 hover:ring-gray-12"
-            // isDateToday && "bg-gray-1 text-primary ring-0 ring-offset-0",
+            // isDateToday && "bg-gray-200  ring-0 ring-offset-0"
           )}
         >
           {formattedDate}
           {isDateToday && (
             <div
               className={cn(
-                "absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-1/2 size-1.5 bg-gray-12 rounded-full",
-                isSelected && "bg-gray-1"
+                "absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-1/2 size-1.5 bg-gray-12 rounded-full"
               )}
             />
           )}

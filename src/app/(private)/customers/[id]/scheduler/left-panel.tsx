@@ -35,7 +35,6 @@ export function LeftPanel({
     setSelectedTime(time);
     handleChangeAvailableTime(time);
   };
-
   return (
     <Tabs defaultValue="12" className="flex flex-col gap-1 w-[260px]">
       <div>
@@ -54,26 +53,28 @@ export function LeftPanel({
           >
             <div className="flex flex-col max-h-64 pr-3">
               <div className="grid gap-2 pr-3">
-                {availableTimes.map((availableTime) => (
-                  <Button
-                    variant={
-                      selectedTime === availableTime[time as "12" | "24"]
-                        ? "default"
-                        : "outline"
-                    }
-                    onClick={() =>
-                      handleButtonClick(availableTime[time as "12" | "24"])
-                    }
-                    key={availableTime[time as "12" | "24"]}
-                    className={`${
-                      selectedTime === availableTime[time as "12" | "24"]
-                        ? "bg-primary text-white"
-                        : "bg-white text-black"
-                    }`}
-                  >
-                    {availableTime[time as "12" | "24"]}
-                  </Button>
-                ))}
+                {availableTimes.map((availableTime) => {
+                  return (
+                    <Button
+                      variant={
+                        selectedTime === availableTime[time as "12" | "24"]
+                          ? "default"
+                          : "outline"
+                      }
+                      onClick={() =>
+                        handleButtonClick(availableTime[time as "12" | "24"])
+                      }
+                      key={availableTime[time as "12" | "24"]}
+                      // className={`${
+                      //   selectedTime === availableTime[time as "12" | "24"]
+                      //     ? "bg-primary text-white"
+                      //     : "bg-white text-black"
+                      // }`}
+                    >
+                      {availableTime[time as "12" | "24"]}
+                    </Button>
+                  );
+                })}
               </div>
             </div>
           </ScrollArea>

@@ -19,6 +19,7 @@ import useUser from "@/hooks/useUser";
 import { toast } from "sonner";
 import { LeftPanel } from "./left-panel";
 import { RightPanel } from "./right-panel";
+import { useGetschedules } from "@/lib/actions/schedule/get-schedule";
 
 export function Scheduler({
   params,
@@ -38,7 +39,6 @@ export function Scheduler({
     date
   );
   const weeksInMonth = getWeeksInMonth(focusedDate as DateValue, locale);
-  console.log(scheduleDate);
   const handleChangeDate = (date: DateValue) => {
     setDate(date as CalendarDate);
   };
@@ -71,6 +71,9 @@ export function Scheduler({
   };
 
   const { mutateAsync: createSchedule } = useCreateSchedule();
+  const { data: shceduleData } = useGetschedules({
+    visit_schedule: scheduleDate,
+  });
 
   async function onScheduleSubmit() {
     const res = await handleResponse(
@@ -122,7 +125,7 @@ export function Scheduler({
           onChange={handleChangeDate}
           onFocusChange={(focused) => setFocusedDate(focused)}
         />
-        <RightPanel />
+        <RightPanel scheduleDate={scheduleDate} />
       </div>
     </div>
   );

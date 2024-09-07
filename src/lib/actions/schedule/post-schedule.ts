@@ -17,6 +17,9 @@ export const useCreateSchedule = () => {
       queryClient.invalidateQueries({
         queryKey: ["get-customer-by-id"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["get-schedules"],
+      });
     },
   });
 };

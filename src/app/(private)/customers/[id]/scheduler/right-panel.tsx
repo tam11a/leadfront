@@ -6,7 +6,7 @@ import {
 import { useLocale } from "@react-aria/i18n";
 import { useSearchParams } from "next/navigation";
 
-export function RightPanel({}: {}) {
+export function RightPanel({ scheduleDate }: { scheduleDate: string }) {
   const { locale } = useLocale();
 
   const searchParams = useSearchParams();
@@ -27,7 +27,7 @@ export function RightPanel({}: {}) {
           </TooltipTrigger>
           <TooltipContent>Shadcn Cal</TooltipContent>
         </Tooltip>
-        <p className="text-gray-11 text-sm font-semibold">Shadcn Cal</p>
+        <p className="text-gray-11 text-sm font-semibold">{scheduleDate}</p>
       </div>
       <div className="grid gap-3">
         <Tooltip>
