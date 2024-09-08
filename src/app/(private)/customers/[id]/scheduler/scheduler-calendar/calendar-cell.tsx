@@ -27,7 +27,6 @@ export function CalendarCell({
   const isOutsideMonth = !isSameMonth(currentMonth, date);
 
   const isDateToday = isToday(date, getLocalTimeZone());
-
   const { focusProps, isFocusVisible } = useFocusRing();
   return (
     <td
@@ -49,8 +48,6 @@ export function CalendarCell({
                 ? "cursor-defaut"
                 : "text-muted-foreground cursor-defaut"
               : "cursor-pointer bg-transparent",
-            // Focus ring, visible while the cell has keyboard focus.
-            isFocusVisible && "",
             // Darker selection background for the start and end.
             isSelected && "border-none bg-primary text-slate-300",
             // Hover state for non-selected cells.

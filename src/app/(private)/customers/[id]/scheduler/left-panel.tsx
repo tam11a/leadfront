@@ -34,6 +34,8 @@ export function LeftPanel({
     setSelectedTime(time);
     handleChangeAvailableTime(time);
   };
+
+  console.log(selectedTime);
   return (
     <Tabs defaultValue="12" className="flex flex-col gap-1 w-[260px]">
       <div>

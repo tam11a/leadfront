@@ -67,11 +67,10 @@ export function Scheduler({
     }
 
     const currentDate = date.toDate(timeZone);
-    console.log(currentDate.toISOString());
-
     currentDate.setHours(hours, minutes);
     setScheduleDate(currentDate.toISOString());
   };
+  console.log(scheduleDate);
 
   const { mutateAsync: createSchedule } = useCreateSchedule();
   const { data: shceduleData } = useGetschedules({
@@ -103,9 +102,8 @@ export function Scheduler({
       });
     }
   }
-
   return (
-    <div className="border px-6 py-6 rounded-md max-w-5xl mx-auto">
+    <div className="border px-6 py-6 rounded-md max-w-3xl mx-auto">
       <div className="flex gap-2">
         <div className="flex flex-col border-r pr-5">
           <LeftPanel
