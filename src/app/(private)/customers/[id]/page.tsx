@@ -155,7 +155,7 @@ export default function CustomerInterestsPage({
                 <CardDescription>
                   {interest.product_id.area?.area_name}
                 </CardDescription>
-                <Badge className="ml-2" variant={"outline"}>
+                <Badge className="ml-2 " variant={"outline"}>
                   {interest.product_id.product_type?.product_type_name}
                 </Badge>
               </span>
