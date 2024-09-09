@@ -4,10 +4,10 @@ import { Calendar } from "./scheduler-calendar";
 import handleResponse from "@/lib/handle-response";
 
 import {
-	type CalendarDate,
-	getLocalTimeZone,
-	getWeeksInMonth,
-	today,
+  type CalendarDate,
+  getLocalTimeZone,
+  getWeeksInMonth,
+  today,
 } from "@internationalized/date";
 import type { DateValue } from "@react-aria/calendar";
 import { useLocale } from "@react-aria/i18n";
@@ -17,116 +17,118 @@ import * as React from "react";
 import { useCreateSchedule } from "@/lib/actions/schedule/post-schedule";
 import useUser from "@/hooks/useUser";
 import { toast } from "sonner";
-import { LeftPanel } from "./left-panel";
+import { ScheduleDialog } from "./schedule-dialog";
 import { RightPanel } from "./right-panel";
 import { useGetschedules } from "@/lib/actions/schedule/get-schedule";
+import moment from "moment";
 
 export function Scheduler({
-	params,
+  params,
 }: {
-	params: {
-		id: number;
-	};
+  params: {
+    id: number;
+  };
 }) {
-	//Dummy Test
-	const { locale } = useLocale();
-	const { user } = useUser();
+  //Dummy Test
+  const { locale } = useLocale();
+  const { user } = useUser();
+  const [property_id, setProperty_id] = React.useState("");
+  const [timeZone, _setTimeZone] = React.useState("America/New_York");
+  const [scheduleDate, setScheduleDate] = React.useState("");
+  const [date, setDate] = React.useState(today(getLocalTimeZone()));
+  const [focusedDate, setFocusedDate] = React.useState<CalendarDate>(date);
+  const weeksInMonth = getWeeksInMonth(focusedDate as DateValue, locale);
+  const handleChangeDate = (date: DateValue) => {
+    setDate(date as CalendarDate);
+  };
+  console.log(property_id);
+  const handleChangeAvailableTime = (time: string) => {
+    const timeValue = time.split(":").join(" ");
 
-	const [timeZone, _setTimeZone] = React.useState("America/New_York");
-	const [scheduleDate, setScheduleDate] = React.useState("");
-	const [date, setDate] = React.useState(today(getLocalTimeZone()));
-	const [focusedDate, setFocusedDate] = React.useState<CalendarDate | null>(
-		date
-	);
-	const weeksInMonth = getWeeksInMonth(focusedDate as DateValue, locale);
-	const handleChangeDate = (date: DateValue) => {
-		setDate(date as CalendarDate);
-	};
+    const match = timeValue.match(/^(\d{1,2}) (\d{2})([ap]m)?$/i);
+    if (!match) {
+      return null;
+    }
 
-	const handleChangeAvailableTime = (time: string) => {
-		const timeValue = time.split(":").join(" ");
+    let hours = Number.parseInt(match[1]);
 
-		const match = timeValue.match(/^(\d{1,2}) (\d{2})([ap]m)?$/i);
-		if (!match) {
-			return null;
-		}
+    const minutes = Number.parseInt(match[2]);
+    const isPM = match[3] && match[3].toLowerCase() === "pm";
 
-		let hours = Number.parseInt(match[1]);
+    if (isPM && (hours < 1 || hours > 12)) {
+      return null;
+    }
 
-		const minutes = Number.parseInt(match[2]);
-		const isPM = match[3] && match[3].toLowerCase() === "pm";
+    if (isPM && hours !== 12) {
+      hours += 12;
+    } else if (!isPM && hours === 12) {
+      hours = 0;
+    }
 
-		if (isPM && (hours < 1 || hours > 12)) {
-			return null;
-		}
+    const currentDate = date.toDate(timeZone);
+    currentDate.setHours(hours, minutes);
+    setScheduleDate(currentDate.toISOString());
+  };
+  const startDate = focusedDate + "T00:00:00.00Z";
+  const endDate = focusedDate + "T12:00:00.00Z";
 
-		if (isPM && hours !== 12) {
-			hours += 12;
-		} else if (!isPM && hours === 12) {
-			hours = 0;
-		}
-
-		const currentDate = date.toDate(timeZone);
-		currentDate.setHours(hours, minutes);
-		setScheduleDate(currentDate.toISOString());
-	};
-	console.log(scheduleDate, focusedDate);
-
-	const { mutateAsync: createSchedule } = useCreateSchedule();
-	const { data: shceduleData } = useGetschedules({
-		visit_schedule: scheduleDate,
-	});
-	async function onScheduleSubmit() {
-		const res = await handleResponse(
-			() =>
-				createSchedule({
-					visit_schedule: scheduleDate,
-					customer_id: params?.id,
-					employee_id: user?.id,
-				}),
-			[201]
-		);
-		if (res.status) {
-			toast("Added!", {
-				description: `Filter Data has been Saved successfully.`,
-				important: true,
-			});
-		} else {
-			toast("Error!", {
-				description: res.message,
-				important: true,
-				action: {
-					label: "Retry",
-					onClick: () => onScheduleSubmit(),
-				},
-			});
-		}
-	}
-	return (
-		<div className="border px-6 py-6 rounded-md max-w-3xl mx-auto">
-			<div className="flex gap-2">
-				<div className="flex flex-col border-r pr-5">
-					<LeftPanel
-						{...{ date, timeZone, weeksInMonth, handleChangeAvailableTime }}
-					/>
-					<Button
-						className="mt-6"
-						disabled={scheduleDate === ""}
-						onClick={() => onScheduleSubmit()}
-					>
-						Add Schedule
-					</Button>
-				</div>
-
-				<Calendar
-					minValue={today(getLocalTimeZone())}
-					defaultValue={today(getLocalTimeZone())}
-					value={date}
-					onChange={handleChangeDate}
-					onFocusChange={(focused) => setFocusedDate(focused)}
-				/>
-				<RightPanel scheduleDate={scheduleDate} />
-			</div>
-		</div>
-	);
+  const { data: shceduleData } = useGetschedules({
+    visit_schedule__gte: startDate,
+    visit_schedule__lte: endDate,
+  });
+  const { mutateAsync: createSchedule } = useCreateSchedule();
+  async function onScheduleSubmit() {
+    const res = await handleResponse(
+      () =>
+        createSchedule({
+          visit_schedule: scheduleDate,
+          customer_id: params?.id,
+          employee_id: user?.id,
+          property_id: property_id,
+        }),
+      [201]
+    );
+    if (res.status) {
+      toast("Added!", {
+        description: `Schedule has been created successfully.`,
+        important: true,
+      });
+    } else {
+      toast("Error!", {
+        description: res.message,
+        important: true,
+        action: {
+          label: "Retry",
+          onClick: () => onScheduleSubmit(),
+        },
+      });
+    }
+  }
+  console.log(scheduleDate);
+  return (
+    <div className="border px-6 py-6 rounded-md max-w-3xl mx-auto">
+      <div className="flex gap-2">
+        <Calendar
+          minValue={today(getLocalTimeZone())}
+          defaultValue={today(getLocalTimeZone())}
+          value={date}
+          onChange={handleChangeDate}
+          onFocusChange={(focused) => setFocusedDate(focused)}
+        />
+        <div className="flex flex-col min-w-[260px]">
+          <RightPanel scheduleData={shceduleData} />
+          <ScheduleDialog
+            {...{
+              date,
+              timeZone,
+              weeksInMonth,
+              handleChangeAvailableTime,
+              setProperty_id,
+            }}
+            customerId={params?.id}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -35,7 +35,7 @@ export default function ClientLayout({
               </Badge>
             </div>
 
-            <p className="text-xl font-bold">
+            <p className="text-xl font-bold capitalize">
               {[data?.data.first_name, data?.data.last_name].join(" ")}{" "}
               {data?.data.gender === "Male"
                 ? "(He/Him)"

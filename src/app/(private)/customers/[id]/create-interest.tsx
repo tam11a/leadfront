@@ -67,7 +67,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useCreateCustomerComment } from "@/lib/actions/customer-logs/post-customer-comment";
-import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
 
 export interface property {
   id: number;
