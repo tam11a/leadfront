@@ -41,6 +41,10 @@ import {
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { useGetInterestsList } from "@/lib/actions/interests/get-interests";
+import { useCreateSchedule } from "@/lib/actions/schedule/post-schedule";
+import handleResponse from "@/lib/handle-response";
+import { toast } from "sonner";
+import useUser from "@/hooks/useUser";
 
 export interface property {
   id: number;
@@ -52,19 +56,21 @@ export function ScheduleDialog({
   date,
   timeZone,
   weeksInMonth,
-  handleChangeAvailableTime,
-  setProperty_id,
+  // handleChangeAvailableTime,
   customerId,
 }: {
   date: DateValue;
   timeZone: string;
   weeksInMonth: number;
-  setProperty_id: any;
   customerId: number;
-  handleChangeAvailableTime: (time: string) => void;
+  // handleChangeAvailableTime: (time: string) => void;
 }) {
   const { locale } = useLocale();
+  const { user } = useUser();
+
   const [open, setOpen] = useState(false);
+  const [property_id, setProperty_id] = useState("");
+  const [scheduleDate, setScheduleDate] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -79,11 +85,39 @@ export function ScheduleDialog({
     })
     .split(" ");
 
+  const handleChangeAvailableTime = (time: string) => {
+    const timeValue = time.split(":").join(" ");
+
+    const match = timeValue.match(/^(\d{1,2}) (\d{2})([ap]m)?$/i);
+    if (!match) {
+      return null;
+    }
+
+    let hours = Number.parseInt(match[1]);
+
+    const minutes = Number.parseInt(match[2]);
+    const isPM = match[3] && match[3].toLowerCase() === "pm";
+
+    if (isPM && (hours < 1 || hours > 12)) {
+      return null;
+    }
+
+    if (isPM && hours !== 12) {
+      hours += 12;
+    } else if (!isPM && hours === 12) {
+      hours = 0;
+    }
+
+    const currentDate = date.toDate(timeZone);
+    currentDate.setHours(hours, minutes);
+    setScheduleDate(currentDate.toISOString());
+  };
+
   const handleButtonClick = (time: string) => {
     setSelectedTime(time);
     handleChangeAvailableTime(time);
   };
-
+  console.log(scheduleDate);
   //data
   const { data, isLoading } = useGetInterestsList({
     customer_id: customerId,
@@ -151,6 +185,35 @@ export function ScheduleDialog({
       rowSelection,
     },
   });
+
+  const { mutateAsync: createSchedule } = useCreateSchedule();
+  async function onScheduleSubmit() {
+    const res = await handleResponse(
+      () =>
+        createSchedule({
+          visit_schedule: scheduleDate,
+          customer_id: customerId,
+          employee_id: user?.id,
+          property_id: property_id,
+        }),
+      [201]
+    );
+    if (res.status) {
+      toast("Added!", {
+        description: `Schedule has been created successfully.`,
+        important: true,
+      });
+    } else {
+      toast("Error!", {
+        description: res.message,
+        important: true,
+        action: {
+          label: "Retry",
+          onClick: () => onScheduleSubmit(),
+        },
+      });
+    }
+  }
   return (
     <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
       <DialogTrigger asChild>
@@ -160,9 +223,9 @@ export function ScheduleDialog({
       </DialogTrigger>
       <DialogContent className="max-w-[425px] sm:max-w-[525px] rounded-lg">
         <DialogHeader>
-          <DialogTitle>Add Interested Property</DialogTitle>
+          <DialogTitle>Add Schedule</DialogTitle>
           <DialogDescription>
-            Select and add a new property that this customer is interested in.
+            Select the preffered time and property to create a schedule
           </DialogDescription>
         </DialogHeader>
         {tabValue === "time" ? (
@@ -222,9 +285,7 @@ export function ScheduleDialog({
               ))}
             </Tabs>
             <DialogFooter className="mt-4">
-              <Button onClick={() => setTabValue("property")}>
-                Find Property
-              </Button>
+              <Button onClick={() => setTabValue("property")}>Next</Button>
             </DialogFooter>
           </>
         ) : tabValue === "property" ? (
@@ -290,7 +351,16 @@ export function ScheduleDialog({
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
             <DialogFooter className="mt-4">
-              <Button type="submit">Save</Button>
+              <Button
+                type="submit"
+                onClick={() => setTabValue("time")}
+                variant={"outline"}
+              >
+                Back
+              </Button>
+              <Button type="submit" onClick={() => onScheduleSubmit()}>
+                Create
+              </Button>
             </DialogFooter>
           </>
         ) : (
