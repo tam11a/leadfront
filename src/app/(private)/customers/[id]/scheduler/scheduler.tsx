@@ -59,7 +59,7 @@ export function Scheduler({
           onChange={handleChangeDate}
           onFocusChange={(focused) => setFocusedDate(focused)}
         />
-        <div className="flex flex-col min-w-[260px] ml-4 xl:border-l">
+        <div className="flex flex-col min-w-[260px] lg:ml-4 xl:border-l">
           <ScrollArea
             type="always"
             className="h-full p-4"

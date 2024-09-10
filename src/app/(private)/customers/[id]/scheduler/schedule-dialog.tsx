@@ -203,6 +203,10 @@ export function ScheduleDialog({
         description: `Schedule has been created successfully.`,
         important: true,
       });
+      setProperty_id("");
+      setOpen(false);
+      setScheduleDate("");
+      setTabValue("time");
     } else {
       toast("Error!", {
         description: res.message,
@@ -217,7 +221,7 @@ export function ScheduleDialog({
   return (
     <Dialog open={open} onOpenChange={(o) => setOpen(o)}>
       <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)} className="ml-5">
+        <Button onClick={() => setOpen(true)} className="lg:ml-5">
           Add Schedule
         </Button>
       </DialogTrigger>

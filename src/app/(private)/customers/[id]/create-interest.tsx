@@ -543,24 +543,6 @@ Minimum Size: ${minSize === "" || minSize === null ? "N/A" : minSize},`
                 </ScrollArea>
               </TabsContent>
               <TabsContent value="details">
-                {/* <FormField
-                  control={form.control}
-                  name="price"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Price</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Input property price.."
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription></FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
                 <FormField
                   control={form.control}
                   name="note"

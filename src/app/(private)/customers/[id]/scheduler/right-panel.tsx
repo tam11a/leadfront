@@ -40,7 +40,7 @@ export function RightPanel({ scheduleData }: { scheduleData: any }) {
         </div>
       ) : (
         <>
-          <div className="flex flex-col gap-4 flex-1 pl-6">
+          <div className="flex flex-col gap-4 flex-1 lg:pl-4">
             {scheduleData?.data?.map((d: any) => (
               <div className="border rounded-md p-4">
                 <div className="space-y-1">
