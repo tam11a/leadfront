@@ -26,7 +26,7 @@ export function Calendar(props: CalendarProps<DateValue>) {
   );
 
   return (
-    <div {...calendarProps} className="inline-block flex-1 px-4">
+    <div {...calendarProps} className="inline-block flex-1 ">
       <CalendarHeader
         state={state}
         calendarProps={calendarProps}

@@ -80,7 +80,6 @@ export default function CustomerInterestsPage({
     </div>
   ) : (
     <>
-      <Scheduler params={params} />
       <div className="space-y-3 max-w-lg mx-2 mt-6">
         {customerData?.data?.status.toLowerCase() === "sold" ? (
           <>

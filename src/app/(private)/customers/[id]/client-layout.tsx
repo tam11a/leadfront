@@ -10,6 +10,7 @@ import CustomerContactBar from "./contact";
 import { Loading } from "../../token-validation-checker";
 import CustomerLogsPage from "./logs/log-list";
 import { Badge } from "@/components/ui/badge";
+import TabNav from "./tab-nav";
 
 export default function ClientLayout({
   children,
@@ -82,6 +83,9 @@ export default function ClientLayout({
             }}
           />
           <div className="flex-1 px-7 py-6">
+            <div className="mb-10">
+              <TabNav />
+            </div>
             <div>{children}</div>
           </div>
           <div className="items-center">
