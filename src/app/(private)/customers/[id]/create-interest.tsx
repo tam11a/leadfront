@@ -67,7 +67,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useCreateCustomerComment } from "@/lib/actions/customer-logs/post-customer-comment";
-import { useGetCustomerById } from "@/lib/actions/customers/get-by-id";
 
 export interface property {
   id: number;
@@ -544,24 +543,6 @@ Minimum Size: ${minSize === "" || minSize === null ? "N/A" : minSize},`
                 </ScrollArea>
               </TabsContent>
               <TabsContent value="details">
-                {/* <FormField
-                  control={form.control}
-                  name="price"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Price</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Input property price.."
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription></FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
                 <FormField
                   control={form.control}
                   name="note"

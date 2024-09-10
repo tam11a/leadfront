@@ -152,7 +152,7 @@ const columns: ColumnDef<Customer>[] = [
     },
     cell: ({ row }) => (
       <Link href={`/customers/${row.original.id}`}>
-        <Button variant={"link"}>
+        <Button variant={"link"} className="capitalize">
           {row.original.first_name} {row.original.last_name}
         </Button>
       </Link>
