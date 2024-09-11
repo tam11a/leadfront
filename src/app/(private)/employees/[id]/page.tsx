@@ -39,6 +39,8 @@ import moment from "moment";
 import { useGetCustomers } from "@/lib/actions/customers/get-customers";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import TabNav from "./tab-nav";
+import { useGetSoldPropertyList } from "@/lib/actions/sold-properties/get-sold-property";
 
 export interface Customer {
   id: number;
@@ -83,7 +85,7 @@ const columns: ColumnDef<Customer>[] = [
     },
     cell: ({ row }) => (
       <Link href={`/customers/${row.original.id}`}>
-        <Button variant={"link"}>
+        <Button variant={"link"} className="capitalize">
           {row.original.first_name} {row.original.last_name}
         </Button>
       </Link>
@@ -99,19 +101,22 @@ const columns: ColumnDef<Customer>[] = [
   {
     accessorKey: "email",
     header: () => {
-      return (
-        // <Button
-        //   variant="ghost"
-        //   onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        // >
-        <div className="mx-4">Email</div>
-        //   <CaretSortIcon className="ml-2 h-4 w-4" />
-        // </Button>
-      );
+      return <div className="mx-4">Email</div>;
     },
     cell: ({ row }) => (
       <>
-        <div className="lowercase">{row.getValue("email")}</div>
+        <div className="mx-4 lowercase">{row.getValue("email")}</div>
+      </>
+    ),
+  },
+  {
+    accessorKey: "address",
+    header: () => {
+      return <div className="mx-4">Address</div>;
+    },
+    cell: ({ row }) => (
+      <>
+        <div className="mx-4 capitalize">{row.getValue("address")}</div>
       </>
     ),
   },
@@ -121,6 +126,13 @@ const columns: ColumnDef<Customer>[] = [
       return <div className="mx-4">Gender</div>;
     },
     cell: ({ row }) => <div className="mx-4">{row.getValue("gender")}</div>,
+  },
+  {
+    accessorKey: "dob",
+    header: () => {
+      return <div className="mx-4">Date Of Birth</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("dob")}</div>,
   },
   {
     accessorKey: "priority",
@@ -141,55 +153,26 @@ const columns: ColumnDef<Customer>[] = [
     header: () => {
       return <div className="mx-4">Status</div>;
     },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("status")}</div>,
-  },
-  // {
-  //   id: "media",
-  //   accessorKey: "full_name",
-  //   header: () => {
-  //     return <div className="mx-4">Media</div>;
-  //   },
-  //   cell: ({ row }) => (
-  //     <Link href={`/customers/${row.original.id}`}>
-  //       <Button variant={"link"}>
-  //         {row.original.first_name} {row.original.last_name}
-  //       </Button>
-  //     </Link>
-  //   ),
-  // },
-  {
-    accessorKey: "followup",
-    header: () => {
-      return <div className="mx-4">Followup</div>;
-    },
     cell: ({ row }) => (
-      <div className="mx-4">
-        {moment(row.getValue("followup")).format("llll")}
+      <div className="mx-4 capitalize">
+        <Badge variant={row.getValue("status")}>{row.getValue("status")}</Badge>
       </div>
     ),
   },
   {
-    accessorKey: "created_at",
+    accessorKey: "media_commision",
     header: () => {
-      return <div className="mx-4">Created At</div>;
+      return <div className="mx-4">Media Commision (৳)</div>;
     },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("created_at")}</div>,
-  },
-  {
-    accessorKey: "is_active",
-    header: () => {
-      return <div className="mx-4">Account status</div>;
-    },
-    cell: ({ row }) => {
-      const isActive = row.getValue("is_active");
-      return (
-        <div className="mx-4">
-          <Badge variant={isActive ? "success" : "destructive"}>
-            {isActive ? "Active" : "Inactive"}
-          </Badge>
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <div className="mx-4">
+        {row.getValue("media_commision") ? (
+          <>{row.getValue("media_commision")}</>
+        ) : (
+          "-"
+        )}{" "}
+      </div>
+    ),
   },
   // {
   //   id: "actions",
@@ -246,11 +229,10 @@ export default function PropertyInfoPage({
   const [rowSelection, setRowSelection] = useState({});
   const [search, setSearch] = useState<string>("");
 
-  const { data } = useGetCustomers({
+  const { data } = useGetSoldPropertyList({
     search,
-    assigned_employee_id: params.id,
+    customer_representative: params.id,
   });
-  console.log(data);
   const table = useReactTable({
     data: useMemo(() => data?.data.results || [], [data]),
     columns,

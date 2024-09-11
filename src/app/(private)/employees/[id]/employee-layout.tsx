@@ -50,7 +50,9 @@ export default function EmployeeLayout({
         <Separator />
         <div className="flex h-full flex-1 relative flex-col-reverse md:flex-row items-start md:justify-between">
           <div className="flex-1 px-7 py-6">
-            <div className="mb-10">{/* <TabNav /> */}</div>
+            <div className="mb-6">
+              <TabNav />
+            </div>
             <div>{children}</div>
           </div>
           <EmployeeSideDetails

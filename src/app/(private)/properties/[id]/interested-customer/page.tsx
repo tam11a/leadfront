@@ -35,9 +35,13 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { useGetInterests } from "@/lib/actions/interests/get-interests";
+import {
+  useGetInterests,
+  useGetInterestsList,
+} from "@/lib/actions/interests/get-interests";
 import { CreateInterest } from "./create-interest";
 import moment from "moment";
+import { Badge } from "@/components/ui/badge";
 
 interface Customer {
   id: number;
@@ -47,6 +51,7 @@ interface Customer {
   phone: string;
   followup: string;
   interest: number;
+  customer_id: any;
 }
 
 const columns: ColumnDef<Customer>[] = [
@@ -55,7 +60,10 @@ const columns: ColumnDef<Customer>[] = [
     header: () => {
       return <div className="mx-4">ID</div>;
     },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
+    cell: ({ row }) => {
+      console.log(row);
+      return <div className="mx-4">{row.original?.customer_id?.id}</div>;
+    },
   },
   {
     id: "full_name",
@@ -64,8 +72,13 @@ const columns: ColumnDef<Customer>[] = [
       return <div className="mx-4">Full Name</div>;
     },
     cell: ({ row }) => (
-      <Link href={`/customers/${row.original.id}`} className="mx-2">
-        <Button variant={"link"}>{row.original.name}</Button>
+      <Link href={`/customers/${row.original?.customer_id?.id}`}>
+        <Button variant={"link"} className="capitalize">
+          {[
+            row.original.customer_id?.first_name,
+            row.original.customer_id?.last_name,
+          ].join(" ")}
+        </Button>
       </Link>
     ),
   },
@@ -74,25 +87,51 @@ const columns: ColumnDef<Customer>[] = [
     header: () => {
       return <div className="mx-4">Phone</div>;
     },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("phone")}</div>,
+    cell: ({ row }) => (
+      <div className="mx-4">{row.original.customer_id?.phone}</div>
+    ),
   },
   {
     accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <CaretSortIcon className="ml-2 h-4 w-4" />
-        </Button>
-      );
+    header: () => {
+      return <div className="mx-4">Email</div>;
     },
     cell: ({ row }) => (
       <>
-        <div className="lowercase">{row.getValue("email")}</div>
+        <div className="lowercase mx-4">{row.original.customer_id?.email}</div>
       </>
+    ),
+  },
+
+  {
+    accessorKey: "address",
+    header: () => {
+      return <div className="mx-4">Address</div>;
+    },
+    cell: ({ row }) => (
+      <>
+        <div className="mx-4 capitalize">
+          {row.original.customer_id?.address}
+        </div>
+      </>
+    ),
+  },
+  {
+    accessorKey: "gender",
+    header: () => {
+      return <div className="mx-4">Gender</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">{row.original.customer_id?.gender}</div>
+    ),
+  },
+  {
+    accessorKey: "dob",
+    header: () => {
+      return <div className="mx-4">Date Of Birth</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">{row.original.customer_id?.dob}</div>
     ),
   },
   {
@@ -100,8 +139,61 @@ const columns: ColumnDef<Customer>[] = [
     header: () => {
       return <div className="mx-4">Priority</div>;
     },
-    cell: ({ row }) => <div className="mx-4">{row.getValue("priority")}</div>,
+    cell: ({ row }) => (
+      <div className="mx-4">{row.original.customer_id?.priority}</div>
+    ),
   },
+  {
+    accessorKey: "source",
+    header: () => {
+      return <div className="mx-4">Source</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">{row.original.customer_id?.source}</div>
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: () => {
+      return <div className="mx-4">Status</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4 capitalize">
+        <Badge variant={row.original.customer_id?.status}>
+          {row.original.customer_id?.status}
+        </Badge>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "media_commision",
+    header: () => {
+      return <div className="mx-4">Media Commision (৳)</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">
+        {row.original.customer_id?.media_commision ? (
+          <>{row.original.customer_id?.media_commision}</>
+        ) : (
+          "-"
+        )}{" "}
+      </div>
+    ),
+  },
+  // {
+  //   id: "media",
+  //   accessorKey: "full_name",
+  //   header: () => {
+  //     return <div className="mx-4">Media</div>;
+  //   },
+  //   cell: ({ row }) => (
+  //     <Link href={`/customers/${row.original.id}`}>
+  //       <Button variant={"link"}>
+  //         {row.original.first_name} {row.original.last_name}
+  //       </Button>
+  //     </Link>
+  //   ),
+  // },
   {
     accessorKey: "followup",
     header: () => {
@@ -109,49 +201,36 @@ const columns: ColumnDef<Customer>[] = [
     },
     cell: ({ row }) => (
       <div className="mx-4">
-        {moment(row.getValue("followup")).format("llll")}
+        {row.original.customer_id?.followup ? (
+          <>{moment(row.original.customer_id?.followup).format("llll")}</>
+        ) : (
+          "No date added yet"
+        )}
       </div>
     ),
   },
   {
-    id: "actions",
-    enableHiding: false,
+    accessorKey: "created_at",
+    header: () => {
+      return <div className="mx-4">Created At</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">{row.original.customer_id?.created_at}</div>
+    ),
+  },
+  {
+    accessorKey: "is_active",
+    header: () => {
+      return <div className="mx-4">Account status</div>;
+    },
     cell: ({ row }) => {
-      const customer = row.original;
+      const isActive = row.original.customer_id?.is_active;
       return (
-        <>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <DotsHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigator.clipboard.writeText(
-                    `ID: ${customer.id?.toString()}\nFull Name: ${
-                      customer?.name
-                    }\nPhone: ${customer.phone}\nEmail: ${
-                      customer.email
-                    }\nEmail: ${customer.priority}\nEmail: ${customer.followup}`
-                  )
-                }
-              >
-                Copy Information
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
-              <Link href={`/customers/${customer.id}`}>
-                <DropdownMenuItem>View profile</DropdownMenuItem>
-              </Link>
-              {/* <DropdownMenuSeparator />
-              <DeleteInterestedCustomer id={customer.interest} /> */}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </>
+        <div className="mx-4">
+          <Badge variant={isActive ? "success" : "destructive"}>
+            {isActive ? "Active" : "Inactive"}
+          </Badge>
+        </div>
       );
     },
   },
@@ -207,9 +286,8 @@ export default function InterestedCustomersTable({
 
   const [search, setSearch] = useState<string>("");
 
-  const { data } = useGetInterests({
-    id: params?.id,
-    varr: false,
+  const { data } = useGetInterestsList({
+    product_id: params?.id,
   });
   const table = useReactTable({
     data: useMemo(() => data?.data || [], [data]),
