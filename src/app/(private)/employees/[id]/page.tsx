@@ -175,45 +175,57 @@ const columns: ColumnDef<Customer>[] = [
     ),
   },
   // {
-  //   id: "actions",
-  //   enableHiding: false,
-  //   cell: ({ row }) => {
-  //     const customer = row.original;
-  //     return (
-  //       <>
-  //         <DropdownMenu>
-  //           <DropdownMenuTrigger asChild>
-  //             <Button variant="ghost" className="h-8 w-8 p-0">
-  //               <span className="sr-only">Open menu</span>
-  //               <DotsHorizontalIcon className="h-4 w-4" />
-  //             </Button>
-  //           </DropdownMenuTrigger>
-  //           <DropdownMenuContent align="end">
-  //             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-  //             {/* <DropdownMenuItem
-  //               onClick={() =>
-  //                 navigator.clipboard.writeText(
-  //                   `ID: ${customer.id?.toString()}\nFirst Name: ${
-  //                     customer?.first_name
-  //                   }\nLast Name: ${customer?.last_name}\nPhone: ${
-  //                     customer.phone
-  //                   }\nEmail: ${customer.email}`
-  //                 )
-  //               }
-  //             >
-  //               Copy Information
-  //             </DropdownMenuItem> */}
-
-  //             <Link href={`/customers/${customer.id}`}>
-  //               <DropdownMenuItem>View profile</DropdownMenuItem>
-  //             </Link>
-  //             <DropdownMenuSeparator />
-  //           </DropdownMenuContent>
-  //         </DropdownMenu>
-  //       </>
-  //     );
+  //   id: "media",
+  //   accessorKey: "full_name",
+  //   header: () => {
+  //     return <div className="mx-4">Media</div>;
   //   },
+  //   cell: ({ row }) => (
+  //     <Link href={`/customers/${row.original.id}`}>
+  //       <Button variant={"link"}>
+  //         {row.original.first_name} {row.original.last_name}
+  //       </Button>
+  //     </Link>
+  //   ),
   // },
+  {
+    accessorKey: "followup",
+    header: () => {
+      return <div className="mx-4">Followup</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">
+        {row.getValue("followup") ? (
+          <>{moment(row.getValue("followup")).format("llll")}</>
+        ) : (
+          "No date added yet"
+        )}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "created_at",
+    header: () => {
+      return <div className="mx-4">Created At</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("created_at")}</div>,
+  },
+  {
+    accessorKey: "is_active",
+    header: () => {
+      return <div className="mx-4">Account status</div>;
+    },
+    cell: ({ row }) => {
+      const isActive = row.getValue("is_active");
+      return (
+        <div className="mx-4">
+          <Badge variant={isActive ? "success" : "destructive"}>
+            {isActive ? "Active" : "Inactive"}
+          </Badge>
+        </div>
+      );
+    },
+  },
 ];
 
 export default function PropertyInfoPage({
@@ -233,8 +245,9 @@ export default function PropertyInfoPage({
     search,
     customer_representative: params.id,
   });
+
   const table = useReactTable({
-    data: useMemo(() => data?.data.results || [], [data]),
+    data: useMemo(() => data?.data?.map((d: any) => d?.customer) || [], [data]),
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

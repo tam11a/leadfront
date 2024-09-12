@@ -1,6 +1,6 @@
 "use client";
 
-import { CaretSortIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -35,14 +35,8 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import {
-  useGetInterests,
-  useGetInterestsList,
-} from "@/lib/actions/interests/get-interests";
-// import { CreateInterest } from "./create-interest";
-import moment from "moment";
 
-import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useGetSoldPropertyList } from "@/lib/actions/sold-properties/get-sold-property";
 
 export interface Property {
   id: number;
@@ -54,7 +48,7 @@ export interface Property {
   price_public: string;
 }
 
-export const columns: ColumnDef<Property>[] = [
+const columns: ColumnDef<Property>[] = [
   {
     accessorKey: "id",
     header: () => {
@@ -155,7 +149,7 @@ export const columns: ColumnDef<Property>[] = [
   },
 ];
 
-export default function InterestedCustomersTable({
+export default function SoldProperties({
   params,
 }: {
   params: {
@@ -168,12 +162,13 @@ export default function InterestedCustomersTable({
   const [rowSelection, setRowSelection] = useState({});
 
   const [search, setSearch] = useState<string>("");
-  console.log(params.id);
-  const { data } = useGetInterestsList({
-    employee_id: params?.id,
+
+  const { data } = useGetSoldPropertyList({
+    search,
+    customer_representative: params.id,
   });
   const table = useReactTable({
-    data: useMemo(() => data?.data || [], [data]),
+    data: useMemo(() => data?.data?.map((d: any) => d.property) || [], [data]),
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -193,12 +188,12 @@ export default function InterestedCustomersTable({
 
   return (
     <div className="w-full max-w-[80vw] md:max-w-[60vw] lg:max-w-[70vw] mx-auto relatives">
-      <CardHeader className="p-0">
+      {/* <CardHeader className="p-0">
         <CardTitle>Assigned Properties</CardTitle>
         <CardDescription>
           Table of assigned properties of this Employee.
         </CardDescription>
-      </CardHeader>
+      </CardHeader> */}
       <div className="flex items-center flex-row gap-2 py-4">
         <Input
           placeholder="Search..."

@@ -16,7 +16,7 @@ export default function TabNav() {
     >
       <TabsList>
         <TabsTrigger value="">Customers</TabsTrigger>
-        <TabsTrigger value="assigned-properties">Properties</TabsTrigger>
+        <TabsTrigger value="sold-properties">Properties</TabsTrigger>
       </TabsList>
     </Tabs>
   );
