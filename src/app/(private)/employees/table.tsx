@@ -135,7 +135,7 @@ export const columns: ColumnDef<Employee>[] = [
     },
     cell: ({ row }) => (
       <>
-        <div className="lowercase">{row.getValue("email")}</div>
+        <div className="lowercase mx-4">{row.getValue("email")}</div>
       </>
     ),
   },
@@ -149,7 +149,7 @@ export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "dob",
     header: () => {
-      return <div className="mx-4">Daet Of Birth</div>;
+      return <div className="mx-4">Date Of Birth</div>;
     },
     cell: ({ row }) => <div className="mx-4">{row.getValue("dob")}</div>,
   },

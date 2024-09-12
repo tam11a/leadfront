@@ -1,6 +1,6 @@
 "use client";
 
-import { CaretSortIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -35,11 +35,8 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { useGetInterests } from "@/lib/actions/interests/get-interests";
-// import { CreateInterest } from "./create-interest";
-import moment from "moment";
 
-import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useGetSoldPropertyList } from "@/lib/actions/sold-properties/get-sold-property";
 
 export interface Property {
   id: number;
@@ -51,108 +48,108 @@ export interface Property {
   price_public: string;
 }
 
-// export const columns: ColumnDef<Property>[] = [
-//   {
-//     accessorKey: "id",
-//     header: () => {
-//       return <div className="mx-4">ID</div>;
-//     },
-//     cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
-//   },
-//   {
-//     id: "product_uid",
-//     accessorKey: "product_uid",
-//     header: () => {
-//       return <div className="mx-4">Title</div>;
-//     },
-//     cell: ({ row }) => (
-//       <Link href={`/properties/${row.original.id}`}>
-//         <Button variant={"link"} className="capitalize">
-//           {row.original.product_uid}
-//         </Button>
-//       </Link>
-//     ),
-//   },
-//   {
-//     accessorKey: "product_typeName",
-//     header: () => {
-//       return <div className="mx-4">Type</div>;
-//     },
-//     cell: ({ row }) => (
-//       <div className="mx-4">{row.getValue("product_typeName")}</div>
-//     ),
-//   },
-//   {
-//     accessorKey: "areaName",
-//     header: () => {
-//       return <div className="mx-4">Area</div>;
-//     },
-//     cell: ({ row }) => <div className="mx-4">{row.getValue("areaName")}</div>,
-//   },
-//   {
-//     accessorKey: "size",
-//     header: () => {
-//       return <div className="mx-4">Size</div>;
-//     },
-//     cell: ({ row }) => (
-//       <div className="mx-4">
-//         {row.original.size} {row.original.unitName}
-//       </div>
-//     ),
-//   },
-//   {
-//     accessorKey: "price_public",
-//     header: () => {
-//       return <div className="mx-4">Price</div>;
-//     },
-//     cell: ({ row }) => (
-//       <div className="mx-4">{row.getValue("price_public")}</div>
-//     ),
-//   },
-//   {
-//     accessorKey: "status",
-//     header: () => {
-//       return <div className="mx-4">Status</div>;
-//     },
-//     cell: ({ row }) => <div className="mx-4">{row.getValue("status")}</div>,
-//   },
-//   {
-//     accessorKey: "created_at",
-//     header: () => {
-//       return <div className="mx-4">Created At</div>;
-//     },
-//     cell: ({ row }) => <div className="mx-4">{row.getValue("created_at")}</div>,
-//   },
+const columns: ColumnDef<Property>[] = [
+  {
+    accessorKey: "id",
+    header: () => {
+      return <div className="mx-4">ID</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("id")}</div>,
+  },
+  {
+    id: "product_uid",
+    accessorKey: "product_uid",
+    header: () => {
+      return <div className="mx-4">Title</div>;
+    },
+    cell: ({ row }) => (
+      <Link href={`/properties/${row.original.id}`}>
+        <Button variant={"link"} className="capitalize">
+          {row.original.product_uid}
+        </Button>
+      </Link>
+    ),
+  },
+  {
+    accessorKey: "product_typeName",
+    header: () => {
+      return <div className="mx-4">Type</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">{row.getValue("product_typeName")}</div>
+    ),
+  },
+  {
+    accessorKey: "areaName",
+    header: () => {
+      return <div className="mx-4">Area</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("areaName")}</div>,
+  },
+  {
+    accessorKey: "size",
+    header: () => {
+      return <div className="mx-4">Size</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">
+        {row.original.size} {row.original.unitName}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "price_public",
+    header: () => {
+      return <div className="mx-4">Price</div>;
+    },
+    cell: ({ row }) => (
+      <div className="mx-4">{row.getValue("price_public")}</div>
+    ),
+  },
+  {
+    accessorKey: "status",
+    header: () => {
+      return <div className="mx-4">Status</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("status")}</div>,
+  },
+  {
+    accessorKey: "created_at",
+    header: () => {
+      return <div className="mx-4">Created At</div>;
+    },
+    cell: ({ row }) => <div className="mx-4">{row.getValue("created_at")}</div>,
+  },
 
-//   {
-//     id: "actions",
-//     enableHiding: false,
-//     cell: ({ row }) => {
-//       const property = row.original;
-//       return (
-//         <>
-//           <DropdownMenu>
-//             <DropdownMenuTrigger asChild>
-//               <Button variant="ghost" className="h-8 w-8 p-0">
-//                 <span className="sr-only">Open menu</span>
-//                 <DotsHorizontalIcon className="h-4 w-4" />
-//               </Button>
-//             </DropdownMenuTrigger>
-//             <DropdownMenuContent align="end">
-//               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-//               <Link href={`/properties/${property.id}`}>
-//                 <DropdownMenuItem>View profile</DropdownMenuItem>
-//               </Link>
-//               <DropdownMenuSeparator />
-//             </DropdownMenuContent>
-//           </DropdownMenu>
-//         </>
-//       );
-//     },
-//   },
-// ];
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const property = row.original;
+      return (
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <Link href={`/properties/${property.id}`}>
+                <DropdownMenuItem>View profile</DropdownMenuItem>
+              </Link>
+              <DropdownMenuSeparator />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </>
+      );
+    },
+  },
+];
 
-export default function InterestedCustomersTable({
+export default function SoldProperties({
   params,
 }: {
   params: {
@@ -166,37 +163,37 @@ export default function InterestedCustomersTable({
 
   const [search, setSearch] = useState<string>("");
 
-  // const { data } = useGetInterests({
-  //   id: params?.id,
-  //   varr: false,
-  // });
-  // const table = useReactTable({
-  //   data: useMemo(() => data?.data || [], [data]),
-  //   columns,
-  //   onSortingChange: setSorting,
-  //   onColumnFiltersChange: setColumnFilters,
-  //   getCoreRowModel: getCoreRowModel(),
-  //   getPaginationRowModel: getPaginationRowModel(),
-  //   getSortedRowModel: getSortedRowModel(),
-  //   getFilteredRowModel: getFilteredRowModel(),
-  //   onColumnVisibilityChange: setColumnVisibility,
-  //   onRowSelectionChange: setRowSelection,
-  //   state: {
-  //     sorting,
-  //     columnFilters,
-  //     columnVisibility,
-  //     rowSelection,
-  //   },
-  // });
+  const { data } = useGetSoldPropertyList({
+    search,
+    customer_representative: params.id,
+  });
+  const table = useReactTable({
+    data: useMemo(() => data?.data?.map((d: any) => d.property) || [], [data]),
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  });
 
   return (
     <div className="w-full max-w-[80vw] md:max-w-[60vw] lg:max-w-[70vw] mx-auto relatives">
-      <CardHeader className="p-0">
+      {/* <CardHeader className="p-0">
         <CardTitle>Assigned Properties</CardTitle>
         <CardDescription>
           Table of assigned properties of this Employee.
         </CardDescription>
-      </CardHeader>
+      </CardHeader> */}
       <div className="flex items-center flex-row gap-2 py-4">
         <Input
           placeholder="Search..."
@@ -208,7 +205,7 @@ export default function InterestedCustomersTable({
         />
       </div>
 
-      {/* <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
+      <ScrollArea className="relative max-w-full whitespace-nowrap rounded-md border">
         <Table className="w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -283,7 +280,7 @@ export default function InterestedCustomersTable({
             Next
           </Button>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }
