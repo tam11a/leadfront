@@ -61,7 +61,6 @@ const columns: ColumnDef<Customer>[] = [
       return <div className="mx-4">ID</div>;
     },
     cell: ({ row }) => {
-      console.log(row);
       return <div className="mx-4">{row.original?.customer_id?.id}</div>;
     },
   },
